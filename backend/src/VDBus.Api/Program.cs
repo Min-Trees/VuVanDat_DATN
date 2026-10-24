@@ -43,6 +43,7 @@ builder.Services.AddScoped<IDispatchRecommendationService, DispatchRecommendatio
 builder.Services.AddScoped<IPodService, PodService>();
 builder.Services.AddScoped<IHosService, HosService>();
 builder.Services.AddScoped<IGeofenceService, GeofenceService>();
+builder.Services.AddScoped<ITollReconciliationService, TollReconciliationService>();
 builder.Services.AddScoped<ITelematicsService, TelematicsService>();
 builder.Services.AddScoped<ITelematicsNotificationService, VDBus.Api.Services.SignalRTelematicsNotificationService>();
 builder.Services.AddSignalR();
