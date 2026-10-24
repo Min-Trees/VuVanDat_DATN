@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'core/theme/theme.dart';
 import 'models/trip_model.dart';
 import 'screens/epod_screen.dart';
+import 'screens/cockpit_screen.dart';
 
 void main() {
   runApp(const VDBusDriverApp());
@@ -262,6 +263,28 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
                     ),
                   ],
                 ),
+              ),
+
+              const SizedBox(height: 12),
+
+              // Digital Cockpit Navigation Button
+              OutlinedButton.icon(
+                icon: const Icon(Icons.speed, size: 18),
+                label: const Text('MO BUONG LAI SO (COCKPIT & HOS)'),
+                style: OutlinedButton.styleFrom(
+                  minimumSize: const Size.fromHeight(48),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                ),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => CockpitScreen(
+                        vehiclePlate: _trip.vehiclePlate,
+                        driverName: 'Nguyen Van Tuan',
+                      ),
+                    ),
+                  );
+                },
               ),
 
               const SizedBox(height: 16),
