@@ -1,0 +1,71 @@
+.vdbus-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--vdbus-space-3);
+  padding: var(--vdbus-space-3) var(--vdbus-space-4);
+  border-width: var(--vdbus-border-width);
+  border-style: solid;
+  border-radius: var(--vdbus-radius-base);
+  font-family: var(--vdbus-font-family);
+  font-size: var(--vdbus-font-size-sm);
+  line-height: 1.4;
+  box-sizing: border-box;
+}
+
+.vdbus-banner--info {
+  background-color: var(--vdbus-color-info-bg);
+  border-color: var(--vdbus-color-info-border);
+  color: var(--vdbus-color-info-text);
+}
+
+.vdbus-banner--warning {
+  background-color: var(--vdbus-color-warning-bg);
+  border-color: var(--vdbus-color-warning-border);
+  color: var(--vdbus-color-warning-text);
+}
+
+.vdbus-banner--error {
+  background-color: var(--vdbus-color-error-bg);
+  border-color: var(--vdbus-color-error-border);
+  color: var(--vdbus-color-error-text);
+}
+
+.vdbus-banner--success {
+  background-color: var(--vdbus-color-success-bg);
+  border-color: var(--vdbus-color-success-border);
+  color: var(--vdbus-color-success-text);
+}
+
+.vdbus-banner__icon {
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.vdbus-banner__content {
+  flex: 1;
+}
+
+.vdbus-banner__title {
+  display: block;
+  font-weight: var(--vdbus-font-weight-semibold);
+  margin-bottom: var(--vdbus-space-1);
+}
+
+.vdbus-banner__body {
+  font-size: var(--vdbus-font-size-sm);
+}
+
+.vdbus-banner__close {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  opacity: 0.7;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+}
+
+.vdbus-banner__close:hover {
+  opacity: 1;
+}

@@ -1,0 +1,124 @@
+.vdbus-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--vdbus-space-2);
+  border-width: var(--vdbus-border-width);
+  border-style: solid;
+  border-radius: var(--vdbus-radius-base);
+  font-family: var(--vdbus-font-family);
+  font-weight: var(--vdbus-font-weight-medium);
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+  outline: none;
+}
+
+.vdbus-btn:focus-visible {
+  box-shadow: var(--vdbus-focus-ring);
+}
+
+.vdbus-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Sizes */
+.vdbus-btn--sm {
+  height: 28px;
+  padding: 0 var(--vdbus-space-2);
+  font-size: var(--vdbus-font-size-xs);
+}
+
+.vdbus-btn--base {
+  height: 32px;
+  padding: 0 var(--vdbus-space-3);
+  font-size: var(--vdbus-font-size-sm);
+}
+
+.vdbus-btn--md {
+  height: 36px;
+  padding: 0 var(--vdbus-space-4);
+  font-size: var(--vdbus-font-size-base);
+}
+
+/* Primary Variant */
+.vdbus-btn--primary {
+  background-color: var(--vdbus-color-primary);
+  border-color: var(--vdbus-color-primary);
+  color: var(--vdbus-color-text-inverse);
+}
+
+.vdbus-btn--primary:hover:not(:disabled) {
+  background-color: var(--vdbus-color-primary-hover);
+  border-color: var(--vdbus-color-primary-hover);
+}
+
+.vdbus-btn--primary:active:not(:disabled) {
+  background-color: var(--vdbus-color-primary-active);
+  border-color: var(--vdbus-color-primary-active);
+}
+
+/* Secondary Variant (Default neutral) */
+.vdbus-btn--secondary {
+  background-color: var(--vdbus-color-bg-surface);
+  border-color: var(--vdbus-color-border-default);
+  color: var(--vdbus-color-text-primary);
+}
+
+.vdbus-btn--secondary:hover:not(:disabled) {
+  background-color: var(--vdbus-color-bg-subtle);
+  border-color: var(--vdbus-color-border-strong);
+}
+
+/* Outline Variant */
+.vdbus-btn--outline {
+  background-color: transparent;
+  border-color: var(--vdbus-color-border-default);
+  color: var(--vdbus-color-text-secondary);
+}
+
+.vdbus-btn--outline:hover:not(:disabled) {
+  background-color: var(--vdbus-color-bg-subtle);
+  color: var(--vdbus-color-text-primary);
+}
+
+/* Danger Variant */
+.vdbus-btn--danger {
+  background-color: var(--vdbus-color-error-bg);
+  border-color: var(--vdbus-color-error-border);
+  color: var(--vdbus-color-error-text);
+}
+
+.vdbus-btn--danger:hover:not(:disabled) {
+  background-color: var(--vdbus-color-error-border);
+}
+
+/* Ghost Variant */
+.vdbus-btn--ghost {
+  background-color: transparent;
+  border-color: transparent;
+  color: var(--vdbus-color-text-secondary);
+}
+
+.vdbus-btn--ghost:hover:not(:disabled) {
+  background-color: var(--vdbus-color-bg-subtle);
+  color: var(--vdbus-color-text-primary);
+}
+
+/* Loading spinner */
+.vdbus-btn__spinner {
+  width: 12px;
+  height: 12px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: var(--vdbus-radius-avatar);
+  animation: vdbus-spin 600ms linear infinite;
+}
+
+@keyframes vdbus-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

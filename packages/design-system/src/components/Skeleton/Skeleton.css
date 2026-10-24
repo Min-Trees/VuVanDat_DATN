@@ -1,0 +1,39 @@
+.vdbus-skeleton {
+  background-color: var(--vdbus-color-bg-hover);
+  border-radius: var(--vdbus-radius-sm);
+  animation: vdbus-pulse 1.4s ease-in-out infinite;
+}
+
+.vdbus-skeleton--text {
+  height: 14px;
+  width: 100%;
+}
+
+.vdbus-skeleton--rect {
+  width: 100%;
+  height: 100%;
+}
+
+.vdbus-skeleton--circle {
+  border-radius: var(--vdbus-radius-avatar);
+}
+
+.vdbus-skeleton--cell {
+  height: 14px;
+  width: 70%;
+}
+
+.vdbus-skeleton--checkbox {
+  height: 14px;
+  width: 14px;
+  margin: 0 auto;
+}
+
+@keyframes vdbus-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}

@@ -1,0 +1,56 @@
+.vdbus-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px var(--vdbus-space-2);
+  border-width: var(--vdbus-border-width);
+  border-style: solid;
+  border-radius: var(--vdbus-radius-sm);
+  font-family: var(--vdbus-font-family);
+  font-size: var(--vdbus-font-size-xs);
+  font-weight: var(--vdbus-font-weight-medium);
+  line-height: 18px;
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* Neutral */
+.vdbus-badge--neutral {
+  background-color: var(--vdbus-color-bg-subtle);
+  border-color: var(--vdbus-color-border-default);
+  color: var(--vdbus-color-text-secondary);
+}
+
+/* Success */
+.vdbus-badge--success {
+  background-color: var(--vdbus-color-success-bg);
+  border-color: var(--vdbus-color-success-border);
+  color: var(--vdbus-color-success-text);
+}
+
+/* Warning */
+.vdbus-badge--warning {
+  background-color: var(--vdbus-color-warning-bg);
+  border-color: var(--vdbus-color-warning-border);
+  color: var(--vdbus-color-warning-text);
+}
+
+/* Error */
+.vdbus-badge--error {
+  background-color: var(--vdbus-color-error-bg);
+  border-color: var(--vdbus-color-error-border);
+  color: var(--vdbus-color-error-text);
+}
+
+/* Info */
+.vdbus-badge--info {
+  background-color: var(--vdbus-color-info-bg);
+  border-color: var(--vdbus-color-info-border);
+  color: var(--vdbus-color-info-text);
+}
+
+/* Mock */
+.vdbus-badge--mock {
+  background-color: var(--vdbus-color-mock-bg);
+  border-color: var(--vdbus-color-mock-border);
+  color: var(--vdbus-color-mock-text);
+}

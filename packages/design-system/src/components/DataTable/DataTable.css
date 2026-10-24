@@ -1,0 +1,157 @@
+.vdbus-datatable-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-width: var(--vdbus-border-width);
+  border-style: solid;
+  border-color: var(--vdbus-color-border-subtle);
+  border-radius: var(--vdbus-radius-md);
+  background-color: var(--vdbus-color-bg-surface);
+  overflow: hidden;
+}
+
+.vdbus-datatable-scroll {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.vdbus-datatable {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--vdbus-font-family);
+  font-size: var(--vdbus-font-size-base);
+  text-align: left;
+}
+
+.vdbus-datatable__th {
+  background-color: var(--vdbus-color-bg-subtle);
+  color: var(--vdbus-color-text-secondary);
+  font-weight: var(--vdbus-font-weight-medium);
+  font-size: var(--vdbus-font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border-bottom: var(--vdbus-border-width) solid var(--vdbus-color-border-default);
+  user-select: none;
+  white-space: nowrap;
+}
+
+.vdbus-datatable__th--sortable {
+  cursor: pointer;
+}
+
+.vdbus-datatable__th--sortable:hover {
+  background-color: var(--vdbus-color-bg-hover);
+  color: var(--vdbus-color-text-primary);
+}
+
+.vdbus-datatable__th-content {
+  display: flex;
+  align-items: center;
+  gap: var(--vdbus-space-1);
+}
+
+.vdbus-datatable--align-left .vdbus-datatable__th-content {
+  justify-content: flex-start;
+}
+
+.vdbus-datatable--align-right .vdbus-datatable__th-content {
+  justify-content: flex-end;
+}
+
+.vdbus-datatable--align-center .vdbus-datatable__th-content {
+  justify-content: center;
+}
+
+.vdbus-datatable__sort-icon {
+  display: flex;
+  align-items: center;
+  color: var(--vdbus-color-text-muted);
+}
+
+.vdbus-datatable__td {
+  color: var(--vdbus-color-text-primary);
+  border-bottom: var(--vdbus-border-width) solid var(--vdbus-color-border-subtle);
+  transition: background-color 100ms ease;
+}
+
+.vdbus-datatable tbody tr:hover .vdbus-datatable__td {
+  background-color: var(--vdbus-color-bg-subtle);
+}
+
+.vdbus-datatable__tr--selected .vdbus-datatable__td {
+  background-color: var(--vdbus-color-primary-subtle);
+}
+
+/* Density */
+.vdbus-datatable--compact .vdbus-datatable__th,
+.vdbus-datatable--compact .vdbus-datatable__td {
+  padding: var(--vdbus-space-2) var(--vdbus-space-3);
+  height: 32px;
+}
+
+.vdbus-datatable--comfortable .vdbus-datatable__th,
+.vdbus-datatable--comfortable .vdbus-datatable__td {
+  padding: var(--vdbus-space-3) var(--vdbus-space-4);
+  height: 44px;
+}
+
+.vdbus-datatable__th--checkbox,
+.vdbus-datatable__td--checkbox {
+  width: 36px;
+  text-align: center;
+  padding: 0 var(--vdbus-space-2) !important;
+}
+
+.vdbus-datatable--align-left {
+  text-align: left;
+}
+
+.vdbus-datatable--align-right {
+  text-align: right;
+}
+
+.vdbus-datatable--align-center {
+  text-align: center;
+}
+
+/* States */
+.vdbus-datatable__state-cell {
+  text-align: center;
+  padding: var(--vdbus-space-8) var(--vdbus-space-4);
+  color: var(--vdbus-color-text-secondary);
+}
+
+.vdbus-datatable__empty {
+  font-size: var(--vdbus-font-size-base);
+  color: var(--vdbus-color-text-muted);
+}
+
+.vdbus-datatable__error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--vdbus-space-3);
+  color: var(--vdbus-color-error-text);
+}
+
+/* Pagination */
+.vdbus-datatable__pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--vdbus-space-2) var(--vdbus-space-4);
+  border-top: var(--vdbus-border-width) solid var(--vdbus-color-border-subtle);
+  background-color: var(--vdbus-color-bg-surface);
+  font-size: var(--vdbus-font-size-xs);
+  color: var(--vdbus-color-text-secondary);
+}
+
+.vdbus-datatable__pagination-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--vdbus-space-2);
+}
+
+.vdbus-datatable__page-number {
+  padding: 0 var(--vdbus-space-2);
+}

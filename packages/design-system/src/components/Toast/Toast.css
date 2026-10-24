@@ -1,0 +1,79 @@
+.vdbus-toast-container {
+  position: fixed;
+  bottom: var(--vdbus-space-5);
+  right: var(--vdbus-space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--vdbus-space-2);
+  z-index: 2000;
+  max-width: 380px;
+}
+
+.vdbus-toast {
+  display: flex;
+  align-items: center;
+  gap: var(--vdbus-space-2);
+  padding: var(--vdbus-space-2) var(--vdbus-space-3);
+  border-width: var(--vdbus-border-width);
+  border-style: solid;
+  border-radius: var(--vdbus-radius-base);
+  font-family: var(--vdbus-font-family);
+  font-size: var(--vdbus-font-size-sm);
+  background-color: var(--vdbus-color-bg-surface);
+  box-shadow: var(--vdbus-shadow-md);
+  animation: vdbus-toast-slide 150ms ease-out;
+}
+
+@keyframes vdbus-toast-slide {
+  from {
+    transform: translateY(8px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.vdbus-toast--success {
+  border-color: var(--vdbus-color-success-border);
+  color: var(--vdbus-color-success-text);
+  background-color: var(--vdbus-color-success-bg);
+}
+
+.vdbus-toast--error {
+  border-color: var(--vdbus-color-error-border);
+  color: var(--vdbus-color-error-text);
+  background-color: var(--vdbus-color-error-bg);
+}
+
+.vdbus-toast--warning {
+  border-color: var(--vdbus-color-warning-border);
+  color: var(--vdbus-color-warning-text);
+  background-color: var(--vdbus-color-warning-bg);
+}
+
+.vdbus-toast--info {
+  border-color: var(--vdbus-color-info-border);
+  color: var(--vdbus-color-info-text);
+  background-color: var(--vdbus-color-info-bg);
+}
+
+.vdbus-toast__message {
+  flex: 1;
+}
+
+.vdbus-toast__close {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  opacity: 0.7;
+  display: flex;
+  align-items: center;
+  padding: 2px;
+}
+
+.vdbus-toast__close:hover {
+  opacity: 1;
+}

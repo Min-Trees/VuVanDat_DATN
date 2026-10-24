@@ -1,0 +1,86 @@
+.vdbus-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: var(--vdbus-color-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--vdbus-space-4);
+}
+
+.vdbus-modal {
+  background-color: var(--vdbus-color-bg-surface);
+  border: var(--vdbus-border-width) solid var(--vdbus-color-border-subtle);
+  border-radius: var(--vdbus-radius-md);
+  box-shadow: var(--vdbus-shadow-lg);
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 64px);
+  width: 100%;
+}
+
+.vdbus-modal--sm {
+  max-width: 420px;
+}
+
+.vdbus-modal--base {
+  max-width: 560px;
+}
+
+.vdbus-modal--lg {
+  max-width: 800px;
+}
+
+.vdbus-modal--dangerous {
+  border-top: 3px solid var(--vdbus-color-error-text);
+}
+
+.vdbus-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--vdbus-space-3) var(--vdbus-space-4);
+  border-bottom: var(--vdbus-border-width) solid var(--vdbus-color-border-subtle);
+}
+
+.vdbus-modal__title {
+  margin: 0;
+  font-size: var(--vdbus-font-size-md);
+  font-weight: var(--vdbus-font-weight-semibold);
+  color: var(--vdbus-color-text-primary);
+}
+
+.vdbus-modal__close-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--vdbus-color-text-muted);
+  padding: var(--vdbus-space-1);
+  display: flex;
+  align-items: center;
+  border-radius: var(--vdbus-radius-sm);
+}
+
+.vdbus-modal__close-btn:hover {
+  color: var(--vdbus-color-text-primary);
+  background-color: var(--vdbus-color-bg-subtle);
+}
+
+.vdbus-modal__body {
+  padding: var(--vdbus-space-4);
+  overflow-y: auto;
+  font-size: var(--vdbus-font-size-base);
+  color: var(--vdbus-color-text-secondary);
+  line-height: 1.5;
+}
+
+.vdbus-modal__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--vdbus-space-2);
+  padding: var(--vdbus-space-3) var(--vdbus-space-4);
+  border-top: var(--vdbus-border-width) solid var(--vdbus-color-border-subtle);
+  background-color: var(--vdbus-color-bg-subtle);
+}
