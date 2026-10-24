@@ -23,5 +23,14 @@ public interface IApplicationDbContext
     DbSet<PodRecord> PodRecords { get; }
     DbSet<Invoice> Invoices { get; }
 
+    // Phase 2 Telematics, Geofence, Tolls & Routing
+    DbSet<Device> Devices { get; }
+    DbSet<TelemetryRecord> TelemetryRecords { get; }
+    DbSet<Geofence> Geofences { get; }
+    DbSet<DetentionRecord> DetentionRecords { get; }
+    DbSet<TollTransaction> TollTransactions { get; }
+    DbSet<RouteStopPlan> RouteStopPlans { get; }
+    DbSet<AxleLoadCalculation> AxleLoadCalculations { get; }
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

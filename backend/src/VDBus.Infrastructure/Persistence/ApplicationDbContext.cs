@@ -33,6 +33,15 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<PodRecord> PodRecords => Set<PodRecord>();
     public DbSet<Invoice> Invoices => Set<Invoice>();
 
+    // Phase 2 Entities
+    public DbSet<Device> Devices => Set<Device>();
+    public DbSet<TelemetryRecord> TelemetryRecords => Set<TelemetryRecord>();
+    public DbSet<Geofence> Geofences => Set<Geofence>();
+    public DbSet<DetentionRecord> DetentionRecords => Set<DetentionRecord>();
+    public DbSet<TollTransaction> TollTransactions => Set<TollTransaction>();
+    public DbSet<RouteStopPlan> RouteStopPlans => Set<RouteStopPlan>();
+    public DbSet<AxleLoadCalculation> AxleLoadCalculations => Set<AxleLoadCalculation>();
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.AddInterceptors(new AuditLogInterceptor(_currentTenantService));
@@ -226,6 +235,71 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
                 .WithMany(c => c.Invoices)
                 .HasForeignKey(inv => inv.CustomerId)
                 .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // Phase 2 Entity Configurations with Tenant Isolation
+        modelBuilder.Entity<Device>(b =>
+        {
+            b.HasKey(d => d.Id);
+            b.Property(d => d.SerialNumber).IsRequired().HasMaxLength(100);
+            b.HasIndex(d => new { d.TenantId, d.SerialNumber }).IsUnique();
+            b.HasQueryFilter(d => !_currentTenantService.TenantId.HasValue || d.TenantId == _currentTenantService.TenantId.Value);
+        });
+
+        modelBuilder.Entity<TelemetryRecord>(b =>
+        {
+            b.HasKey(t => t.Id);
+            b.HasIndex(t => new { t.TenantId, t.VehicleId, t.RecordedAtUtc });
+            b.HasQueryFilter(t => !_currentTenantService.TenantId.HasValue || t.TenantId == _currentTenantService.TenantId.Value);
+        });
+
+        modelBuilder.Entity<Geofence>(b =>
+        {
+            b.HasKey(g => g.Id);
+            b.Property(g => g.Name).IsRequired().HasMaxLength(200);
+            b.Property(g => g.DetentionRatePerHourVnd).HasPrecision(18, 2);
+            b.HasIndex(g => new { g.TenantId, g.Name });
+            b.HasQueryFilter(g => !_currentTenantService.TenantId.HasValue || g.TenantId == _currentTenantService.TenantId.Value);
+        });
+
+        modelBuilder.Entity<DetentionRecord>(b =>
+        {
+            b.HasKey(dr => dr.Id);
+            b.Property(dr => dr.DetentionFeeVnd).HasPrecision(18, 2);
+            b.HasIndex(dr => new { dr.TenantId, dr.GeofenceId, dr.VehicleId });
+            b.HasQueryFilter(dr => !_currentTenantService.TenantId.HasValue || dr.TenantId == _currentTenantService.TenantId.Value);
+        });
+
+        modelBuilder.Entity<TollTransaction>(b =>
+        {
+            b.HasKey(tt => tt.Id);
+            b.Property(tt => tt.TransactionCode).IsRequired().HasMaxLength(100);
+            b.Property(tt => tt.StationName).IsRequired().HasMaxLength(200);
+            b.Property(tt => tt.AmountVnd).HasPrecision(18, 2);
+            b.HasIndex(tt => new { tt.TenantId, tt.TransactionCode }).IsUnique();
+            b.HasQueryFilter(tt => !_currentTenantService.TenantId.HasValue || tt.TenantId == _currentTenantService.TenantId.Value);
+        });
+
+        modelBuilder.Entity<RouteStopPlan>(b =>
+        {
+            b.HasKey(rsp => rsp.Id);
+            b.Property(rsp => rsp.DistanceKmFromPrevious).HasPrecision(18, 2);
+            b.Property(rsp => rsp.EstimatedFuelLitre).HasPrecision(18, 2);
+            b.HasIndex(rsp => new { rsp.TenantId, rsp.TripId, rsp.SequenceOrder });
+            b.HasQueryFilter(rsp => !_currentTenantService.TenantId.HasValue || rsp.TenantId == _currentTenantService.TenantId.Value);
+        });
+
+        modelBuilder.Entity<AxleLoadCalculation>(b =>
+        {
+            b.HasKey(alc => alc.Id);
+            b.Property(alc => alc.TotalCargoWeightKg).HasPrecision(18, 2);
+            b.Property(alc => alc.FrontAxleLoadKg).HasPrecision(18, 2);
+            b.Property(alc => alc.RearAxleLoadKg).HasPrecision(18, 2);
+            b.Property(alc => alc.FrontAxleLimitKg).HasPrecision(18, 2);
+            b.Property(alc => alc.RearAxleLimitKg).HasPrecision(18, 2);
+            b.Property(alc => alc.MarginOfErrorPercentage).HasPrecision(5, 2);
+            b.HasIndex(alc => new { alc.TenantId, alc.VehicleId });
+            b.HasQueryFilter(alc => !_currentTenantService.TenantId.HasValue || alc.TenantId == _currentTenantService.TenantId.Value);
         });
     }
 }
