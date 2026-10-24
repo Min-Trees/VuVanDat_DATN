@@ -1,0 +1,57 @@
+.vdbus-temperature-gauge {
+  padding: var(--vdbus-space-3);
+  background-color: var(--vdbus-surface-primary);
+  border: 1px solid var(--vdbus-border-subtle);
+  border-radius: var(--vdbus-radius-base);
+  display: flex;
+  flex-direction: column;
+  gap: var(--vdbus-space-2);
+}
+
+.vdbus-temperature-gauge--normal {
+  border-left: 3px solid var(--vdbus-color-success-600);
+}
+
+.vdbus-temperature-gauge--warning {
+  border-left: 3px solid var(--vdbus-color-warning-600);
+}
+
+.vdbus-temperature-gauge--critical {
+  border-left: 3px solid var(--vdbus-color-error-600);
+}
+
+.vdbus-temperature-gauge__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.vdbus-temperature-gauge__label {
+  font-size: var(--vdbus-font-size-xs);
+  font-weight: 500;
+  color: var(--vdbus-text-secondary);
+}
+
+.vdbus-temperature-gauge__value-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--vdbus-space-2);
+}
+
+.vdbus-temperature-gauge__temp {
+  font-size: var(--vdbus-font-size-2xl);
+  font-weight: 700;
+  font-family: var(--vdbus-font-mono);
+  color: var(--vdbus-text-primary);
+}
+
+.vdbus-temperature-gauge__unit {
+  font-size: var(--vdbus-font-size-sm);
+  font-weight: 500;
+  color: var(--vdbus-text-muted);
+}
+
+.vdbus-temperature-gauge__range {
+  font-size: var(--vdbus-font-size-xs);
+  color: var(--vdbus-text-muted);
+}

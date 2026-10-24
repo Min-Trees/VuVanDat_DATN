@@ -19,3 +19,6 @@ export * from './components/MapPanel/MapPanel';
 export * from './components/Timeline/Timeline';
 export * from './components/ScoreMeter/ScoreMeter';
 export * from './components/SplitPane/SplitPane';
+export * from './components/TemperatureGauge/TemperatureGauge';
+export * from './components/AxleSchema/AxleSchema';
+export * from './components/GeofenceBadge/GeofenceBadge';

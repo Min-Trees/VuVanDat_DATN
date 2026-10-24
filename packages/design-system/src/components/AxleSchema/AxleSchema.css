@@ -1,0 +1,94 @@
+.vdbus-axle-schema {
+  padding: var(--vdbus-space-4);
+  background-color: var(--vdbus-surface-primary);
+  border: 1px solid var(--vdbus-border-subtle);
+  border-radius: var(--vdbus-radius-base);
+  display: flex;
+  flex-direction: column;
+  gap: var(--vdbus-space-3);
+}
+
+.vdbus-axle-schema__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.vdbus-axle-schema__title {
+  font-size: var(--vdbus-font-size-sm);
+  font-weight: 600;
+  color: var(--vdbus-text-primary);
+}
+
+.vdbus-axle-schema__diagram {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vdbus-space-3);
+  padding: var(--vdbus-space-3);
+  background-color: var(--vdbus-surface-secondary);
+  border-radius: var(--vdbus-radius-base);
+  position: relative;
+}
+
+.vdbus-axle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vdbus-space-2);
+}
+
+.vdbus-axle-bar {
+  flex: 1;
+  height: 6px;
+  background-color: var(--vdbus-border-default);
+  border-radius: 3px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vdbus-axle-load-badge {
+  position: absolute;
+  top: -18px;
+  font-size: 11px;
+  font-family: var(--vdbus-font-mono);
+  font-weight: 600;
+  color: var(--vdbus-text-primary);
+}
+
+.vdbus-tire {
+  padding: 4px 6px;
+  background-color: var(--vdbus-surface-primary);
+  border: 1px solid var(--vdbus-border-default);
+  border-radius: 3px;
+  font-size: 11px;
+  font-family: var(--vdbus-font-mono);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 65px;
+}
+
+.vdbus-tire--normal {
+  border-color: var(--vdbus-color-success-600);
+}
+
+.vdbus-tire--warning {
+  border-color: var(--vdbus-color-warning-600);
+  background-color: var(--vdbus-surface-secondary);
+}
+
+.vdbus-tire--critical {
+  border-color: var(--vdbus-color-error-600);
+  background-color: var(--vdbus-surface-secondary);
+}
+
+.vdbus-tire__pressure {
+  font-weight: 600;
+}
+
+.vdbus-tire__temp {
+  font-size: 10px;
+  color: var(--vdbus-text-muted);
+}
