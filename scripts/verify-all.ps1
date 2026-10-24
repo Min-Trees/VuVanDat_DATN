@@ -35,7 +35,7 @@ npm run build
 if ($LASTEXITCODE -ne 0) { throw "Web production build failed!" }
 
 # 6. Mobile Driver App
-Write-Host "`n>>> [7/7] Mobile: Flutter analyze & unit tests..." -ForegroundColor Yellow
+Write-Host "`n>>> [7/8] Mobile: Flutter analyze & unit tests..." -ForegroundColor Yellow
 Push-Location mobile
 try {
     flutter analyze
@@ -45,6 +45,11 @@ try {
 } finally {
     Pop-Location
 }
+
+# 7. Phase 1 Seed Script Validation
+Write-Host "`n>>> [8/8] Scripts: Phase 1 Seed Data Validation..." -ForegroundColor Yellow
+& (Join-Path $PSScriptRoot "seed-phase1.ps1")
+if ($LASTEXITCODE -ne 0) { throw "Seed script validation failed!" }
 
 Write-Host "`n==========================================================" -ForegroundColor Green
 Write-Host " [VDBUS QUALITY GATE] TAT CA KIEM TRA XANH 100%! SAN SANG!" -ForegroundColor Green
