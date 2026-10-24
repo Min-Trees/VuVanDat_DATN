@@ -5,6 +5,7 @@ import { I18nProvider } from './i18n/i18nContext';
 import { LoginForm } from './auth/LoginForm';
 import { AppLayout } from './layout/AppLayout';
 import { DashboardPage } from './pages/DashboardPage';
+import { OrdersPage } from './pages/OrdersPage';
 import { RegulationsPage } from './pages/RegulationsPage';
 import { VetcTollPage } from './pages/VetcTollPage';
 import { CustomersPage } from './pages/CustomersPage';
@@ -30,6 +31,7 @@ const MainContent = () => {
   return (
     <AppLayout currentTab={currentTab} onTabChange={setCurrentTab}>
       {currentTab === 'dashboard' && <DashboardPage />}
+      {currentTab === 'orders' && <OrdersPage />}
       {currentTab === 'customers' && <CustomersPage />}
       {currentTab === 'vehicles' && <VehiclesPage />}
       {currentTab === 'drivers' && <DriversPage />}
