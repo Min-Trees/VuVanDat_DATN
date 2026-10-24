@@ -41,6 +41,9 @@ builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IDispatchRecommendationService, DispatchRecommendationService>();
 builder.Services.AddScoped<IPodService, PodService>();
+builder.Services.AddScoped<ITelematicsService, TelematicsService>();
+builder.Services.AddScoped<ITelematicsNotificationService, VDBus.Api.Services.SignalRTelematicsNotificationService>();
+builder.Services.AddSignalR();
 
 // 3. Mock vs Real Providers Configuration
 var useMockVetc = builder.Configuration.GetValue<bool>("Providers:Vetc:UseMock", true);
@@ -161,6 +164,7 @@ app.UseMiddleware<TenantMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<VDBus.Api.Hubs.TelematicsHub>("/hubs/telematics");
 
 app.Run();
 
