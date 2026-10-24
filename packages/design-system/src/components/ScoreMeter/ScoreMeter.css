@@ -1,0 +1,59 @@
+.vdbus-scoremeter {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vdbus-space-1);
+  width: 100%;
+}
+
+.vdbus-scoremeter__info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vdbus-space-2);
+}
+
+.vdbus-scoremeter__label {
+  font-size: var(--vdbus-font-size-xs);
+  color: var(--vdbus-color-text-secondary);
+}
+
+.vdbus-scoremeter__value {
+  font-size: var(--vdbus-font-size-xs);
+  font-weight: var(--vdbus-font-weight-semibold);
+}
+
+.vdbus-scoremeter__track {
+  height: 4px;
+  background-color: var(--vdbus-color-bg-hover);
+  border-radius: var(--vdbus-radius-sm);
+  overflow: hidden;
+  width: 100%;
+}
+
+.vdbus-scoremeter__fill {
+  height: 100%;
+  border-radius: var(--vdbus-radius-sm);
+  transition: width 300ms ease;
+}
+
+/* Variants */
+.vdbus-scoremeter--high .vdbus-scoremeter__value {
+  color: var(--vdbus-color-success-text);
+}
+.vdbus-scoremeter--high .vdbus-scoremeter__fill {
+  background-color: var(--vdbus-color-success-text);
+}
+
+.vdbus-scoremeter--medium .vdbus-scoremeter__value {
+  color: var(--vdbus-color-warning-text);
+}
+.vdbus-scoremeter--medium .vdbus-scoremeter__fill {
+  background-color: var(--vdbus-color-warning-text);
+}
+
+.vdbus-scoremeter--low .vdbus-scoremeter__value {
+  color: var(--vdbus-color-error-text);
+}
+.vdbus-scoremeter--low .vdbus-scoremeter__fill {
+  background-color: var(--vdbus-color-error-text);
+}

@@ -16,3 +16,6 @@ export * from './components/EmptyState/EmptyState';
 export * from './components/Skeleton/Skeleton';
 export * from './components/PageHeader/PageHeader';
 export * from './components/MapPanel/MapPanel';
+export * from './components/Timeline/Timeline';
+export * from './components/ScoreMeter/ScoreMeter';
+export * from './components/SplitPane/SplitPane';

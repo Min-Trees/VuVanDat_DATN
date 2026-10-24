@@ -1,0 +1,33 @@
+.vdbus-splitpane {
+  display: flex;
+  width: 100%;
+  height: calc(100vh - 120px);
+  border: var(--vdbus-border-width) solid var(--vdbus-color-border-subtle);
+  border-radius: var(--vdbus-radius-md);
+  background-color: var(--vdbus-color-bg-surface);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.vdbus-splitpane__left {
+  height: 100%;
+  overflow-y: auto;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.vdbus-splitpane__divider {
+  width: 1px;
+  background-color: var(--vdbus-color-border-subtle);
+  flex-shrink: 0;
+}
+
+.vdbus-splitpane__right {
+  flex: 1;
+  height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--vdbus-color-bg-canvas);
+}
