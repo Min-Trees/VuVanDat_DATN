@@ -6,6 +6,7 @@ import { LoginForm } from './auth/LoginForm';
 import { AppLayout } from './layout/AppLayout';
 import { DashboardPage } from './pages/DashboardPage';
 import { OrdersPage } from './pages/OrdersPage';
+import { DispatchConsolePage } from './pages/DispatchConsolePage';
 import { RegulationsPage } from './pages/RegulationsPage';
 import { VetcTollPage } from './pages/VetcTollPage';
 import { CustomersPage } from './pages/CustomersPage';
@@ -32,6 +33,7 @@ const MainContent = () => {
     <AppLayout currentTab={currentTab} onTabChange={setCurrentTab}>
       {currentTab === 'dashboard' && <DashboardPage />}
       {currentTab === 'orders' && <OrdersPage />}
+      {currentTab === 'dispatch' && <DispatchConsolePage />}
       {currentTab === 'customers' && <CustomersPage />}
       {currentTab === 'vehicles' && <VehiclesPage />}
       {currentTab === 'drivers' && <DriversPage />}
