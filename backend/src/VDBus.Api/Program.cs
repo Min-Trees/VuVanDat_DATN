@@ -39,6 +39,8 @@ builder.Services.AddScoped<ICurrentTenantService, CurrentTenantService>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IDispatchRecommendationService, DispatchRecommendationService>();
+builder.Services.AddScoped<IPodService, PodService>();
 
 // 3. Mock vs Real Providers Configuration
 var useMockVetc = builder.Configuration.GetValue<bool>("Providers:Vetc:UseMock", true);
