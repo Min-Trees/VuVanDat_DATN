@@ -7,6 +7,7 @@ import { AppLayout } from './layout/AppLayout';
 import { DashboardPage } from './pages/DashboardPage';
 import { OrdersPage } from './pages/OrdersPage';
 import { DispatchConsolePage } from './pages/DispatchConsolePage';
+import { InvoicesPage } from './pages/InvoicesPage';
 import { RegulationsPage } from './pages/RegulationsPage';
 import { VetcTollPage } from './pages/VetcTollPage';
 import { CustomersPage } from './pages/CustomersPage';
@@ -37,6 +38,7 @@ const MainContent = () => {
       {currentTab === 'customers' && <CustomersPage />}
       {currentTab === 'vehicles' && <VehiclesPage />}
       {currentTab === 'drivers' && <DriversPage />}
+      {currentTab === 'invoices' && <InvoicesPage />}
       {currentTab === 'regulations' && <RegulationsPage />}
       {currentTab === 'vetc' && <VetcTollPage />}
     </AppLayout>
