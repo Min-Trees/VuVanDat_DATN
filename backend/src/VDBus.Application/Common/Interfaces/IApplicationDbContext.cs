@@ -12,5 +12,16 @@ public interface IApplicationDbContext
     DbSet<AuditLog> AuditLogs { get; }
     DbSet<RegulationRule> RegulationRules { get; }
 
+    // Logistics Core Entities
+    DbSet<Customer> Customers { get; }
+    DbSet<Vehicle> Vehicles { get; }
+    DbSet<Driver> Drivers { get; }
+    DbSet<Order> Orders { get; }
+    DbSet<OrderItem> OrderItems { get; }
+    DbSet<Trip> Trips { get; }
+    DbSet<Stop> Stops { get; }
+    DbSet<PodRecord> PodRecords { get; }
+    DbSet<Invoice> Invoices { get; }
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
