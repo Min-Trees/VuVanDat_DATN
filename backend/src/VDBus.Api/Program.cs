@@ -45,6 +45,7 @@ builder.Services.AddScoped<IHosService, HosService>();
 builder.Services.AddScoped<IGeofenceService, GeofenceService>();
 builder.Services.AddScoped<ITollReconciliationService, TollReconciliationService>();
 builder.Services.AddScoped<IAxleLoadService, AxleLoadService>();
+builder.Services.AddScoped<IRoutingService, RoutingService>();
 builder.Services.AddScoped<ITelematicsService, TelematicsService>();
 builder.Services.AddScoped<ITelematicsNotificationService, VDBus.Api.Services.SignalRTelematicsNotificationService>();
 builder.Services.AddSignalR();
