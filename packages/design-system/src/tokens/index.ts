@@ -1,0 +1,45 @@
+import './tokens.css';
+
+export const tokens = {
+  fontSizes: {
+    xs: 'var(--vdbus-font-size-xs)',
+    sm: 'var(--vdbus-font-size-sm)',
+    base: 'var(--vdbus-font-size-base)',
+    md: 'var(--vdbus-font-size-md)',
+    lg: 'var(--vdbus-font-size-lg)',
+    xl: 'var(--vdbus-font-size-xl)',
+  },
+  spacing: {
+    1: 'var(--vdbus-space-1)',
+    2: 'var(--vdbus-space-2)',
+    3: 'var(--vdbus-space-3)',
+    4: 'var(--vdbus-space-4)',
+    5: 'var(--vdbus-space-5)',
+    6: 'var(--vdbus-space-6)',
+    8: 'var(--vdbus-space-8)',
+    10: 'var(--vdbus-space-10)',
+    12: 'var(--vdbus-space-12)',
+  },
+  radius: {
+    sm: 'var(--vdbus-radius-sm)',
+    base: 'var(--vdbus-radius-base)',
+    md: 'var(--vdbus-radius-md)',
+    avatar: 'var(--vdbus-radius-avatar)',
+  },
+  colors: {
+    canvas: 'var(--vdbus-color-bg-canvas)',
+    surface: 'var(--vdbus-color-bg-surface)',
+    subtle: 'var(--vdbus-color-bg-subtle)',
+    textPrimary: 'var(--vdbus-color-text-primary)',
+    textSecondary: 'var(--vdbus-color-text-secondary)',
+    textMuted: 'var(--vdbus-color-text-muted)',
+    borderSubtle: 'var(--vdbus-color-border-subtle)',
+    borderDefault: 'var(--vdbus-color-border-default)',
+    primary: 'var(--vdbus-color-primary)',
+    success: 'var(--vdbus-color-success-text)',
+    warning: 'var(--vdbus-color-warning-text)',
+    error: 'var(--vdbus-color-error-text)',
+    info: 'var(--vdbus-color-info-text)',
+    mock: 'var(--vdbus-color-mock-text)',
+  },
+} as const;

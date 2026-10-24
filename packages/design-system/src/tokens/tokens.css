@@ -1,0 +1,158 @@
+:root {
+  /* Font Family & Metrics */
+  --vdbus-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --vdbus-font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  /* Font Sizes */
+  --vdbus-font-size-xs: 12px;
+  --vdbus-font-size-sm: 13px;
+  --vdbus-font-size-base: 14px;
+  --vdbus-font-size-md: 16px;
+  --vdbus-font-size-lg: 20px;
+  --vdbus-font-size-xl: 24px;
+
+  /* Font Weights */
+  --vdbus-font-weight-regular: 400;
+  --vdbus-font-weight-medium: 500;
+  --vdbus-font-weight-semibold: 600;
+
+  /* Spacing (4px grid) */
+  --vdbus-space-1: 4px;
+  --vdbus-space-2: 8px;
+  --vdbus-space-3: 12px;
+  --vdbus-space-4: 16px;
+  --vdbus-space-5: 20px;
+  --vdbus-space-6: 24px;
+  --vdbus-space-8: 32px;
+  --vdbus-space-10: 40px;
+  --vdbus-space-12: 48px;
+
+  /* Border & Radius (Enterprise strict: 2-4px, 1px border) */
+  --vdbus-border-width: 1px;
+  --vdbus-radius-sm: 2px;
+  --vdbus-radius-base: 3px;
+  --vdbus-radius-md: 4px;
+  --vdbus-radius-avatar: 9999px;
+
+  /* Focus ring */
+  --vdbus-focus-ring: 0 0 0 2px var(--vdbus-color-primary-focus);
+
+  /* Overlays and Shadows */
+  --vdbus-color-overlay: rgba(15, 23, 42, 0.45);
+  --vdbus-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --vdbus-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --vdbus-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --vdbus-shadow-drawer: -4px 0 16px rgba(0, 0, 0, 0.1);
+
+  /* Light Theme Colors (Default) */
+  --vdbus-color-bg-canvas: #f8fafc;
+  --vdbus-color-bg-surface: #ffffff;
+  --vdbus-color-bg-subtle: #f1f5f9;
+  --vdbus-color-bg-hover: #e2e8f0;
+
+  --vdbus-color-text-primary: #0f172a;
+  --vdbus-color-text-secondary: #475569;
+  --vdbus-color-text-muted: #64748b;
+  --vdbus-color-text-inverse: #ffffff;
+
+  --vdbus-color-border-subtle: #e2e8f0;
+  --vdbus-color-border-default: #cbd5e1;
+  --vdbus-color-border-strong: #94a3b8;
+
+  /* Single Brand Primary: Deep Blue (Linear/Stripe style) */
+  --vdbus-color-primary: #1e3a8a;
+  --vdbus-color-primary-hover: #172554;
+  --vdbus-color-primary-active: #0f172a;
+  --vdbus-color-primary-subtle: #eff6ff;
+  --vdbus-color-primary-border: #bfdbfe;
+  --vdbus-color-primary-focus: rgba(30, 58, 138, 0.35);
+
+  /* Semantic Status Colors (Text badge tint, no bright neon) */
+  /* Success */
+  --vdbus-color-success-text: #14532d;
+  --vdbus-color-success-bg: #f0fdf4;
+  --vdbus-color-success-border: #bbf7d0;
+
+  /* Warning */
+  --vdbus-color-warning-text: #78350f;
+  --vdbus-color-warning-bg: #fffbeb;
+  --vdbus-color-warning-border: #fde68a;
+
+  /* Error / Danger */
+  --vdbus-color-error-text: #7f1d1d;
+  --vdbus-color-error-bg: #fef2f2;
+  --vdbus-color-error-border: #fecaca;
+
+  /* Info */
+  --vdbus-color-info-text: #1e3a8a;
+  --vdbus-color-info-bg: #eff6ff;
+  --vdbus-color-info-border: #bfdbfe;
+
+  /* Mock / Simulation Label Badge (Orange-neutral tone) */
+  --vdbus-color-mock-text: #854d0e;
+  --vdbus-color-mock-bg: #fefce8;
+  --vdbus-color-mock-border: #fef08a;
+}
+
+[data-theme="dark"] {
+  --vdbus-color-overlay: rgba(0, 0, 0, 0.7);
+  --vdbus-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --vdbus-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --vdbus-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  --vdbus-shadow-drawer: -4px 0 16px rgba(0, 0, 0, 0.5);
+
+  --vdbus-color-bg-canvas: #090d16;
+  --vdbus-color-bg-surface: #111827;
+  --vdbus-color-bg-subtle: #1f2937;
+  --vdbus-color-bg-hover: #374151;
+
+  --vdbus-color-text-primary: #f9fafb;
+  --vdbus-color-text-secondary: #9ca3af;
+  --vdbus-color-text-muted: #6b7280;
+  --vdbus-color-text-inverse: #111827;
+
+  --vdbus-color-border-subtle: #1f2937;
+  --vdbus-color-border-default: #374151;
+  --vdbus-color-border-strong: #4b5563;
+
+  --vdbus-color-primary: #3b82f6;
+  --vdbus-color-primary-hover: #60a5fa;
+  --vdbus-color-primary-active: #93c5fd;
+  --vdbus-color-primary-subtle: #1e293b;
+  --vdbus-color-primary-border: #1d4ed8;
+  --vdbus-color-primary-focus: rgba(59, 130, 246, 0.4);
+
+  --vdbus-color-success-text: #86efac;
+  --vdbus-color-success-bg: #052e16;
+  --vdbus-color-success-border: #14532d;
+
+  --vdbus-color-warning-text: #fde047;
+  --vdbus-color-warning-bg: #451a03;
+  --vdbus-color-warning-border: #78350f;
+
+  --vdbus-color-error-text: #fca5a5;
+  --vdbus-color-error-bg: #450a0a;
+  --vdbus-color-error-border: #7f1d1d;
+
+  --vdbus-color-info-text: #93c5fd;
+  --vdbus-color-info-bg: #172554;
+  --vdbus-color-info-border: #1e3a8a;
+
+  --vdbus-color-mock-text: #fef08a;
+  --vdbus-color-mock-bg: #422006;
+  --vdbus-color-mock-border: #713f12;
+}
+
+body {
+  margin: 0;
+  font-family: var(--vdbus-font-family);
+  font-size: var(--vdbus-font-size-base);
+  color: var(--vdbus-color-text-primary);
+  background-color: var(--vdbus-color-bg-canvas);
+  -webkit-font-smoothing: antialiased;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
