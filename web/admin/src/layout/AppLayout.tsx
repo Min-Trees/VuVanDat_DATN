@@ -11,6 +11,9 @@ import {
   IconTruck,
   IconUser,
   IconFileText,
+  IconMapPin,
+  IconRadio,
+  IconClock,
 } from '@vdbus/design-system';
 import { useAuth } from '../auth/AuthContext';
 import { useI18n } from '../i18n/i18nContext';
@@ -37,6 +40,10 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ currentTab, onTabChange, c
     { id: 'dashboard', label: t('nav.dashboard'), icon: <IconSliders size={16} /> },
     { id: 'orders', label: t('nav.orders'), icon: <IconFileText size={16} /> },
     { id: 'dispatch', label: t('nav.dispatch'), icon: <IconSliders size={16} /> },
+    { id: 'fleet-map', label: t('nav.fleetMap'), icon: <IconMapPin size={16} /> },
+    { id: 'telematics', label: t('nav.telematics'), icon: <IconRadio size={16} /> },
+    { id: 'hos-detention', label: t('nav.hosDetention'), icon: <IconClock size={16} /> },
+    { id: 'axle-load', label: t('nav.axleLoad'), icon: <IconTruck size={16} /> },
     { id: 'customers', label: t('nav.customers'), icon: <IconBuilding size={16} /> },
     { id: 'vehicles', label: t('nav.vehicles'), icon: <IconTruck size={16} /> },
     { id: 'drivers', label: t('nav.drivers'), icon: <IconUser size={16} /> },

@@ -11,6 +11,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@microsoft/signalr": "^10.0.11",
     "@vdbus/design-system": "*",
     "axios": "^1.7.9",
     "lucide-react": "^1.16.0",

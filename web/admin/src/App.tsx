@@ -13,6 +13,7 @@ import { VetcTollPage } from './pages/VetcTollPage';
 import { CustomersPage } from './pages/CustomersPage';
 import { VehiclesPage } from './pages/VehiclesPage';
 import { DriversPage } from './pages/DriversPage';
+import { FleetMapPage } from './pages/FleetMapPage';
 
 const MainContent = () => {
   const { isAuthenticated, isLoading } = useAuth();
@@ -35,6 +36,7 @@ const MainContent = () => {
       {currentTab === 'dashboard' && <DashboardPage />}
       {currentTab === 'orders' && <OrdersPage />}
       {currentTab === 'dispatch' && <DispatchConsolePage />}
+      {currentTab === 'fleet-map' && <FleetMapPage />}
       {currentTab === 'customers' && <CustomersPage />}
       {currentTab === 'vehicles' && <VehiclesPage />}
       {currentTab === 'drivers' && <DriversPage />}
