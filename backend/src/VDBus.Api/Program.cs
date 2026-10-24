@@ -42,6 +42,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IDispatchRecommendationService, DispatchRecommendationService>();
 builder.Services.AddScoped<IPodService, PodService>();
 builder.Services.AddScoped<IHosService, HosService>();
+builder.Services.AddScoped<IGeofenceService, GeofenceService>();
 builder.Services.AddScoped<ITelematicsService, TelematicsService>();
 builder.Services.AddScoped<ITelematicsNotificationService, VDBus.Api.Services.SignalRTelematicsNotificationService>();
 builder.Services.AddSignalR();
