@@ -1,0 +1,88 @@
+name: VDBus Platform CI
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  backend:
+    name: Backend .NET 8 (LTS)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET 8 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore backend/VDBus.slnx
+
+      - name: Build solution
+        run: dotnet build backend/VDBus.slnx --no-restore --configuration Release
+
+      - name: Run unit & integration tests
+        run: dotnet test backend/VDBus.slnx --no-build --configuration Release --verbosity normal
+
+  web:
+    name: Web & Design System
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Enterprise Linter (No Emoji, No Hardcoded Colors)
+        run: npm run lint
+
+      - name: TypeScript Typecheck
+        run: npm run typecheck
+
+      - name: Run unit tests
+        run: npm run test
+
+      - name: Build production bundles
+        run: npm run build
+
+  mobile:
+    name: Mobile Driver App (Flutter)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.x'
+          channel: 'stable'
+
+      - name: Install dependencies
+        run: |
+          cd mobile
+          flutter pub get
+
+      - name: Flutter analyze
+        run: |
+          cd mobile
+          flutter analyze
+
+      - name: Flutter test
+        run: |
+          cd mobile
+          flutter test
