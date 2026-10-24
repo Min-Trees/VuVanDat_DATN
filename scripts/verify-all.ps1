@@ -46,10 +46,14 @@ try {
     Pop-Location
 }
 
-# 7. Phase 1 Seed Script Validation
-Write-Host "`n>>> [8/8] Scripts: Phase 1 Seed Data Validation..." -ForegroundColor Yellow
+# 7. Phase 1 & 2 Seed Script Validation
+Write-Host "`n>>> [8/9] Scripts: Phase 1 Seed Data Validation..." -ForegroundColor Yellow
 & (Join-Path $PSScriptRoot "seed-phase1.ps1")
-if ($LASTEXITCODE -ne 0) { throw "Seed script validation failed!" }
+if ($LASTEXITCODE -ne 0) { throw "Phase 1 Seed script validation failed!" }
+
+Write-Host "`n>>> [9/9] Scripts: Phase 2 Seed Data Validation..." -ForegroundColor Yellow
+& (Join-Path $PSScriptRoot "seed-phase2.ps1")
+if ($LASTEXITCODE -ne 0) { throw "Phase 2 Seed script validation failed!" }
 
 Write-Host "`n==========================================================" -ForegroundColor Green
 Write-Host " [VDBUS QUALITY GATE] TAT CA KIEM TRA XANH 100%! SAN SANG!" -ForegroundColor Green
