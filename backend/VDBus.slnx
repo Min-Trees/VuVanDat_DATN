@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/VDBus.Api/VDBus.Api.csproj" />
+    <Project Path="src/VDBus.Application/VDBus.Application.csproj" />
+    <Project Path="src/VDBus.Domain/VDBus.Domain.csproj" />
+    <Project Path="src/VDBus.Infrastructure/VDBus.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/VDBus.Application.Tests/VDBus.Application.Tests.csproj" />
+    <Project Path="tests/VDBus.Domain.Tests/VDBus.Domain.Tests.csproj" />
+    <Project Path="tests/VDBus.Infrastructure.Tests/VDBus.Infrastructure.Tests.csproj" />
+  </Folder>
+</Solution>
