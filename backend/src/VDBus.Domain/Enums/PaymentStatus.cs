@@ -1,0 +1,9 @@
+namespace VDBus.Domain.Enums;
+
+public enum PaymentStatus
+{
+    Pending = 1,
+    PartiallyPaid = 2,
+    Paid = 3,
+    Overdue = 4
+}
