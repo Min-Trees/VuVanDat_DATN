@@ -1,0 +1,48 @@
+# Environment & Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+
+# .NET / C#
+bin/
+obj/
+TestResults/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+.vs/
+.rider/
+
+# Node / Web / Design System
+node_modules/
+dist/
+dist-ssr/
+*.local
+.npm
+.vite
+coverage/
+storybook-static/
+.eslintcache
+
+# Flutter / Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+/mobile/build/
+/mobile/.dart_tool/
+ephemeral/
+*.iml
+
+# Operating Systems & Tools
+.DS_Store
+Thumbs.db
+*.log
+tmp/
+temp/

@@ -1,0 +1,20 @@
+{
+  "name": "vdbus-logistics-platform",
+  "version": "0.1.0",
+  "private": true,
+  "description": "VDBus Logistics Platform Monorepo - Enterprise B2B SaaS TMS",
+  "workspaces": [
+    "packages/*",
+    "web/*"
+  ],
+  "scripts": {
+    "lint": "npm run lint --workspaces --if-present && node scripts/lint-enterprise-rules.cjs",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present",
+    "storybook": "npm run storybook --workspace=@vdbus/design-system"
+  },
+  "devDependencies": {
+    "prettier": "^3.5.2"
+  }
+}
