@@ -14,6 +14,7 @@ import { CustomersPage } from './pages/CustomersPage';
 import { VehiclesPage } from './pages/VehiclesPage';
 import { DriversPage } from './pages/DriversPage';
 import { FleetMapPage } from './pages/FleetMapPage';
+import { ColdChainTpmsPage } from './pages/ColdChainTpmsPage';
 
 const MainContent = () => {
   const { isAuthenticated, isLoading } = useAuth();
@@ -37,6 +38,7 @@ const MainContent = () => {
       {currentTab === 'orders' && <OrdersPage />}
       {currentTab === 'dispatch' && <DispatchConsolePage />}
       {currentTab === 'fleet-map' && <FleetMapPage />}
+      {currentTab === 'telematics' && <ColdChainTpmsPage />}
       {currentTab === 'customers' && <CustomersPage />}
       {currentTab === 'vehicles' && <VehiclesPage />}
       {currentTab === 'drivers' && <DriversPage />}
