@@ -15,6 +15,7 @@ import { VehiclesPage } from './pages/VehiclesPage';
 import { DriversPage } from './pages/DriversPage';
 import { FleetMapPage } from './pages/FleetMapPage';
 import { ColdChainTpmsPage } from './pages/ColdChainTpmsPage';
+import { HosDetentionPage } from './pages/HosDetentionPage';
 
 const MainContent = () => {
   const { isAuthenticated, isLoading } = useAuth();
@@ -39,6 +40,7 @@ const MainContent = () => {
       {currentTab === 'dispatch' && <DispatchConsolePage />}
       {currentTab === 'fleet-map' && <FleetMapPage />}
       {currentTab === 'telematics' && <ColdChainTpmsPage />}
+      {currentTab === 'hos-detention' && <HosDetentionPage />}
       {currentTab === 'customers' && <CustomersPage />}
       {currentTab === 'vehicles' && <VehiclesPage />}
       {currentTab === 'drivers' && <DriversPage />}
