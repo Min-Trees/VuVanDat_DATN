@@ -8,6 +8,9 @@ import {
   IconLogOut,
   IconSliders,
   IconBuilding,
+  IconTruck,
+  IconUser,
+  IconFileText,
 } from '@vdbus/design-system';
 import { useAuth } from '../auth/AuthContext';
 import { useI18n } from '../i18n/i18nContext';
@@ -32,6 +35,12 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ currentTab, onTabChange, c
 
   const navItems = [
     { id: 'dashboard', label: t('nav.dashboard'), icon: <IconSliders size={16} /> },
+    { id: 'orders', label: t('nav.orders'), icon: <IconFileText size={16} /> },
+    { id: 'dispatch', label: t('nav.dispatch'), icon: <IconSliders size={16} /> },
+    { id: 'customers', label: t('nav.customers'), icon: <IconBuilding size={16} /> },
+    { id: 'vehicles', label: t('nav.vehicles'), icon: <IconTruck size={16} /> },
+    { id: 'drivers', label: t('nav.drivers'), icon: <IconUser size={16} /> },
+    { id: 'invoices', label: t('nav.invoices'), icon: <IconFileText size={16} /> },
     { id: 'regulations', label: t('nav.regulations'), icon: <IconSliders size={16} /> },
     { id: 'vetc', label: t('nav.vetc'), icon: <IconSliders size={16} /> },
   ];

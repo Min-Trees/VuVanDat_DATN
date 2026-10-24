@@ -7,6 +7,9 @@ import { AppLayout } from './layout/AppLayout';
 import { DashboardPage } from './pages/DashboardPage';
 import { RegulationsPage } from './pages/RegulationsPage';
 import { VetcTollPage } from './pages/VetcTollPage';
+import { CustomersPage } from './pages/CustomersPage';
+import { VehiclesPage } from './pages/VehiclesPage';
+import { DriversPage } from './pages/DriversPage';
 
 const MainContent = () => {
   const { isAuthenticated, isLoading } = useAuth();
@@ -27,6 +30,9 @@ const MainContent = () => {
   return (
     <AppLayout currentTab={currentTab} onTabChange={setCurrentTab}>
       {currentTab === 'dashboard' && <DashboardPage />}
+      {currentTab === 'customers' && <CustomersPage />}
+      {currentTab === 'vehicles' && <VehiclesPage />}
+      {currentTab === 'drivers' && <DriversPage />}
       {currentTab === 'regulations' && <RegulationsPage />}
       {currentTab === 'vetc' && <VetcTollPage />}
     </AppLayout>
