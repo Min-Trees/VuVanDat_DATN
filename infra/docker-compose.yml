@@ -46,6 +46,50 @@ services:
       - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
       - mqtt_data:/mosquitto/data
 
+  backend-api:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: vdbus-backend-api
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=${POSTGRES_DB:-vdbus_logistics};Username=${POSTGRES_USER:-vdbus_admin};Password=${POSTGRES_PASSWORD:-vdbus_secret_password_change_in_prod}"
+      ConnectionStrings__Redis: "redis:6379,password=${REDIS_PASSWORD:-redis_secret_password_change_in_prod}"
+      Mqtt__Host: "mqtt"
+      Mqtt__Port: "1883"
+    ports:
+      - "5000:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      mqtt:
+        condition: service_started
+
+  web-admin:
+    build:
+      context: ..
+      dockerfile: web/Dockerfile.admin
+    container_name: vdbus-web-admin
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend-api
+
+  web-shipper:
+    build:
+      context: ..
+      dockerfile: web/Dockerfile.shipper
+    container_name: vdbus-web-shipper
+    restart: unless-stopped
+    ports:
+      - "3001:80"
+    depends_on:
+      - backend-api
+
 volumes:
   postgres_data:
   redis_data:
