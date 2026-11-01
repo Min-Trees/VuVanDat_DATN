@@ -48,3 +48,25 @@
   font-size: var(--vdbus-font-size-sm);
   color: var(--vdbus-color-text-muted);
 }
+
+.vdbus-map-container {
+  width: 100%;
+  position: relative;
+  min-height: 240px;
+}
+
+.vdbus-custom-marker {
+  background: transparent;
+  border: none;
+}
+
+.vdbus-geofence-tooltip {
+  background: var(--vdbus-color-text-primary);
+  color: var(--vdbus-color-text-inverse);
+  border: none;
+  border-radius: var(--vdbus-radius-xs, 4px);
+  font-size: var(--vdbus-font-size-xs, 11px);
+  font-weight: 500;
+  padding: 3px 7px;
+  box-shadow: var(--vdbus-shadow-sm);
+}

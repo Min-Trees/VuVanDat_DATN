@@ -8,7 +8,7 @@ export const LoginForm: React.FC = () => {
   const { t } = useI18n();
 
   const [email, setEmail] = useState('admin@vdbus.vn');
-  const [password, setPassword] = useState('Password123!');
+  const [password, setPassword] = useState('AdminPassword123!');
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 

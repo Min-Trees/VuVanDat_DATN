@@ -10,6 +10,8 @@ class VDBusColors {
   static const Color canvas = Color(0xFFF8FAFC);
   static const Color surface = Color(0xFFFFFFFF);
   static const Color subtle = Color(0xFFF1F5F9);
+  static const Color bgCanvas = canvas;
+  static const Color bgSurface = surface;
 
   // Text Colors (High contrast for sunlight readability)
   static const Color textPrimary = Color(0xFF0F172A);
@@ -32,6 +34,22 @@ class VDBusColors {
   static const Color infoText = Color(0xFF1E3A8A);
   static const Color mockBg = Color(0xFFFEFCE8);
   static const Color mockText = Color(0xFF854D0E);
+}
+
+class VDBusSpace {
+  static const double xs = 4.0;
+  static const double sm = 8.0;
+  static const double md = 12.0;
+  static const double lg = 16.0;
+  static const double xl = 24.0;
+  static const double xxl = 32.0;
+}
+
+class VDBusRadius {
+  static const double sm = 4.0;
+  static const double md = 8.0;
+  static const double lg = 12.0;
+  static const double full = 999.0;
 }
 
 class VDBusTheme {

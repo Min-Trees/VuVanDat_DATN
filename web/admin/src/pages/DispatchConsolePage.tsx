@@ -6,6 +6,7 @@ import {
   ScoreMeter,
   SplitPane,
   MapPanel,
+  VDBusMap,
   EmptyState,
   MockDataBadge,
   IconRefresh,
@@ -180,6 +181,35 @@ export const DispatchConsolePage: React.FC = () => {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    const fetchPendingOrders = async () => {
+      try {
+        const res = await apiClient.get<any[]>('/orders');
+        if (Array.isArray(res.data) && res.data.length > 0) {
+          const mapped: PendingOrderItem[] = res.data.map((o) => ({
+            id: o.id,
+            orderCode: o.orderCode,
+            customerName: o.customer?.name || 'Khách hàng VDBus',
+            pickupAddress: o.pickupAddress,
+            deliveryAddress: o.deliveryAddress,
+            totalWeightKg: o.totalWeightKg,
+            totalVolumeCbm: o.totalVolumeCbm,
+            pickupWindow: `${new Date(o.pickupWindowStartUtc).toLocaleDateString('vi-VN')} ${new Date(o.pickupWindowStartUtc).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}`,
+            deliveryWindow: `${new Date(o.deliveryWindowStartUtc).toLocaleDateString('vi-VN')} ${new Date(o.deliveryWindowStartUtc).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}`,
+            freightAmountVnd: o.freightAmountVnd,
+          }));
+          setPendingOrders(mapped);
+          if (mapped.length > 0) {
+            setSelectedOrderId(mapped[0].id);
+          }
+        }
+      } catch {
+        // Keep fallback
+      }
+    };
+    fetchPendingOrders();
+  }, []);
 
   useEffect(() => {
     if (selectedOrderId) {
@@ -407,32 +437,47 @@ export const DispatchConsolePage: React.FC = () => {
                 {/* Bản đồ hành trình có thể thu gọn */}
                 <MapPanel
                   title={`Hành trình điều xe: ${selectedOrder.orderCode}`}
-                  height={220}
+                  height={260}
                   isCollapsible={true}
                   defaultExpanded={true}
-                  isSimulated={true}
+                  isSimulated={false}
                 >
-                  <div
-                    style={{
-                      height: '100%',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      backgroundColor: 'var(--vdbus-surface-tertiary)',
-                      color: 'var(--vdbus-text-secondary)',
-                      fontSize: 'var(--vdbus-font-size-sm)',
-                    }}
-                  >
-                    <div style={{ textAlign: 'center' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '6px' }}>
-                        <IconMapPin size={16} />
-                        <strong>Hành lang vận chuyển: {selectedOrder.pickupAddress.split(',')[0]} - {selectedOrder.deliveryAddress.split(',')[0]}</strong>
-                      </div>
-                      <div style={{ fontSize: 'var(--vdbus-font-size-xs)', color: 'var(--vdbus-text-muted)' }}>
-                        Tọa độ GPS mô phỏng: 16.074°N, 108.153°E &rarr; 16.068°N, 108.212°E (Ước tính cự ly: 115 km)
-                      </div>
-                    </div>
-                  </div>
+                  <VDBusMap
+                    center={[16.074, 108.182]}
+                    zoom={12}
+                    height={260}
+                    markers={[
+                      {
+                        id: 'pickup',
+                        lat: 16.074,
+                        lng: 108.153,
+                        title: 'Điểm lấy hàng',
+                        subtitle: selectedOrder.pickupAddress,
+                        status: 'Pickup',
+                      },
+                      {
+                        id: 'delivery',
+                        lat: 16.068,
+                        lng: 108.212,
+                        title: 'Điểm giao hàng',
+                        subtitle: selectedOrder.deliveryAddress,
+                        status: 'Delivery',
+                      },
+                    ]}
+                    polylines={[
+                      {
+                        id: 'route',
+                        points: [
+                          [16.074, 108.153],
+                          [16.075, 108.170],
+                          [16.065, 108.190],
+                          [16.068, 108.212],
+                        ],
+                        color: 'var(--vdbus-color-primary, #2563eb)',
+                        weight: 4,
+                      },
+                    ]}
+                  />
                 </MapPanel>
 
                 {/* Danh sách xe khuyến nghị theo công thức minh bạch */}

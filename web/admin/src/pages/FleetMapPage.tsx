@@ -8,6 +8,7 @@ import {
   Input,
   Select,
   MapPanel,
+  VDBusMap,
   TemperatureGauge,
   AxleSchema,
   AxleInfo,
@@ -18,6 +19,7 @@ import {
   IconClock,
   IconAlertTriangle,
 } from '@vdbus/design-system';
+import { apiClient } from '../services/apiClient';
 
 export interface VehicleTelemetryItem {
   id: string;
@@ -346,6 +348,61 @@ export const FleetMapPage: React.FC = () => {
     };
   }, []);
 
+  const [geofences, setGeofences] = useState<GeofenceMarker[]>(initialGeofences);
+
+  const fetchLiveFleet = async () => {
+    try {
+      const [vRes, gRes] = await Promise.all([
+        apiClient.get<any[]>('/vehicles'),
+        apiClient.get<any[]>('/geofences'),
+      ]);
+
+      if (Array.isArray(vRes.data) && vRes.data.length > 0) {
+        const mapped: VehicleTelemetryItem[] = vRes.data.map((dbV, idx) => ({
+          id: dbV.id,
+          licensePlate: dbV.licensePlate,
+          vehicleType: dbV.type === 4 ? 'Refrigerated' : dbV.type === 5 ? 'Container' : 'DryBox',
+          makeModel: dbV.makeModel,
+          driverName: initialVehicles[idx % initialVehicles.length]?.driverName || 'Tài xế VDBus',
+          latitude: dbV.currentLocationLat || 16.074,
+          longitude: dbV.currentLocationLng || 108.153,
+          speedKmh: dbV.status === 'OnTrip' ? 62.5 : 0,
+          headingDegrees: 180,
+          status: dbV.status === 'OnTrip' ? 'Moving' : 'Stopped',
+          temperatureCelsius: dbV.type === 4 ? -19.2 : undefined,
+          humidityPercentage: dbV.type === 4 ? 85 : undefined,
+          fuelLevelPercentage: 75,
+          isDoorOpen: false,
+          axleCount: dbV.axleCount || 2,
+          axles: initialVehicles[0].axles,
+          lastUpdatedUtc: dbV.lastLocationUpdateUtc || new Date().toISOString(),
+          isSimulated: dbV.isSimulated || false,
+        }));
+        setVehicles(mapped);
+        if (mapped.length > 0) setSelectedVehicleId(mapped[0].id);
+      }
+
+      if (Array.isArray(gRes.data) && gRes.data.length > 0) {
+        setGeofences(
+          gRes.data.map((g) => ({
+            id: g.id,
+            name: g.name,
+            type: g.geofenceType === 1 ? 'Port' : g.geofenceType === 2 ? 'TollBooth' : 'Warehouse',
+            latitude: g.centerLatitude,
+            longitude: g.centerLongitude,
+            radiusMeters: g.radiusMeters,
+          }))
+        );
+      }
+    } catch {
+      // Fallback
+    }
+  };
+
+  useEffect(() => {
+    fetchLiveFleet();
+  }, []);
+
   // Filter vehicles
   const filteredVehicles = useMemo(() => {
     return vehicles.filter((v) => {
@@ -375,22 +432,6 @@ export const FleetMapPage: React.FC = () => {
   const selectedVehicle = useMemo(() => {
     return vehicles.find((v) => v.id === selectedVehicleId) || vehicles[0];
   }, [vehicles, selectedVehicleId]);
-
-  // Map coordinate projection: converts Vietnam Lat (9.5 to 22.5) & Lng (104.0 to 109.5) to SVG (800x480)
-  const mapWidth = 800;
-  const mapHeight = 480;
-  const projectCoords = (lat: number, lng: number) => {
-    const minLat = 9.5;
-    const maxLat = 22.5;
-    const minLng = 104.0;
-    const maxLng = 109.5;
-    const x = ((lng - minLng) / (maxLng - minLng)) * (mapWidth - 80) + 40;
-    const y = (1 - (lat - minLat) / (maxLat - minLat)) * (mapHeight - 80) + 40;
-    return {
-      x: Math.max(30, Math.min(mapWidth - 30, x)),
-      y: Math.max(30, Math.min(mapHeight - 30, y)),
-    };
-  };
 
   return (
     <div style={{ padding: 'var(--vdbus-space-4)', display: 'flex', flexDirection: 'column', gap: 'var(--vdbus-space-4)' }}>
@@ -574,135 +615,70 @@ export const FleetMapPage: React.FC = () => {
 
         {/* Right Side: Map & Telemetry Details */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--vdbus-space-4)' }}>
-          {/* Realtime GIS / Vector Map View */}
+          {/* Realtime GIS / OpenStreetMap Leaflet Map View */}
           <MapPanel
-            title="Bản đồ GIS Định vị Đội xe Toàn quốc (Hành lang Bắc - Nam)"
-            isSimulated={true}
-            height={380}
+            title="Bản đồ GIS Định vị Đội xe Toàn quốc (OpenStreetMap Leaflet)"
+            isSimulated={selectedVehicle?.isSimulated || false}
+            height={440}
           >
-            <svg
-              viewBox={`0 0 ${mapWidth} ${mapHeight}`}
-              style={{
-                width: '100%',
-                height: '100%',
-                backgroundColor: 'var(--vdbus-color-bg-subtle)',
-                userSelect: 'none',
-              }}
-            >
-              {/* Grid Lines */}
-              <defs>
-                <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="var(--vdbus-color-border-subtle)" strokeWidth="0.5" />
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#grid)" />
-
-              {/* Simplified North-South Highway Corridor Line (QL1A & Cao tốc Bắc Nam) */}
-              <polyline
-                points="210,50 220,120 280,210 330,290 350,380 340,430"
-                fill="none"
-                stroke="var(--vdbus-color-border-strong)"
-                strokeWidth="2"
-                strokeDasharray="4 4"
-              />
-
-              {/* Geofences Zones */}
-              {initialGeofences.map((geo) => {
-                const pt = projectCoords(geo.latitude, geo.longitude);
-                return (
-                  <g key={geo.id}>
-                    <circle
-                      cx={pt.x}
-                      cy={pt.y}
-                      r="18"
-                      fill="var(--vdbus-color-info-bg)"
-                      stroke="var(--vdbus-color-info-border)"
-                      strokeWidth="1.5"
-                      opacity="0.75"
-                    />
-                    <text
-                      x={pt.x}
-                      y={pt.y + 28}
-                      textAnchor="middle"
-                      fontSize="10"
-                      fill="var(--vdbus-color-text-secondary)"
-                      fontFamily="sans-serif"
-                    >
-                      {geo.name}
-                    </text>
-                  </g>
-                );
-              })}
-
-              {/* Vehicles Pins on Map */}
-              {vehicles.map((v) => {
-                const pt = projectCoords(v.latitude, v.longitude);
-                const isSelected = v.id === selectedVehicle?.id;
-                const isMoving = v.status === 'Moving';
-
-                return (
-                  <g
-                    key={v.id}
-                    onClick={() => setSelectedVehicleId(v.id)}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    {/* Selected vehicle pulsing ring */}
-                    {isSelected && (
-                      <circle
-                        cx={pt.x}
-                        cy={pt.y}
-                        r="18"
-                        fill="none"
-                        stroke="var(--vdbus-color-primary)"
-                        strokeWidth="2"
-                        strokeDasharray="2 2"
-                      />
-                    )}
-
-                    {/* Marker circle */}
-                    <circle
-                      cx={pt.x}
-                      cy={pt.y}
-                      r="10"
-                      fill={isMoving ? 'var(--vdbus-color-success-text)' : 'var(--vdbus-color-text-muted)'}
-                      stroke="var(--vdbus-color-bg-surface)"
-                      strokeWidth="2"
-                    />
-
-                    {/* Inner direction dot */}
-                    <circle
-                      cx={pt.x}
-                      cy={pt.y}
-                      r="3"
-                      fill="var(--vdbus-color-bg-surface)"
-                    />
-
-                    {/* License Plate Label Callout */}
-                    <rect
-                      x={pt.x - 36}
-                      y={pt.y - 28}
-                      width="72"
-                      height="16"
-                      rx="3"
-                      fill="var(--vdbus-color-bg-surface)"
-                      stroke={isSelected ? 'var(--vdbus-color-primary)' : 'var(--vdbus-color-border-default)'}
-                      strokeWidth="1"
-                    />
-                    <text
-                      x={pt.x}
-                      y={pt.y - 16}
-                      textAnchor="middle"
-                      fontSize="9"
-                      fontWeight="bold"
-                      fill={isSelected ? 'var(--vdbus-color-primary)' : 'var(--vdbus-color-text-primary)'}
-                      fontFamily="monospace"
-                    >
-                      {v.licensePlate}
-                    </text>
-                  </g>
-                );
-              })}
-            </svg>
+            <div style={{ position: 'relative', height: '100%', width: '100%' }}>
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 10,
+                  right: 10,
+                  zIndex: 500,
+                  background: 'var(--vdbus-color-bg-surface)',
+                  padding: '6px 10px',
+                  borderRadius: 'var(--vdbus-radius-sm)',
+                  boxShadow: 'var(--vdbus-shadow-md)',
+                  display: 'flex',
+                  gap: '6px',
+                  flexWrap: 'wrap',
+                  maxWidth: '380px',
+                  pointerEvents: 'auto',
+                }}
+              >
+                {geofences.map((g) => (
+                  <Badge key={g.id} variant="neutral">
+                    {g.name}
+                  </Badge>
+                ))}
+              </div>
+              <VDBusMap
+              center={selectedVehicle ? [selectedVehicle.latitude, selectedVehicle.longitude] : [16.074, 108.182]}
+              zoom={13}
+              markers={filteredVehicles.map((v) => ({
+                id: v.id,
+                lat: v.latitude,
+                lng: v.longitude,
+                title: v.licensePlate,
+                subtitle: `${v.makeModel} - ${v.driverName}`,
+                status: v.status,
+                heading: v.headingDegrees,
+                popupContent: `
+                  <div style="font-size: 12px; line-height: 1.4;">
+                    <strong style="font-size: 13px;">${v.licensePlate}</strong> (${v.makeModel})<br/>
+                    Tài xế: <strong>${v.driverName}</strong><br/>
+                    Vận tốc: <strong>${v.speedKmh} km/h</strong> | Hướng: ${v.headingDegrees}°<br/>
+                    ${v.temperatureCelsius !== undefined ? `Nhiệt độ thùng lạnh: <strong style="color: var(--vdbus-color-primary, #2563eb);">${v.temperatureCelsius} °C</strong><br/>` : ''}
+                    Nhiên liệu: <strong>${v.fuelLevelPercentage}%</strong><br/>
+                    Trạng thái: <strong>${v.status === 'Moving' ? 'Đang chạy' : 'Dừng đỗ'}</strong>
+                  </div>
+                `,
+              }))}
+              circles={geofences.map((g) => ({
+                id: g.id,
+                center: [g.latitude, g.longitude],
+                radiusMeters: g.radiusMeters,
+                name: g.name,
+                color: g.type === 'Port' ? 'var(--vdbus-color-purple, #7c3aed)' : g.type === 'TollBooth' ? 'var(--vdbus-color-warning, #ea580c)' : 'var(--vdbus-color-info, #0284c7)',
+              }))}
+              selectedMarkerId={selectedVehicleId}
+              onMarkerClick={(m) => setSelectedVehicleId(m.id)}
+              height={440}
+            />
+            </div>
           </MapPanel>
 
           {/* Selected Vehicle Telemetry Card */}

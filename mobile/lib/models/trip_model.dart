@@ -55,15 +55,17 @@ class DriverTrip {
   });
 
   DriverTrip copyWith({
+    String? tripCode,
+    String? vehiclePlate,
     TripStep? currentStep,
     List<TripStop>? stops,
   }) {
     return DriverTrip(
       id: id,
-      tripCode: tripCode,
+      tripCode: tripCode ?? this.tripCode,
       orderId: orderId,
       orderCode: orderCode,
-      vehiclePlate: vehiclePlate,
+      vehiclePlate: vehiclePlate ?? this.vehiclePlate,
       vehicleModel: vehicleModel,
       totalWeightKg: totalWeightKg,
       totalVolumeCbm: totalVolumeCbm,

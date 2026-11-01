@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   PageHeader,
   Badge,
   MockDataBadge,
   MapPanel,
+  VDBusMap,
   Button,
   Input,
   Timeline,
@@ -37,79 +38,62 @@ interface PublicTrackingDto {
 }
 
 const defaultShipment: PublicTrackingDto = {
-  orderCode: 'DH-20261023-1102',
-  status: 'Delivered',
-  pickupAddress: 'KCN Dien Nam - Dien Ngoc, Quang Nam',
-  deliveryAddress: 'Cang Tien Sa, Da Nang',
-  pickupWindow: '23/10 08:00 - 10:00',
-  deliveryWindow: '23/10 13:00 - 15:00',
-  totalWeightKg: 7200,
-  driverMasked: 'Tran H.',
+  orderCode: 'DH-20261101-8192',
+  status: 'InTransitDelivery',
+  pickupAddress: 'KCN Hòa Khánh, Liên Chiểu, Đà Nẵng',
+  deliveryAddress: 'Tổng kho Big C, 255 Hùng Vương, Đà Nẵng',
+  pickupWindow: '01/11 06:30 - 09:30',
+  deliveryWindow: '01/11 09:30 - 12:30',
+  totalWeightKg: 5400,
+  driverMasked: 'Nguyễn V.',
   vehiclePlateMasked: '43C-***24',
-  approximateLatitude: 16.128,
-  approximateLongitude: 108.219,
-  hasPod: true,
-  podVerificationHash: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
+  approximateLatitude: 16.074,
+  approximateLongitude: 108.163,
+  hasPod: false,
   isColdChain: true,
   coldChainCertificateHash: '7a29f84091bc7d432e18501198fbbac490e541b63c78198fbc102d9481bca012',
   coldChainDataPoints: [
-    { time: '08:00', temp: -18.2 },
-    { time: '09:00', temp: -18.5 },
-    { time: '10:00', temp: -18.1 },
-    { time: '11:00', temp: -18.4 },
-    { time: '12:00', temp: -18.9 },
-    { time: '13:00', temp: -18.4 },
-    { time: '14:00', temp: -18.6 },
+    { time: '08:00', temp: 3.2 },
+    { time: '09:00', temp: 3.5 },
+    { time: '10:00', temp: 3.1 },
+    { time: '11:00', temp: 3.4 },
   ],
-  isSimulated: true,
+  isSimulated: false,
 };
 
 export const App: React.FC = () => {
-  const [tokenInput, setTokenInput] = useState('vdbus_trk_78bc3410a92de4f76201bda829c4ef01');
+  const [tokenInput, setTokenInput] = useState('vdbus_trk_f91a82b4c73d9e018a4bc7102e3f49ab');
   const [shipment, setShipment] = useState<PublicTrackingDto>(defaultShipment);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleTrack = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!tokenInput.trim()) return;
-
+  const fetchTracking = async (token: string) => {
+    if (!token.trim()) return;
     setIsLoading(true);
     setErrorMessage(null);
 
     try {
       const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
-      const res = await fetch(`${baseUrl}/orders/track/${encodeURIComponent(tokenInput.trim())}`);
+      const res = await fetch(`${baseUrl}/orders/track/${encodeURIComponent(token.trim())}`);
       if (!res.ok) {
-        throw new Error('Khong tim thay thong tin van don hoac token da het han.');
+        throw new Error('Không tìm thấy thông tin vận đơn hoặc mã tra cứu đã hết hạn.');
       }
       const data: PublicTrackingDto = await res.json();
       setShipment(data);
-    } catch {
-      // Fallback demo
-      if (tokenInput.includes('8192')) {
-        setShipment({
-          orderCode: 'DH-20261024-8192',
-          status: 'InTransit',
-          pickupAddress: 'KCN Hoa Khanh, Lien Chieu, Da Nang',
-          deliveryAddress: 'Tong kho Big C, 255 Hung Vuong, Da Nang',
-          pickupWindow: '24/10 08:00 - 10:00',
-          deliveryWindow: '24/10 14:00 - 17:00',
-          totalWeightKg: 5400,
-          driverMasked: 'Tran H.',
-          vehiclePlateMasked: '43C-***24',
-          approximateLatitude: 16.071,
-          approximateLongitude: 108.182,
-          hasPod: false,
-          isColdChain: false,
-          isSimulated: true,
-        });
-      } else {
-        setShipment(defaultShipment);
-      }
+    } catch (err: any) {
+      setErrorMessage(err.message || 'Lỗi tra cứu thông tin hành trình.');
     } finally {
       setIsLoading(false);
     }
+  };
+
+  useEffect(() => {
+    fetchTracking(tokenInput);
+  }, []);
+
+  const handleTrack = (e: React.FormEvent) => {
+    e.preventDefault();
+    fetchTracking(tokenInput);
   };
 
   const getTimelineSteps = (status: string): TimelineStep[] => {
@@ -442,31 +426,34 @@ export const App: React.FC = () => {
 
         {/* Map Panel with Rounded Coordinates */}
         <MapPanel
-          title="Ban do hanh trinh vi tri xe (Toa do duoc lam tron bao mat quyen rieng tu)"
+          title="Bản đồ hành trình vị trí xe (Tọa độ được làm tròn bảo mật quyền riêng tư)"
           isSimulated={shipment.isSimulated}
-          height={320}
+          height={360}
         >
-          <div
-            style={{
-              height: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: 'var(--vdbus-color-bg-subtle)',
-              color: 'var(--vdbus-color-text-secondary)',
-              fontSize: 'var(--vdbus-font-size-sm)',
-            }}
-          >
-            <div style={{ textAlign: 'center', padding: '16px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '8px' }}>
-                <IconMapPin size={16} />
-                <strong>Vi tri phuong tien uoc luong: {shipment.approximateLatitude.toFixed(3)} N, {shipment.approximateLongitude.toFixed(3)} E</strong>
-              </div>
-              <div style={{ fontSize: 'var(--vdbus-font-size-xs)', color: 'var(--vdbus-color-text-muted)', maxWidth: '480px', margin: '0 auto' }}>
-                Toa do GPS duoc lam tron 3 chu so thap phan (do chinh xac ~110 met) theo tieu chuan bao mat du lieu dinh vi ca nhan.
-              </div>
-            </div>
-          </div>
+          <VDBusMap
+            center={[shipment.approximateLatitude, shipment.approximateLongitude]}
+            zoom={13}
+            height={360}
+            markers={[
+              {
+                id: 'vehicle',
+                lat: shipment.approximateLatitude,
+                lng: shipment.approximateLongitude,
+                title: shipment.vehiclePlateMasked,
+                subtitle: `Tài xế: ${shipment.driverMasked}`,
+                status: 'Moving',
+                popupContent: `
+                  <div style="font-size: 12px; line-height: 1.4;">
+                    <strong>Xe vận chuyển: ${shipment.vehiclePlateMasked}</strong><br/>
+                    Tài xế: ${shipment.driverMasked}<br/>
+                    Trạng thái: <strong>${shipment.status}</strong><br/>
+                    Khối lượng hàng: <strong>${(shipment.totalWeightKg / 1000).toFixed(1)} tấn</strong><br/>
+                    ETA giao hàng: <strong>${shipment.deliveryWindow}</strong>
+                  </div>
+                `,
+              },
+            ]}
+          />
         </MapPanel>
 
         <div style={{ marginTop: '12px', display: 'flex', justifyContent: 'flex-end' }}>
