@@ -48,6 +48,9 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ currentTab, onTabChange, c
     { id: 'vehicles', label: t('nav.vehicles'), icon: <IconTruck size={16} /> },
     { id: 'drivers', label: t('nav.drivers'), icon: <IconUser size={16} /> },
     { id: 'invoices', label: t('nav.invoices'), icon: <IconFileText size={16} /> },
+    { id: 'pnl', label: t('nav.pnl'), icon: <IconFileText size={16} /> },
+    { id: 'fuel', label: t('nav.fuel'), icon: <IconSliders size={16} /> },
+    { id: 'subscriptions', label: t('nav.subscriptions'), icon: <IconBuilding size={16} /> },
     { id: 'regulations', label: t('nav.regulations'), icon: <IconSliders size={16} /> },
     { id: 'vetc', label: t('nav.vetc'), icon: <IconSliders size={16} /> },
   ];

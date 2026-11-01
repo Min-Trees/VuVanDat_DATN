@@ -17,6 +17,9 @@ import { FleetMapPage } from './pages/FleetMapPage';
 import { ColdChainTpmsPage } from './pages/ColdChainTpmsPage';
 import { HosDetentionPage } from './pages/HosDetentionPage';
 import { AxleLoadPage } from './pages/AxleLoadPage';
+import { PnLPage } from './pages/PnLPage';
+import { FuelMaintenancePage } from './pages/FuelMaintenancePage';
+import { SubscriptionsCopilotPage } from './pages/SubscriptionsCopilotPage';
 
 const MainContent = () => {
   const { isAuthenticated, isLoading } = useAuth();
@@ -47,6 +50,9 @@ const MainContent = () => {
       {currentTab === 'vehicles' && <VehiclesPage />}
       {currentTab === 'drivers' && <DriversPage />}
       {currentTab === 'invoices' && <InvoicesPage />}
+      {currentTab === 'pnl' && <PnLPage />}
+      {currentTab === 'fuel' && <FuelMaintenancePage />}
+      {currentTab === 'subscriptions' && <SubscriptionsCopilotPage />}
       {currentTab === 'regulations' && <RegulationsPage />}
       {currentTab === 'vetc' && <VetcTollPage />}
     </AppLayout>
