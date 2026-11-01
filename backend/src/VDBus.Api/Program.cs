@@ -167,6 +167,20 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
+// Ensure Database is created on startup
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    try
+    {
+        db.Database.EnsureCreated();
+    }
+    catch (Exception ex)
+    {
+        app.Logger.LogWarning(ex, "Database EnsureCreated failed or already initialized.");
+    }
+}
+
 // 7. Middlewares Pipeline
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
