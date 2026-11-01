@@ -51,6 +51,7 @@ builder.Services.AddScoped<ITelematicsService, TelematicsService>();
 builder.Services.AddScoped<IFuelService, FuelService>();
 builder.Services.AddScoped<IPnLService, PnLService>();
 builder.Services.AddScoped<IVietQrService, VietQrService>();
+builder.Services.AddScoped<IMeteringService, MeteringService>();
 builder.Services.AddScoped<ITelematicsNotificationService, VDBus.Api.Services.SignalRTelematicsNotificationService>();
 builder.Services.AddSignalR();
 
