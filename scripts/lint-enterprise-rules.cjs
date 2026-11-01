@@ -80,8 +80,8 @@ for (const scanDir of SCAN_DIRS) {
 }
 
 if (errorCount > 0) {
-  console.error(`\n❌ Phát hiện ${errorCount} lỗi vi phạm nguyên tắc (Emoji / Hardcoded Color). Vui lòng sửa lại!`);
+  console.error(`\n[ERROR] Phat hien ${errorCount} loi vi pham nguyen tac (Emoji / Hardcoded Color). Vui long sua lai!`);
   process.exit(1);
 } else {
-  console.log('✅ Đạt chuẩn: Không có Emoji, không có màu hardcode trong thành phần giao diện.\n');
+  console.log('[OK] Dat chuan: Khong co Emoji, khong co mau hardcode trong thanh phan giao dien.\n');
 }
