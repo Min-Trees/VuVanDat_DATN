@@ -48,6 +48,7 @@ builder.Services.AddScoped<IAxleLoadService, AxleLoadService>();
 builder.Services.AddScoped<IRoutingService, RoutingService>();
 builder.Services.AddScoped<ITelematicsService, TelematicsService>();
 builder.Services.AddScoped<IFuelService, FuelService>();
+builder.Services.AddScoped<IPnLService, PnLService>();
 builder.Services.AddScoped<ITelematicsNotificationService, VDBus.Api.Services.SignalRTelematicsNotificationService>();
 builder.Services.AddSignalR();
 
