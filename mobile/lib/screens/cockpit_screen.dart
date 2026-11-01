@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '../core/theme/theme.dart';
+import '../core/sync/sync_queue.dart';
+import 'document_wallet_screen.dart';
+import 'fuel_entry_screen.dart';
 
 class GpsFilter {
   static const double minMovingSpeedKmh = 3.0;
@@ -90,6 +93,37 @@ class _CockpitScreenState extends State<CockpitScreen> {
       // Set to 2.4 km/h (below 3.0 km/h threshold) to test GPS noise filter
       _rawSpeedKmh = 2.4;
     });
+  }
+
+  void _handleSosEmergency() {
+    final syncQueue = SyncQueueService();
+    syncQueue.enqueue(
+      actionType: 'SOS_EMERGENCY_BROADCAST',
+      payload: {
+        'vehiclePlate': widget.vehiclePlate,
+        'driverName': widget.driverName,
+        'lat': 16.0544,
+        'lng': 108.2022,
+        'timestampUtc': DateTime.now().toUtc().toIso8601String(),
+        'alertType': 'COLLISION_OR_BREAKDOWN',
+      },
+    );
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('TIN HIEU SOS DA PHAT', style: TextStyle(fontWeight: FontWeight.bold, color: VDBusColors.errorText)),
+        content: const Text(
+          'Toa do 16.0544, 108.2022 va thong tin khan cap da duoc ghi nhan va phat toi Trung tam dieu hanh VDBus TMS va cac doi cuu ho gan nhat.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('DA HIEU'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -478,6 +512,68 @@ class _CockpitScreenState extends State<CockpitScreen> {
                     ),
                   ],
                 ),
+              ),
+
+              const SizedBox(height: 16),
+
+              // Driver Quick Access Actions (Phase 3)
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        side: const BorderSide(color: VDBusColors.primary),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => DocumentWalletScreen(
+                              driverName: widget.driverName,
+                              vehiclePlate: widget.vehiclePlate,
+                            ),
+                          ),
+                        );
+                      },
+                      child: const Text('VI GIAY TO', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        side: const BorderSide(color: VDBusColors.primary),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => FuelEntryScreen(
+                              driverName: widget.driverName,
+                              vehiclePlate: widget.vehiclePlate,
+                            ),
+                          ),
+                        );
+                      },
+                      child: const Text('DO XANG DAU', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        backgroundColor: VDBusColors.errorText,
+                        foregroundColor: VDBusColors.textInverse,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                      ),
+                      onPressed: _handleSosEmergency,
+                      child: const Text('SOS KHAN CAP', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                    ),
+                  ),
+                ],
               ),
 
               const SizedBox(height: 16),
