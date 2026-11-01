@@ -11,6 +11,7 @@ using VDBus.Api.Middlewares;
 using VDBus.Application.Common.Interfaces;
 using VDBus.Application.Services;
 using VDBus.Infrastructure.Persistence;
+using VDBus.Infrastructure.Providers.EInvoice;
 using VDBus.Infrastructure.Providers.Telematics;
 using VDBus.Infrastructure.Providers.Vetc;
 using VDBus.Infrastructure.Services;
@@ -72,6 +73,16 @@ if (useMockTelematics)
 else
 {
     builder.Services.AddScoped<ITelematicsProvider, RealTelematicsProvider>();
+}
+
+var useMockEInvoice = builder.Configuration.GetValue<bool>("Providers:EInvoice:UseMock", true);
+if (useMockEInvoice)
+{
+    builder.Services.AddScoped<IEInvoiceProvider, MockEInvoiceProvider>();
+}
+else
+{
+    builder.Services.AddScoped<IEInvoiceProvider, RealEInvoiceProvider>();
 }
 
 // 4. JWT Authentication
