@@ -32,5 +32,12 @@ public interface IApplicationDbContext
     DbSet<RouteStopPlan> RouteStopPlans { get; }
     DbSet<AxleLoadCalculation> AxleLoadCalculations { get; }
 
+    // Phase 3 Financial, Maintenance, Fuel & Subscription
+    DbSet<FuelRecord> FuelRecords { get; }
+    DbSet<MaintenanceOrder> MaintenanceOrders { get; }
+    DbSet<VehicleDocument> VehicleDocuments { get; }
+    DbSet<SubscriptionPlan> SubscriptionPlans { get; }
+    DbSet<TenantMeteringRecord> TenantMeteringRecords { get; }
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

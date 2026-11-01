@@ -42,6 +42,13 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<RouteStopPlan> RouteStopPlans => Set<RouteStopPlan>();
     public DbSet<AxleLoadCalculation> AxleLoadCalculations => Set<AxleLoadCalculation>();
 
+    // Phase 3 Entities
+    public DbSet<FuelRecord> FuelRecords => Set<FuelRecord>();
+    public DbSet<MaintenanceOrder> MaintenanceOrders => Set<MaintenanceOrder>();
+    public DbSet<VehicleDocument> VehicleDocuments => Set<VehicleDocument>();
+    public DbSet<SubscriptionPlan> SubscriptionPlans => Set<SubscriptionPlan>();
+    public DbSet<TenantMeteringRecord> TenantMeteringRecords => Set<TenantMeteringRecord>();
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.AddInterceptors(new AuditLogInterceptor(_currentTenantService));
@@ -300,6 +307,54 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             b.Property(alc => alc.MarginOfErrorPercentage).HasPrecision(5, 2);
             b.HasIndex(alc => new { alc.TenantId, alc.VehicleId });
             b.HasQueryFilter(alc => !_currentTenantService.TenantId.HasValue || alc.TenantId == _currentTenantService.TenantId.Value);
+        });
+
+        // Phase 3 Entity Configurations with Tenant Isolation
+        modelBuilder.Entity<FuelRecord>(b =>
+        {
+            b.HasKey(fr => fr.Id);
+            b.Property(fr => fr.OdometerKm).HasPrecision(18, 2);
+            b.Property(fr => fr.FuelLitre).HasPrecision(18, 2);
+            b.Property(fr => fr.UnitPriceVnd).HasPrecision(18, 2);
+            b.Property(fr => fr.TotalAmountVnd).HasPrecision(18, 2);
+            b.Property(fr => fr.StationName).HasMaxLength(200);
+            b.HasIndex(fr => new { fr.TenantId, fr.VehicleId, fr.PurchasedAtUtc });
+            b.HasQueryFilter(fr => !_currentTenantService.TenantId.HasValue || fr.TenantId == _currentTenantService.TenantId.Value);
+        });
+
+        modelBuilder.Entity<MaintenanceOrder>(b =>
+        {
+            b.HasKey(mo => mo.Id);
+            b.Property(mo => mo.OrderCode).IsRequired().HasMaxLength(50);
+            b.Property(mo => mo.OdometerKm).HasPrecision(18, 2);
+            b.Property(mo => mo.TotalCostVnd).HasPrecision(18, 2);
+            b.Property(mo => mo.GarageName).HasMaxLength(200);
+            b.HasIndex(mo => new { mo.TenantId, mo.OrderCode }).IsUnique();
+            b.HasQueryFilter(mo => !_currentTenantService.TenantId.HasValue || mo.TenantId == _currentTenantService.TenantId.Value);
+        });
+
+        modelBuilder.Entity<VehicleDocument>(b =>
+        {
+            b.HasKey(vd => vd.Id);
+            b.Property(vd => vd.DocumentNumber).IsRequired().HasMaxLength(100);
+            b.Property(vd => vd.Issuer).HasMaxLength(200);
+            b.HasIndex(vd => new { vd.TenantId, vd.VehicleId, vd.DocumentType });
+            b.HasQueryFilter(vd => !_currentTenantService.TenantId.HasValue || vd.TenantId == _currentTenantService.TenantId.Value);
+        });
+
+        modelBuilder.Entity<SubscriptionPlan>(b =>
+        {
+            b.HasKey(sp => sp.Id);
+            b.Property(sp => sp.Name).IsRequired().HasMaxLength(100);
+            b.Property(sp => sp.MonthlyPriceVnd).HasPrecision(18, 2);
+        });
+
+        modelBuilder.Entity<TenantMeteringRecord>(b =>
+        {
+            b.HasKey(tmr => tmr.Id);
+            b.Property(tmr => tmr.StorageUsedMb).HasPrecision(18, 2);
+            b.HasIndex(tmr => new { tmr.TenantId, tmr.MeteredAtUtc });
+            b.HasQueryFilter(tmr => !_currentTenantService.TenantId.HasValue || tmr.TenantId == _currentTenantService.TenantId.Value);
         });
     }
 }
