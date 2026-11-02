@@ -9,7 +9,7 @@ class FuelEntryScreen extends StatefulWidget {
   const FuelEntryScreen({
     super.key,
     this.vehiclePlate = '43C-189.24',
-    this.driverName = 'Nguyen Van Hai',
+    this.driverName = 'Nguyễn Văn Tuấn',
   });
 
   @override
@@ -21,7 +21,7 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
   final _odometerController = TextEditingController(text: '124500');
   final _litresController = TextEditingController(text: '120');
   final _unitPriceController = TextEditingController(text: '22000');
-  final _stationController = TextEditingController(text: 'Petrolimex Cua hang 12 (Hoa Cam)');
+  final _stationController = TextEditingController(text: 'Petrolimex Cửa hàng 12 (Hòa Cầm)');
   bool _isSubmitted = false;
   String? _submittedSyncId;
 
@@ -57,7 +57,7 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Da ghi nhan hoa don xang dau vao hang doi dong bo: ${item.id}'),
+        content: Text('Đã ghi nhận hóa đơn xăng dầu vào hàng đợi đồng bộ: ${item.id}'),
         backgroundColor: VDBusColors.primary,
       ),
     );
@@ -74,13 +74,19 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final formatCurrency = '${_totalVnd.toStringAsFixed(0)} VND';
+    final formatCurrency = '${_totalVnd.toStringAsFixed(0)} VNĐ';
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Ghi Nhan Do Xang Dau',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+        title: const Row(
+          children: [
+            Icon(Icons.local_gas_station_outlined, color: VDBusColors.primary, size: 22),
+            SizedBox(width: 8),
+            Text(
+              'Ghi Nhận Đổ Xăng Dầu',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            ),
+          ],
         ),
         backgroundColor: VDBusColors.surface,
         foregroundColor: VDBusColors.textPrimary,
@@ -109,12 +115,19 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            'Phuong tien',
+                            'Phương tiện',
                             style: TextStyle(fontSize: 11, color: VDBusColors.textMuted),
                           ),
-                          Text(
-                            widget.vehiclePlate,
-                            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                          const SizedBox(height: 2),
+                          Row(
+                            children: [
+                              const Icon(Icons.local_shipping, size: 16, color: VDBusColors.primary),
+                              const SizedBox(width: 4),
+                              Text(
+                                widget.vehiclePlate,
+                                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -122,12 +135,19 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           const Text(
-                            'Tai xe thuc hien',
+                            'Tài xế thực hiện',
                             style: TextStyle(fontSize: 11, color: VDBusColors.textMuted),
                           ),
-                          Text(
-                            widget.driverName,
-                            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                          const SizedBox(height: 2),
+                          Row(
+                            children: [
+                              const Icon(Icons.person, size: 16, color: VDBusColors.textSecondary),
+                              const SizedBox(width: 4),
+                              Text(
+                                widget.driverName,
+                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -137,9 +157,15 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
                 const SizedBox(height: 16),
 
                 // Form fields
-                const Text(
-                  'Chi so Odometer (km dong ho)',
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: VDBusColors.textPrimary),
+                const Row(
+                  children: [
+                    Icon(Icons.speed, size: 16, color: VDBusColors.primary),
+                    SizedBox(width: 6),
+                    Text(
+                      'Chỉ số Odometer (km đồng hồ)',
+                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: VDBusColors.textPrimary),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 6),
                 TextFormField(
@@ -147,10 +173,10 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    hintText: 'Vi du: 124500',
+                    hintText: 'Ví dụ: 124500',
                     suffixText: 'km',
                   ),
-                  validator: (v) => (v == null || v.isEmpty) ? 'Vui long nhap so km' : null,
+                  validator: (v) => (v == null || v.isEmpty) ? 'Vui lòng nhập số km' : null,
                   onChanged: (_) => setState(() {}),
                 ),
                 const SizedBox(height: 14),
@@ -161,9 +187,15 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'So lit dau thuc do',
-                            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: VDBusColors.textPrimary),
+                          const Row(
+                            children: [
+                              Icon(Icons.water_drop_outlined, size: 16, color: VDBusColors.warningText),
+                              SizedBox(width: 4),
+                              Text(
+                                'Số lít dầu thực đổ',
+                                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: VDBusColors.textPrimary),
+                              ),
+                            ],
                           ),
                           const SizedBox(height: 6),
                           TextFormField(
@@ -172,9 +204,9 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
                             decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               hintText: '120',
-                              suffixText: 'Lit',
+                              suffixText: 'Lít',
                             ),
-                            validator: (v) => (v == null || v.isEmpty) ? 'Nhap so lit' : null,
+                            validator: (v) => (v == null || v.isEmpty) ? 'Nhập số lít' : null,
                             onChanged: (_) => setState(() {}),
                           ),
                         ],
@@ -185,9 +217,15 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Don gia (VND/lit)',
-                            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: VDBusColors.textPrimary),
+                          const Row(
+                            children: [
+                              Icon(Icons.payments_outlined, size: 16, color: VDBusColors.successText),
+                              SizedBox(width: 4),
+                              Text(
+                                'Đơn giá (VNĐ/lít)',
+                                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: VDBusColors.textPrimary),
+                              ),
+                            ],
                           ),
                           const SizedBox(height: 6),
                           TextFormField(
@@ -196,9 +234,9 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
                             decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               hintText: '22000',
-                              suffixText: 'd',
+                              suffixText: 'đ',
                             ),
-                            validator: (v) => (v == null || v.isEmpty) ? 'Nhap don gia' : null,
+                            validator: (v) => (v == null || v.isEmpty) ? 'Nhập đơn giá' : null,
                             onChanged: (_) => setState(() {}),
                           ),
                         ],
@@ -208,18 +246,24 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
                 ),
                 const SizedBox(height: 14),
 
-                const Text(
-                  'Ten cay xang / Tram bom',
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: VDBusColors.textPrimary),
+                const Row(
+                  children: [
+                    Icon(Icons.storefront_outlined, size: 16, color: VDBusColors.primary),
+                    SizedBox(width: 6),
+                    Text(
+                      'Tên cây xăng / Trạm bơm',
+                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: VDBusColors.textPrimary),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 6),
                 TextFormField(
                   controller: _stationController,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    hintText: 'Ten tram xang dau Petrolimex, PVOIL...',
+                    hintText: 'Tên trạm xăng dầu Petrolimex, PVOIL...',
                   ),
-                  validator: (v) => (v == null || v.isEmpty) ? 'Vui long nhap ten tram' : null,
+                  validator: (v) => (v == null || v.isEmpty) ? 'Vui lòng nhập tên trạm' : null,
                 ),
                 const SizedBox(height: 16),
 
@@ -235,7 +279,7 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
-                        'Tong thanh tien hoa don:',
+                        'Tổng thanh tiền hóa đơn:',
                         style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                       ),
                       Text(
@@ -268,11 +312,11 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Anh hoa don VAT cay xang',
+                              'Ảnh hóa đơn VAT cây xăng',
                               style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              'Da chup anh hoa don tu camera (Mo phong dinh kem)',
+                              'Đã chụp ảnh hóa đơn từ camera (Mô phỏng đính kèm)',
                               style: TextStyle(fontSize: 11, color: VDBusColors.textSecondary),
                             ),
                           ],
@@ -285,7 +329,7 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: const Text(
-                          'Da dinh kem',
+                          'Đã đính kèm',
                           style: TextStyle(fontSize: 11, color: VDBusColors.successText, fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -298,16 +342,17 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
                 SizedBox(
                   width: double.infinity,
                   height: 48,
-                  child: ElevatedButton(
+                  child: ElevatedButton.icon(
                     onPressed: _handleSubmit,
+                    icon: const Icon(Icons.cloud_upload_outlined, size: 20),
+                    label: const Text(
+                      'Xác Nhận & Lưu Hàng Đợi Ngoại Tuyến',
+                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: VDBusColors.primary,
                       foregroundColor: VDBusColors.textInverse,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    ),
-                    child: const Text(
-                      'Xac Nhan & Luu Hang Doi Ngoai Tuyen',
-                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -322,7 +367,7 @@ class _FuelEntryScreenState extends State<FuelEntryScreen> {
                       border: Border.all(color: VDBusColors.successText),
                     ),
                     child: Text(
-                      'Thanh cong: Da dua vao SyncQueue (ID: $_submittedSyncId). Du lieu se tu dong dong bo ve TMS ngay khi co mang 4G.',
+                      'Thành công: Đã đưa vào SyncQueue (ID: $_submittedSyncId). Dữ liệu sẽ tự động đồng bộ về TMS ngay khi có mạng 4G.',
                       style: const TextStyle(fontSize: 12, color: VDBusColors.successText),
                     ),
                   ),

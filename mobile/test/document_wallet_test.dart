@@ -9,19 +9,19 @@ void main() {
       await tester.pumpWidget(
         const MaterialApp(
           home: DocumentWalletScreen(
-            driverName: 'Nguyen Van Hai',
+            driverName: 'Nguyễn Văn Tuấn',
             vehiclePlate: '43C-189.24',
           ),
         ),
       );
 
-      expect(find.text('Vi Giay to So & Dang kiem'), findsOneWidget);
-      expect(find.text('Nguyen Van Hai'), findsOneWidget);
-      expect(find.text('Phuong tien gan lien: 43C-189.24'), findsOneWidget);
-      expect(find.text('Giay phep lai xe Hang FC'), findsOneWidget);
-      expect(find.text('Giay chung nhan Kiem dinh ATKT & BVMT'), findsOneWidget);
+      expect(find.text('Ví Giấy tờ Số & Đăng kiểm'), findsOneWidget);
+      expect(find.text('Nguyễn Văn Tuấn'), findsOneWidget);
+      expect(find.text('Phương tiện gắn liền: 43C-189.24'), findsOneWidget);
+      expect(find.text('Giấy phép lái xe hạng FC'), findsOneWidget);
+      expect(find.text('Giấy chứng nhận Kiểm định ATKT & BVMT'), findsOneWidget);
       expect(find.textContaining('KD-4301S-19284'), findsOneWidget);
-      expect(find.text('Sap het han (9 ngay)'), findsOneWidget);
+      expect(find.text('Sắp hết hạn (9 ngày)'), findsOneWidget);
     });
 
     testWidgets('fills fuel entry form and submits to sync queue', (WidgetTester tester) async {
@@ -33,22 +33,22 @@ void main() {
         const MaterialApp(
           home: FuelEntryScreen(
             vehiclePlate: '43C-189.24',
-            driverName: 'Nguyen Van Hai',
+            driverName: 'Nguyễn Văn Tuấn',
           ),
         ),
       );
 
-      expect(find.text('Ghi Nhan Do Xang Dau'), findsOneWidget);
-      expect(find.text('Tong thanh tien hoa don:'), findsOneWidget);
+      expect(find.text('Ghi Nhận Đổ Xăng Dầu'), findsOneWidget);
+      expect(find.text('Tổng thanh tiền hóa đơn:'), findsOneWidget);
 
-      final submitBtn = find.text('Xac Nhan & Luu Hang Doi Ngoai Tuyen');
+      final submitBtn = find.text('Xác Nhận & Lưu Hàng Đợi Ngoại Tuyến');
       expect(submitBtn, findsOneWidget);
 
       await tester.ensureVisible(submitBtn);
       await tester.tap(submitBtn);
       await tester.pumpAndSettle();
 
-      expect(find.textContaining('Thanh cong: Da dua vao SyncQueue'), findsOneWidget);
+      expect(find.textContaining('Thành công: Đã đưa vào SyncQueue'), findsOneWidget);
     });
   });
 }

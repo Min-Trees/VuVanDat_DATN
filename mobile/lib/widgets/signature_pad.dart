@@ -67,26 +67,33 @@ class SignaturePadState extends State<SignaturePad> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              'Ky bang ngon tay vao khung ben tren',
-              style: TextStyle(
-                fontSize: 12,
-                color: VDBusColors.textMuted,
-              ),
+            const Row(
+              children: [
+                Icon(Icons.touch_app_outlined, size: 16, color: VDBusColors.textMuted),
+                SizedBox(width: 4),
+                Text(
+                  'Ký bằng ngón tay vào khung bên trên',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: VDBusColors.textMuted,
+                  ),
+                ),
+              ],
             ),
-            TextButton(
+            TextButton.icon(
               onPressed: clear,
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                minimumSize: const Size(60, 36),
-              ),
-              child: const Text(
-                'KY LAI',
+              icon: const Icon(Icons.refresh, size: 16, color: VDBusColors.primary),
+              label: const Text(
+                'KÝ LẠI',
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.bold,
                   color: VDBusColors.primary,
                 ),
+              ),
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                minimumSize: const Size(60, 36),
               ),
             ),
           ],

@@ -41,7 +41,7 @@ class _EpodScreenState extends State<EpodScreen> {
     if (receiver.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Vui long nhap ten nguoi nhan hang.'),
+          content: Text('Vui lòng nhập họ tên người nhận hàng.'),
           backgroundColor: VDBusColors.errorText,
         ),
       );
@@ -51,7 +51,7 @@ class _EpodScreenState extends State<EpodScreen> {
     if (!_hasSignature) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Vui long yeu cau nguoi nhan ky xac nhan.'),
+          content: Text('Vui lòng yêu cầu người nhận ký xác nhận.'),
           backgroundColor: VDBusColors.errorText,
         ),
       );
@@ -89,7 +89,13 @@ class _EpodScreenState extends State<EpodScreen> {
     if (_generatedHashSha256 != null) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text('Chung Chi ePOD'),
+          title: const Row(
+            children: [
+              Icon(Icons.verified, color: VDBusColors.primary, size: 22),
+              SizedBox(width: 8),
+              Text('Chứng Chỉ ePOD'),
+            ],
+          ),
           automaticallyImplyLeading: false,
         ),
         body: SafeArea(
@@ -104,12 +110,17 @@ class _EpodScreenState extends State<EpodScreen> {
                   decoration: BoxDecoration(
                     color: VDBusColors.surface,
                     border: Border.all(color: VDBusColors.successText, width: 2),
-                    borderRadius: BorderRadius.circular(6),
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: const [
+                      BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 3)),
+                    ],
                   ),
                   child: Column(
                     children: [
+                      const Icon(Icons.check_circle, color: VDBusColors.successText, size: 48),
+                      const SizedBox(height: 12),
                       const Text(
-                        'XAC NHAN GIAO HANG THANH CONG',
+                        'XÁC NHẬN GIAO HÀNG THÀNH CÔNG',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -118,31 +129,53 @@ class _EpodScreenState extends State<EpodScreen> {
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 16),
-                      Text(
-                        'Don hang: ${widget.trip.orderCode}',
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: VDBusColors.textPrimary,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.inventory_2_outlined, size: 16, color: VDBusColors.primary),
+                          const SizedBox(width: 6),
+                          Text(
+                            'Đơn hàng: ${widget.trip.orderCode}',
+                            style: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              color: VDBusColors.textPrimary,
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 6),
-                      Text(
-                        'Nguoi nhan: ${_receiverController.text}',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: VDBusColors.textSecondary,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.person_outline, size: 16, color: VDBusColors.textSecondary),
+                          const SizedBox(width: 6),
+                          Text(
+                            'Người nhận: ${_receiverController.text}',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: VDBusColors.textSecondary,
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 16),
                       const Divider(color: VDBusColors.borderSubtle),
                       const SizedBox(height: 12),
-                      const Text(
-                        'Ma bam bao mat toan ven (SHA-256):',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: VDBusColors.textMuted,
-                        ),
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.fingerprint, size: 16, color: VDBusColors.primary),
+                          SizedBox(width: 6),
+                          Text(
+                            'Mã băm bảo mật toàn vẹn (SHA-256):',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: VDBusColors.textMuted,
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 6),
                       Container(
@@ -150,6 +183,7 @@ class _EpodScreenState extends State<EpodScreen> {
                         decoration: BoxDecoration(
                           color: VDBusColors.subtle,
                           borderRadius: BorderRadius.circular(4),
+                          border: Border.all(color: VDBusColors.borderSubtle),
                         ),
                         child: Text(
                           _generatedHashSha256!,
@@ -166,11 +200,15 @@ class _EpodScreenState extends State<EpodScreen> {
                   ),
                 ),
                 const Spacer(),
-                ElevatedButton(
+                ElevatedButton.icon(
                   onPressed: () {
-                    Navigator.of(context).pop(true); // Return success
+                    Navigator.of(context).pop(true);
                   },
-                  child: const Text('HOAN TAT & VE TRANG CHU'),
+                  icon: const Icon(Icons.home, size: 20),
+                  label: const Text('HOÀN TẤT & VỀ TRANG CHỦ'),
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size.fromHeight(50),
+                  ),
                 ),
               ],
             ),
@@ -181,7 +219,13 @@ class _EpodScreenState extends State<EpodScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Ky Nhan Dien Tu (ePOD)'),
+        title: const Row(
+          children: [
+            Icon(Icons.draw, color: VDBusColors.primary, size: 22),
+            SizedBox(width: 8),
+            Text('Ký Nhận Điện Tử (ePOD)'),
+          ],
+        ),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -195,26 +239,40 @@ class _EpodScreenState extends State<EpodScreen> {
                 decoration: BoxDecoration(
                   color: VDBusColors.surface,
                   border: Border.all(color: VDBusColors.borderSubtle),
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Don hang: ${widget.trip.orderCode}',
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: VDBusColors.textPrimary,
-                      ),
+                    Row(
+                      children: [
+                        const Icon(Icons.inventory_2_outlined, size: 18, color: VDBusColors.primary),
+                        const SizedBox(width: 6),
+                        Text(
+                          'Đơn hàng: ${widget.trip.orderCode}',
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: VDBusColors.textPrimary,
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 6),
-                    Text(
-                      'Diem giao: ${widget.trip.stops.last.address}',
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: VDBusColors.textSecondary,
-                      ),
+                    Row(
+                      children: [
+                        const Icon(Icons.location_on_outlined, size: 16, color: VDBusColors.infoText),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(
+                            'Điểm giao: ${widget.trip.stops.last.address}',
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: VDBusColors.textSecondary,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -223,52 +281,74 @@ class _EpodScreenState extends State<EpodScreen> {
               const SizedBox(height: 18),
 
               // Receiver Full Name Input
-              const Text(
-                'Ho ten nguoi nhan hang *',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: VDBusColors.textPrimary,
-                ),
+              const Row(
+                children: [
+                  Icon(Icons.person_outline, size: 16, color: VDBusColors.primary),
+                  SizedBox(width: 6),
+                  Text(
+                    'Họ tên người nhận hàng *',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: VDBusColors.textPrimary,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 6),
               TextField(
                 controller: _receiverController,
-                decoration: const InputDecoration(
-                  hintText: 'VD: Vo Minh Tri (Thu kho)',
+                decoration: InputDecoration(
+                  hintText: 'VD: Võ Minh Trí (Thủ kho)',
+                  prefixIcon: const Icon(Icons.badge_outlined, size: 20),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
                 ),
               ),
 
               const SizedBox(height: 14),
 
               // Receiver Phone Input
-              const Text(
-                'So dien thoai nguoi nhan',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: VDBusColors.textPrimary,
-                ),
+              const Row(
+                children: [
+                  Icon(Icons.phone_outlined, size: 16, color: VDBusColors.primary),
+                  SizedBox(width: 6),
+                  Text(
+                    'Số điện thoại người nhận',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: VDBusColors.textPrimary,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 6),
               TextField(
                 controller: _phoneController,
                 keyboardType: TextInputType.phone,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   hintText: 'VD: 0905333444',
+                  prefixIcon: const Icon(Icons.phone_iphone, size: 20),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
                 ),
               ),
 
               const SizedBox(height: 18),
 
               // Interactive Signature Pad
-              const Text(
-                'Chu ky dien tu nguoi nhan *',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: VDBusColors.textPrimary,
-                ),
+              const Row(
+                children: [
+                  Icon(Icons.gesture, size: 16, color: VDBusColors.primary),
+                  SizedBox(width: 6),
+                  Text(
+                    'Chữ ký điện tử người nhận *',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: VDBusColors.textPrimary,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 8),
               SignaturePad(
@@ -288,23 +368,16 @@ class _EpodScreenState extends State<EpodScreen> {
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: VDBusColors.subtle,
-                    borderRadius: BorderRadius.circular(4),
+                    borderRadius: BorderRadius.circular(6),
                     border: Border.all(color: VDBusColors.borderSubtle),
                   ),
-                  child: Row(
+                  child: const Row(
                     children: [
-                      Container(
-                        width: 12,
-                        height: 12,
-                        decoration: const BoxDecoration(
-                          color: VDBusColors.successText,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      const Expanded(
+                      Icon(Icons.camera_alt_outlined, color: VDBusColors.successText, size: 20),
+                      SizedBox(width: 8),
+                      Expanded(
                         child: Text(
-                          'Anh chup chung tu / kien hang: Da ghi nhan',
+                          'Ảnh chụp chứng từ / kiện hàng: Đã ghi nhận',
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w500,
@@ -312,6 +385,7 @@ class _EpodScreenState extends State<EpodScreen> {
                           ),
                         ),
                       ),
+                      Icon(Icons.check_circle, color: VDBusColors.successText, size: 18),
                     ],
                   ),
                 ),
@@ -319,28 +393,37 @@ class _EpodScreenState extends State<EpodScreen> {
               const SizedBox(height: 14),
 
               // Delivery Notes
-              const Text(
-                'Ghi chu tinh trang hang hoa',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: VDBusColors.textPrimary,
-                ),
+              const Row(
+                children: [
+                  Icon(Icons.note_alt_outlined, size: 16, color: VDBusColors.primary),
+                  SizedBox(width: 6),
+                  Text(
+                    'Ghi chú tình trạng hàng hóa',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: VDBusColors.textPrimary,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 6),
               TextField(
                 controller: _notesController,
-                decoration: const InputDecoration(
-                  hintText: 'VD: Hang nguyen dai kien, day du niem phong',
+                decoration: InputDecoration(
+                  hintText: 'VD: Hàng nguyên đai kiện, đầy đủ niêm phong chì',
+                  prefixIcon: const Icon(Icons.edit_note, size: 20),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
                 ),
               ),
 
               const SizedBox(height: 24),
 
               // Submit Button >= 48dp
-              ElevatedButton(
+              ElevatedButton.icon(
                 onPressed: _isSubmitting ? null : _submitEpod,
-                child: _isSubmitting
+                icon: const Icon(Icons.verified, size: 20),
+                label: _isSubmitting
                     ? const SizedBox(
                         height: 20,
                         width: 20,
@@ -349,7 +432,10 @@ class _EpodScreenState extends State<EpodScreen> {
                           color: VDBusColors.textInverse,
                         ),
                       )
-                    : const Text('XAC NHAN GIAO HANG (ePOD)'),
+                    : const Text('XÁC NHẬN GIAO HÀNG (ePOD)'),
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size.fromHeight(50),
+                ),
               ),
             ],
           ),

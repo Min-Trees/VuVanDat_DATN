@@ -6,33 +6,33 @@ void main() {
     await tester.pumpWidget(const VDBusDriverApp());
 
     // Step 0: Scheduled
-    expect(find.text('VDBus Tai xe'), findsOneWidget);
-    expect(find.text('Chuyen xe: CH-2026-0881'), findsOneWidget);
-    expect(find.text('Cho bat dau'), findsOneWidget);
-    expect(find.text('BAT DAU DI DEN DIEM LAY HANG'), findsOneWidget);
+    expect(find.text('VDBus Tài xế'), findsOneWidget);
+    expect(find.text('Chuyến xe: CH-2026-0881'), findsOneWidget);
+    expect(find.text('Chờ bắt đầu'), findsOneWidget);
+    expect(find.text('BẮT ĐẦU ĐI ĐẾN ĐIỂM LẤY HÀNG'), findsOneWidget);
 
     // Advance to Step 1: atPickup
-    await tester.tap(find.text('BAT DAU DI DEN DIEM LAY HANG'));
+    await tester.tap(find.text('BẮT ĐẦU ĐI ĐẾN ĐIỂM LẤY HÀNG'));
     await tester.pump();
-    expect(find.text('Da den diem lay hang'), findsOneWidget);
-    expect(find.text('XAC NHAN BAT DAU XEP HANG'), findsOneWidget);
+    expect(find.text('Đã đến điểm lấy hàng'), findsOneWidget);
+    expect(find.text('XÁC NHẬN BẮT ĐẦU XẾP HÀNG'), findsOneWidget);
 
     // Advance to Step 2: loading
-    await tester.tap(find.text('XAC NHAN BAT DAU XEP HANG'));
+    await tester.tap(find.text('XÁC NHẬN BẮT ĐẦU XẾP HÀNG'));
     await tester.pump();
-    expect(find.text('Dang boc xep hang'), findsOneWidget);
-    expect(find.text('XEP HANG XONG - KHOI HANH'), findsOneWidget);
+    expect(find.text('Đang bốc xếp hàng'), findsOneWidget);
+    expect(find.text('XẾP HÀNG XONG - KHỞI HÀNH'), findsOneWidget);
 
     // Advance to Step 3: inTransit
-    await tester.tap(find.text('XEP HANG XONG - KHOI HANH'));
+    await tester.tap(find.text('XẾP HÀNG XONG - KHỞI HÀNH'));
     await tester.pump();
-    expect(find.text('Dang van chuyen'), findsOneWidget);
-    expect(find.text('DA TOI DIEM GIAO HANG'), findsOneWidget);
+    expect(find.text('Đang vận chuyển'), findsOneWidget);
+    expect(find.text('ĐÃ TỚI ĐIỂM GIAO HÀNG'), findsOneWidget);
 
     // Advance to Step 4: atDelivery
-    await tester.tap(find.text('DA TOI DIEM GIAO HANG'));
+    await tester.tap(find.text('ĐÃ TỚI ĐIỂM GIAO HÀNG'));
     await tester.pump();
-    expect(find.text('Da den diem giao hang'), findsOneWidget);
-    expect(find.text('TIEN HANH GIAO HANG & KY ePOD'), findsOneWidget);
+    expect(find.text('Đã đến điểm giao hàng'), findsOneWidget);
+    expect(find.text('TIẾN HÀNH GIAO HÀNG & KÝ ePOD'), findsOneWidget);
   });
 }

@@ -1,0 +1,2454 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>VDBus Driver Mobile - B2B Logistics Prototype</title>
+  <style>
+    /* ==========================================================================
+       1. DESIGN TOKENS (LIGHT & DARK THEMES) - ENTERPRISE B2B TMS SPECIFICATION
+       ========================================================================== */
+    :root {
+      /* Brand Primary (Navy Blue) */
+      --color-primary: #1E3A8A;
+      --color-primary-hover: #172554;
+      --color-primary-subtle: #EFF6FF;
+
+      /* Canvas & Surface */
+      --color-bg-canvas: #F1F4F9;
+      --color-bg-surface: #FFFFFF;
+      --color-bg-subtle: #F8FAFC;
+      --color-bg-overlay: rgba(15, 23, 42, 0.75);
+
+      /* Typography & Contrast (WCAG AA Compliant for Sunlight Cabin) */
+      --color-text-primary: #0F172A;
+      --color-text-secondary: #334155;
+      --color-text-muted: #64748B;
+      --color-text-inverse: #FFFFFF;
+
+      /* Borders & Dividers */
+      --color-border-subtle: #E2E8F0;
+      --color-border-default: #CBD5E1;
+      --color-border-strong: #94A3B8;
+
+      /* Single Primary Action Accent: Industrial Amber */
+      --color-action-amber: #D97706;
+      --color-action-amber-hover: #B45309;
+      --color-action-amber-subtle: #FEF3C7;
+      --color-action-amber-text: #78350F;
+
+      /* Status Tints (Paired Background & Foreground) */
+      --color-success-bg: #DCFCE7;
+      --color-success-text: #14532D;
+      --color-success-border: #86EFAC;
+
+      --color-warning-bg: #FEF3C7;
+      --color-warning-text: #78350F;
+      --color-warning-border: #FCD34D;
+
+      --color-error-bg: #FEE2E2;
+      --color-error-text: #7F1D1D;
+      --color-error-border: #FCA5A5;
+
+      --color-info-bg: #DBEAFE;
+      --color-info-text: #1E3A8A;
+      --color-info-border: #93C5FD;
+
+      /* Vector Map Tokens (Light) */
+      --color-map-bg: #E2E8F0;
+      --color-map-water: #BFDBFE;
+      --color-map-park: #DCFCE7;
+      --color-map-building: #CBD5E1;
+      --color-map-road-minor: #FFFFFF;
+      --color-map-road-major: #94A3B8;
+      --color-map-route-past: #64748B;
+      --color-map-route-active: #D97706;
+
+      /* Geometry & Radii */
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-full: 9999px;
+
+      /* Typography Scale */
+      --font-sans: 'Be Vietnam Pro', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-condensed: 'Barlow Condensed', 'DIN Alternate', 'Trebuchet MS', 'Impact', sans-serif;
+
+      /* Elevation & Shadows */
+      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.08);
+      --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.12), 0 2px 4px -2px rgba(15, 23, 42, 0.08);
+      --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.18), 0 4px 6px -4px rgba(15, 23, 42, 0.12);
+    }
+
+    /* Dark Mode (System & Manual Toggle Support) */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --color-primary: #3B82F6;
+        --color-primary-hover: #60A5FA;
+        --color-primary-subtle: #1E293B;
+
+        --color-bg-canvas: #0B0F19;
+        --color-bg-surface: #111827;
+        --color-bg-subtle: #1E293B;
+        --color-bg-overlay: rgba(0, 0, 0, 0.85);
+
+        --color-text-primary: #F8FAFC;
+        --color-text-secondary: #CBD5E1;
+        --color-text-muted: #94A3B8;
+        --color-text-inverse: #0F172A;
+
+        --color-border-subtle: #1F2937;
+        --color-border-default: #374151;
+        --color-border-strong: #4B5563;
+
+        --color-action-amber: #F59E0B;
+        --color-action-amber-hover: #D97706;
+        --color-action-amber-subtle: #451A03;
+        --color-action-amber-text: #FEF3C7;
+
+        --color-success-bg: #064E3B;
+        --color-success-text: #A7F3D0;
+        --color-success-border: #047857;
+
+        --color-warning-bg: #78350F;
+        --color-warning-text: #FDE68A;
+        --color-warning-border: #B45309;
+
+        --color-error-bg: #7F1D1D;
+        --color-error-text: #FECACA;
+        --color-error-border: #991B1B;
+
+        --color-info-bg: #1E3A8A;
+        --color-info-text: #BFDBFE;
+        --color-info-border: #2563EB;
+
+        --color-map-bg: #0F172A;
+        --color-map-water: #1E293B;
+        --color-map-park: #14231E;
+        --color-map-building: #1E293B;
+        --color-map-road-minor: #1E293B;
+        --color-map-road-major: #334155;
+        --color-map-route-past: #475569;
+        --color-map-route-active: #F59E0B;
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --color-primary: #3B82F6;
+      --color-primary-hover: #60A5FA;
+      --color-primary-subtle: #1E293B;
+      --color-bg-canvas: #0B0F19;
+      --color-bg-surface: #111827;
+      --color-bg-subtle: #1E293B;
+      --color-bg-overlay: rgba(0, 0, 0, 0.85);
+      --color-text-primary: #F8FAFC;
+      --color-text-secondary: #CBD5E1;
+      --color-text-muted: #94A3B8;
+      --color-text-inverse: #0F172A;
+      --color-border-subtle: #1F2937;
+      --color-border-default: #374151;
+      --color-border-strong: #4B5563;
+      --color-action-amber: #F59E0B;
+      --color-action-amber-hover: #D97706;
+      --color-action-amber-subtle: #451A03;
+      --color-action-amber-text: #FEF3C7;
+      --color-success-bg: #064E3B;
+      --color-success-text: #A7F3D0;
+      --color-success-border: #047857;
+      --color-warning-bg: #78350F;
+      --color-warning-text: #FDE68A;
+      --color-warning-border: #B45309;
+      --color-error-bg: #7F1D1D;
+      --color-error-text: #FECACA;
+      --color-error-border: #991B1B;
+      --color-info-bg: #1E3A8A;
+      --color-info-text: #BFDBFE;
+      --color-info-border: #2563EB;
+      --color-map-bg: #0F172A;
+      --color-map-water: #1E293B;
+      --color-map-park: #14231E;
+      --color-map-building: #1E293B;
+      --color-map-road-minor: #1E293B;
+      --color-map-road-major: #334155;
+      --color-map-route-past: #475569;
+      --color-map-route-active: #F59E0B;
+    }
+
+    /* ==========================================================================
+       2. BASE RESET & MOBILE LAYOUT CONTAINER
+       ========================================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--color-text-primary);
+      background-color: #0F172A;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 0;
+    }
+
+    /* 430px Mobile Chassis / Viewport Simulator */
+    .app-chassis {
+      width: 100%;
+      max-width: 430px;
+      min-height: 100vh;
+      background-color: var(--color-bg-canvas);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      overflow-x: hidden;
+    }
+
+    /* System Status Bar Simulation */
+    .status-bar {
+      height: 24px;
+      padding: 4px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: var(--color-primary);
+      color: #FFFFFF;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      user-select: none;
+      z-index: 50;
+    }
+
+    /* ==========================================================================
+       3. FIXED VEHICLE & TRIP HEADER
+       ========================================================================== */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background-color: var(--color-primary);
+      color: #FFFFFF;
+      padding: 10px 14px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-title {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    .header-truck-badge {
+      font-family: var(--font-condensed);
+      font-size: 14px;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 2px 8px;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+    }
+
+    .header-sub {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .header-metrics {
+      display: flex;
+      gap: 10px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    /* Sync State Chip (Interactive Online/Offline Toggle) */
+    .sync-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+
+    .sync-chip.online {
+      background-color: var(--color-success-bg);
+      color: var(--color-success-text);
+      border-color: var(--color-success-border);
+    }
+
+    .sync-chip.offline {
+      background-color: var(--color-warning-bg);
+      color: var(--color-warning-text);
+      border-color: var(--color-warning-border);
+      animation: pulse-border 2s infinite;
+    }
+
+    @keyframes pulse-border {
+      0%, 100% { border-color: var(--color-warning-border); }
+      50% { border-color: var(--color-action-amber); }
+    }
+
+    .sync-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: currentColor;
+    }
+
+    /* ==========================================================================
+       4. SCROLLABLE CONTENT VIEWPORT & TABS
+       ========================================================================== */
+    .tab-content-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px 14px 80px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .tab-pane {
+      display: none;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .tab-pane.active {
+      display: flex;
+    }
+
+    /* ==========================================================================
+       5. INDUSTRIAL B2B UI CARDS & SURFACES
+       ========================================================================== */
+    .b2b-card {
+      background-color: var(--color-bg-surface);
+      border: 1px solid var(--color-border-subtle);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .card-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .b2b-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      font-weight: 700;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .badge-info { background: var(--color-info-bg); color: var(--color-info-text); border-color: var(--color-info-border); }
+    .badge-success { background: var(--color-success-bg); color: var(--color-success-text); border-color: var(--color-success-border); }
+    .badge-warning { background: var(--color-warning-bg); color: var(--color-warning-text); border-color: var(--color-warning-border); }
+    .badge-error { background: var(--color-error-bg); color: var(--color-error-text); border-color: var(--color-error-border); }
+
+    /* ==========================================================================
+       6. BUTTONS & INTERACTIVE TOUCH TARGETS
+       ========================================================================== */
+    button, .btn {
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 8px 16px;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    button:focus-visible, .btn:focus-visible {
+      outline: 3px solid var(--color-action-amber);
+      outline-offset: 2px;
+    }
+
+    /* Single Primary Amber Action Button (>= 56px height for cabin gloves/shake) */
+    .btn-primary-action {
+      min-height: 56px;
+      background-color: var(--color-action-amber);
+      color: #FFFFFF;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      box-shadow: 0 4px 12px rgba(217, 119, 6, 0.35);
+      border: none;
+      width: 100%;
+    }
+
+    .btn-primary-action:hover {
+      background-color: var(--color-action-amber-hover);
+    }
+
+    .btn-primary-action:active {
+      transform: scale(0.985);
+    }
+
+    .btn-secondary {
+      background-color: var(--color-bg-surface);
+      color: var(--color-text-primary);
+      border-color: var(--color-border-default);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--color-bg-subtle);
+      border-color: var(--color-border-strong);
+    }
+
+    .btn-call {
+      min-height: 44px;
+      padding: 4px 12px;
+      background-color: var(--color-primary-subtle);
+      color: var(--color-primary);
+      border-color: var(--color-info-border);
+      font-size: 13px;
+    }
+
+    /* ==========================================================================
+       7. TAB 1: CHUYẾN XE (TRIP DETAILS & TIMELINE)
+       ========================================================================== */
+    .trip-metric-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin: 10px 0;
+    }
+
+    .metric-cell {
+      background: var(--color-bg-subtle);
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--color-border-subtle);
+    }
+
+    .metric-cell-label {
+      font-size: 11px;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .metric-cell-val {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+    }
+
+    /* Pre-trip Checklist Banner */
+    .pretrip-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--color-warning-border);
+      background-color: var(--color-warning-bg);
+      color: var(--color-warning-text);
+      cursor: pointer;
+    }
+
+    .pretrip-banner.completed {
+      background-color: var(--color-success-bg);
+      color: var(--color-success-text);
+      border-color: var(--color-success-border);
+    }
+
+    /* Stops Timeline */
+    .stops-timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+      margin-top: 6px;
+    }
+
+    .stop-card {
+      background: var(--color-bg-subtle);
+      border: 1px solid var(--color-border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      position: relative;
+    }
+
+    .stop-card.active-stop {
+      border-left: 4px solid var(--color-action-amber);
+      background: var(--color-bg-surface);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .stop-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .stop-order {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .stop-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin-bottom: 2px;
+    }
+
+    .stop-address {
+      font-size: 12px;
+      color: var(--color-text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .stop-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--color-border-subtle);
+      padding-top: 8px;
+      font-size: 12px;
+    }
+
+    /* Toll Fee Summary */
+    .toll-summary-box {
+      background: var(--color-bg-subtle);
+      border: 1px dashed var(--color-border-default);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* ==========================================================================
+       8. TAB 2: BUỒNG LÁI (HEAVY-DUTY INDUSTRIAL COCKPIT)
+       ========================================================================== */
+    .cockpit-hud {
+      background: var(--color-bg-surface);
+      border: 2px solid var(--color-border-strong);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .speed-block {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--color-border-subtle);
+    }
+
+    .speed-current {
+      text-align: center;
+    }
+
+    .speed-number {
+      font-family: var(--font-condensed);
+      font-size: 64px;
+      line-height: 0.95;
+      font-weight: 900;
+      color: var(--color-primary);
+    }
+
+    .speed-unit {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--color-text-muted);
+      letter-spacing: 1px;
+    }
+
+    /* Vietnamese Traffic Speed Limit Sign (Red Border Circle) */
+    .speed-limit-sign {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      border: 6px solid #DC2626;
+      background: #FFFFFF;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-md);
+      user-select: none;
+    }
+
+    .speed-limit-val {
+      font-family: var(--font-condensed);
+      font-size: 30px;
+      font-weight: 900;
+      color: #000000;
+      line-height: 1;
+    }
+
+    .speed-limit-label {
+      font-size: 8px;
+      font-weight: 800;
+      color: #DC2626;
+      text-transform: uppercase;
+    }
+
+    /* HOS (Hours of Service) Ring */
+    .hos-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--color-bg-subtle);
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--color-border-subtle);
+    }
+
+    .hos-ring-container {
+      width: 76px;
+      height: 76px;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .hos-ring-svg {
+      transform: rotate(-90deg);
+      width: 100%;
+      height: 100%;
+    }
+
+    .hos-ring-bg {
+      fill: none;
+      stroke: var(--color-border-subtle);
+      stroke-width: 8;
+    }
+
+    .hos-ring-fill {
+      fill: none;
+      stroke: var(--color-action-amber);
+      stroke-width: 8;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.5s ease;
+    }
+
+    .hos-ring-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--font-condensed);
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--color-text-primary);
+    }
+
+    .hos-info-col {
+      flex: 1;
+    }
+
+    .hos-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--color-text-primary);
+    }
+
+    .hos-status-text {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--color-warning-text);
+      margin-top: 2px;
+    }
+
+    /* Cold Chain & TPMS */
+    .telemetry-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .telemetry-box {
+      background: var(--color-bg-subtle);
+      border: 1px solid var(--color-border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+    }
+
+    .telemetry-val-condensed {
+      font-family: var(--font-condensed);
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--color-primary);
+      line-height: 1.1;
+    }
+
+    /* 6-Tire Truck TPMS Schema */
+    .tpms-chassis-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .tire-indicator {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--color-bg-surface);
+      border: 1px solid var(--color-border-default);
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+    }
+
+    .tire-psi {
+      font-family: var(--font-condensed);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-success-text);
+    }
+
+    /* Dedicated Guarded SOS Button */
+    .sos-safety-panel {
+      border: 2px dashed var(--color-error-border);
+      background-color: var(--color-error-bg);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      text-align: center;
+    }
+
+    .btn-sos {
+      min-height: 52px;
+      background-color: #DC2626;
+      color: #FFFFFF;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      width: 100%;
+      border: none;
+      box-shadow: 0 4px 10px rgba(220, 38, 38, 0.4);
+    }
+
+    .btn-sos:hover {
+      background-color: #B91C1C;
+    }
+
+    /* ==========================================================================
+       9. TAB 3: KÝ NHẬN ĐIỆN TỬ (ePOD)
+       ========================================================================== */
+    .epod-result-group {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .epod-radio-card {
+      border: 1px solid var(--color-border-default);
+      border-radius: var(--radius-sm);
+      padding: 8px 6px;
+      text-align: center;
+      cursor: pointer;
+      background: var(--color-bg-surface);
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.15s ease;
+    }
+
+    .epod-radio-card.selected {
+      border-color: var(--color-primary);
+      background: var(--color-primary-subtle);
+      color: var(--color-primary);
+      font-weight: 700;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 12px;
+    }
+
+    .form-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-text-secondary);
+    }
+
+    .form-input {
+      min-height: 44px;
+      padding: 8px 12px;
+      border: 1px solid var(--color-border-default);
+      border-radius: var(--radius-sm);
+      background-color: var(--color-bg-surface);
+      color: var(--color-text-primary);
+      font-size: 15px;
+      font-family: inherit;
+    }
+
+    .form-input:focus {
+      outline: 2px solid var(--color-primary);
+      border-color: transparent;
+    }
+
+    /* Interactive Canvas for Handwritten Signature */
+    .signature-container {
+      border: 2px dashed var(--color-border-strong);
+      border-radius: var(--radius-sm);
+      background-color: #FFFFFF;
+      position: relative;
+      touch-action: none;
+      height: 140px;
+      margin-bottom: 6px;
+    }
+
+    #signatureCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      cursor: crosshair;
+    }
+
+    .signature-watermark {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 12px;
+      color: #94A3B8;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* Photo Upload / Simulated Camera Viewfinder */
+    .photo-capture-box {
+      border: 1px solid var(--color-border-default);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+      background: var(--color-bg-subtle);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .photo-thumb {
+      width: 60px;
+      height: 60px;
+      border-radius: var(--radius-sm);
+      background: var(--color-primary-subtle);
+      border: 1px solid var(--color-info-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-primary);
+      flex-shrink: 0;
+    }
+
+    /* ==========================================================================
+       10. TAB 4: VÍ XE & SỔ CHI PHÍ (WALLET & FUEL)
+       ========================================================================== */
+    .doc-item-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--color-border-subtle);
+    }
+
+    .doc-item-row:last-child {
+      border-bottom: none;
+    }
+
+    .doc-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+    }
+
+    .doc-num {
+      font-family: var(--font-condensed);
+      font-size: 13px;
+      color: var(--color-primary);
+      font-weight: 600;
+    }
+
+    .doc-exp {
+      font-size: 12px;
+      color: var(--color-text-muted);
+    }
+
+    /* ==========================================================================
+       11. FULL-SCREEN OVERLAY A: GRAB-STYLE TRIP OFFER (15-SEC COUNTDOWN)
+       ========================================================================== */
+    .fullscreen-modal {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 430px;
+      height: 100%;
+      background: var(--color-bg-overlay);
+      z-index: 100;
+      display: none;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .fullscreen-modal.active {
+      display: flex;
+    }
+
+    .offer-sheet {
+      background: var(--color-bg-surface);
+      border-radius: 16px 16px 0 0;
+      padding: 20px 16px;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .offer-countdown-bar {
+      height: 6px;
+      background: var(--color-border-subtle);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .offer-countdown-fill {
+      height: 100%;
+      width: 100%;
+      background: var(--color-action-amber);
+      transition: width 1s linear;
+    }
+
+    .offer-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .offer-fare-badge {
+      font-family: var(--font-condensed);
+      font-size: 32px;
+      font-weight: 900;
+      color: var(--color-primary);
+      line-height: 1;
+    }
+
+    /* ==========================================================================
+       12. FULL-SCREEN OVERLAY B: TURN-BY-TURN VECTOR NAVIGATION (SVG MAP)
+       ========================================================================== */
+    .nav-fullscreen {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 430px;
+      height: 100%;
+      background: var(--color-map-bg);
+      z-index: 90;
+      display: none;
+      flex-direction: column;
+    }
+
+    .nav-fullscreen.active {
+      display: flex;
+    }
+
+    /* Top Instruction Banner */
+    .nav-top-banner {
+      background: var(--color-primary);
+      color: #FFFFFF;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: var(--shadow-md);
+      z-index: 20;
+    }
+
+    .nav-turn-icon {
+      width: 44px;
+      height: 44px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .nav-instruction-col {
+      flex: 1;
+    }
+
+    .nav-turn-distance {
+      font-family: var(--font-condensed);
+      font-size: 26px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .nav-turn-street {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.9);
+      margin-top: 2px;
+    }
+
+    /* Navigation Context Truck Alerts */
+    .nav-alert-pill {
+      background: var(--color-warning-bg);
+      border-bottom: 1px solid var(--color-warning-border);
+      color: var(--color-warning-text);
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 15;
+    }
+
+    /* Pure SVG Interactive Map Viewport */
+    .svg-map-viewport {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      background-color: var(--color-map-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #navigationSvgMap {
+      width: 100%;
+      height: 100%;
+      transform-origin: center center;
+      transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    /* Floating Controls on Navigation Screen */
+    .nav-floating-tools {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 25;
+    }
+
+    .tool-circle-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--color-bg-surface);
+      border: 1px solid var(--color-border-default);
+      color: var(--color-text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-md);
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* Speed Limit Badge on Map */
+    .nav-speed-hud {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 25;
+    }
+
+    .nav-speed-badge {
+      background: var(--color-bg-surface);
+      border: 2px solid var(--color-border-strong);
+      border-radius: var(--radius-sm);
+      padding: 6px 10px;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+    }
+
+    .nav-speed-val {
+      font-family: var(--font-condensed);
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--color-primary);
+      line-height: 1;
+    }
+
+    /* Bottom Navigation Arrival Sheet */
+    .nav-bottom-sheet {
+      background: var(--color-bg-surface);
+      border-radius: 14px 14px 0 0;
+      padding: 16px 14px;
+      box-shadow: var(--shadow-lg);
+      z-index: 30;
+      border-top: 1px solid var(--color-border-subtle);
+    }
+
+    .nav-summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+
+    .nav-eta-large {
+      font-family: var(--font-condensed);
+      font-size: 32px;
+      font-weight: 900;
+      color: var(--color-primary);
+      line-height: 1;
+    }
+
+    .nav-dist-time {
+      font-size: 13px;
+      color: var(--color-text-secondary);
+      font-weight: 600;
+    }
+
+    /* ==========================================================================
+       13. FIXED BOTTOM NAVIGATION BAR (4 TABS)
+       ========================================================================== */
+    .app-bottom-nav {
+      position: sticky;
+      bottom: 0;
+      z-index: 40;
+      background-color: var(--color-bg-surface);
+      border-top: 1px solid var(--color-border-default);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      height: 64px;
+      user-select: none;
+    }
+
+    .nav-tab-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      background: transparent;
+      border: none;
+      color: var(--color-text-muted);
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 0;
+      min-height: 64px;
+      transition: color 0.15s ease;
+    }
+
+    .nav-tab-btn svg {
+      width: 22px;
+      height: 22px;
+      stroke-width: 2;
+    }
+
+    .nav-tab-btn.active {
+      color: var(--color-primary);
+      font-weight: 700;
+    }
+
+    .nav-tab-btn.active svg {
+      stroke: var(--color-primary);
+    }
+
+    /* Notification Toast Banner */
+    .app-toast {
+      position: fixed;
+      top: 60px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      width: 90%;
+      max-width: 380px;
+      background: #0F172A;
+      color: #FFFFFF;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-lg);
+      font-size: 13px;
+      font-weight: 600;
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .app-toast.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+      pointer-events: auto;
+    }
+
+    /* Accessibility Focus & Reduced Motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- MOBILE DEVICE VIEWPORT CHASSIS (MAX 430px) -->
+  <div class="app-chassis" id="appRoot">
+
+    <!-- 1. OS STATUS BAR SIMULATION -->
+    <header class="status-bar" aria-hidden="true">
+      <span id="osClock">10:45</span>
+      <div style="display: flex; gap: 6px; align-items: center;">
+        <span id="osNetworkType">4G</span>
+        <span>•</span>
+        <span>88%</span>
+      </div>
+    </header>
+
+    <!-- 2. FIXED VEHICLE & TRIP HEADER -->
+    <div class="app-header">
+      <div class="header-top">
+        <div class="header-brand">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/>
+            <path d="M15 18H9"/>
+            <path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/>
+            <circle cx="17" cy="18" r="2"/>
+            <circle cx="7" cy="18" r="2"/>
+          </svg>
+          <span class="header-title">VDBus Driver</span>
+          <span class="header-truck-badge">43C-189.24</span>
+        </div>
+
+        <!-- Sync Chip (Toggle Online / Offline Simulator) -->
+        <button class="sync-chip online" id="syncStatusChip" onclick="toggleOnlineStatus()" aria-label="Trạng thái mạng - Bấm để giả lập mất mạng">
+          <span class="sync-dot"></span>
+          <span id="syncStatusLabel">Đã đồng bộ</span>
+        </button>
+      </div>
+
+      <div class="header-sub">
+        <span id="tripCodeHeader">Lệnh: CH-2026-0881</span>
+        <div class="header-metrics">
+          <span>8.5 Tấn</span>
+          <span>•</span>
+          <span>32 CBM</span>
+          <span>•</span>
+          <span style="cursor: pointer; text-decoration: underline;" onclick="toggleDarkMode()">Giao diện</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. SCROLLABLE TAB CONTENT PANES -->
+    <main class="tab-content-area" id="mainContentArea">
+
+      <!-- ===================================================================
+           TAB 1: CHUYẾN XE (TRIP DETAILS & STATE MACHINE)
+           =================================================================== -->
+      <section class="tab-pane active" id="tabPaneTrip" aria-label="Tab Chuyến xe">
+
+        <!-- Trip Status Card -->
+        <article class="b2b-card">
+          <div class="card-header-row">
+            <span class="card-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 2v4M8 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
+              Thông tin đơn vận
+            </span>
+            <span class="b2b-badge badge-info" id="tripStateBadge">Đã nhận lệnh</span>
+          </div>
+
+          <div style="font-size: 15px; font-weight: 700; color: var(--color-text-primary);">
+            Vinamilk Đà Nẵng (DH-20261024-8192)
+          </div>
+          <div style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 8px;">
+            Mặt hàng: Sữa tiệt trùng đóng thùng • 8.5 Tấn (32 CBM)
+          </div>
+
+          <div class="trip-metric-grid">
+            <div class="metric-cell">
+              <div class="metric-cell-label">Giờ đến dự kiến</div>
+              <div class="metric-cell-val" id="etaDisplay">14:15 (Còn 22p)</div>
+            </div>
+            <div class="metric-cell">
+              <div class="metric-cell-label">Lộ trình tổng</div>
+              <div class="metric-cell-val">36.8 km (2 Chặng)</div>
+            </div>
+          </div>
+
+          <!-- Delay Warning Alert -->
+          <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--color-warning-text); background: var(--color-warning-bg); border: 1px solid var(--color-warning-border); padding: 6px 10px; border-radius: var(--radius-sm);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <span>Cảnh báo: Khung giờ giao kho 14:00 - 15:00. Vui lòng xuất bến đúng lịch!</span>
+          </div>
+        </article>
+
+        <!-- Pre-trip Inspection Checklist Banner -->
+        <div class="pretrip-banner" id="preTripBanner" onclick="openPreTripModal()" role="button" tabindex="0">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <div>
+              <div style="font-weight: 700; font-size: 13px;" id="preTripTitle">Kiểm tra xe trước chuyến (Pre-trip)</div>
+              <div style="font-size: 11px;" id="preTripSubtitle">Đã xác nhận 4/5 hạng mục an toàn</div>
+            </div>
+          </div>
+          <span class="b2b-badge badge-warning" id="preTripBadge">4/5 Mục</span>
+        </div>
+
+        <!-- Stops Timeline -->
+        <article class="b2b-card">
+          <div class="card-header-row">
+            <span class="card-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Lộ trình điểm dừng (2 Điểm)
+            </span>
+          </div>
+
+          <div class="stops-timeline">
+            <!-- Stop 1: Pickup -->
+            <div class="stop-card active-stop" id="stopCard1">
+              <div class="stop-header-row">
+                <span class="stop-order" style="color: var(--color-action-amber);">Điểm 1: Lấy hàng (14.2 km)</span>
+                <span class="b2b-badge badge-info" id="stopBadge1">Chờ đến</span>
+              </div>
+              <div class="stop-name">Kho Thép & Cảng Hòa Phát Dung Quất</div>
+              <div class="stop-address">Khu Kinh tế Dung Quất, H. Bình Sơn, Quảng Ngãi</div>
+              <div class="stop-actions">
+                <span>Thủ kho: Nguyễn Văn Hùng</span>
+                <button class="btn btn-call" onclick="simulatePhoneCall('0905123456', 'Nguyễn Văn Hùng (Kho Dung Quất)')">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  Gọi thủ kho
+                </button>
+              </div>
+            </div>
+
+            <!-- Stop 2: Delivery -->
+            <div class="stop-card" id="stopCard2">
+              <div class="stop-header-row">
+                <span class="stop-order" style="color: var(--color-text-muted);">Điểm 2: Giao hàng (22.6 km)</span>
+                <span class="b2b-badge badge-warning" id="stopBadge2">Chưa đến</span>
+              </div>
+              <div class="stop-name">Kho Tổng Vinamilk Hòa Cường</div>
+              <div class="stop-address">478 Điện Biên Phủ, Q. Thanh Khê, Đà Nẵng</div>
+              <div class="stop-actions">
+                <span>Thủ kho: Trần Đình Long</span>
+                <button class="btn btn-call" onclick="simulatePhoneCall('0905789012', 'Trần Đình Long (Kho Vinamilk)')">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  Gọi thủ kho
+                </button>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Toll Fee Estimate -->
+        <div class="toll-summary-box">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+            <div>
+              <div style="font-size: 13px; font-weight: 700;">Phí BOT dự kiến: 186.000 đ</div>
+              <div style="font-size: 11px; color: var(--color-text-muted);">BOT Điện Bàn (76k) + BOT Nam Hải Vân (110k)</div>
+            </div>
+          </div>
+          <span class="b2b-badge badge-success">VETC Tự động</span>
+        </div>
+
+        <!-- SINGLE PRIMARY AMBER ACTION BUTTON (State Machine Driver) -->
+        <button class="btn-primary-action" id="btnMainTripAction" onclick="handlePrimaryAction()">
+          BẮT ĐẦU DẪN ĐƯỜNG ĐẾN KHO LẤY HÀNG
+        </button>
+
+        <div style="text-align: center; margin-top: 4px;">
+          <button class="btn btn-secondary" style="font-size: 12px; min-height: 36px; padding: 4px 10px;" onclick="openOfferModal()">
+            Xem thử màn hình nhận đơn kiểu Grab (15s)
+          </button>
+        </div>
+
+      </section>
+
+      <!-- ===================================================================
+           TAB 2: BUỒNG LÁI (COCKPIT HUD & HOS NĐ 10/2020)
+           =================================================================== -->
+      <section class="tab-pane" id="tabPaneCockpit" aria-label="Tab Buồng lái">
+
+        <div class="cockpit-hud">
+          <!-- Speedometer & Speed Limit Sign -->
+          <div class="speed-block">
+            <div class="speed-current">
+              <div class="speed-number" id="cockpitSpeedNum">58</div>
+              <div class="speed-unit">KM/H GPS</div>
+            </div>
+
+            <!-- Official Speed Limit Sign -->
+            <div class="speed-limit-sign" id="speedSign">
+              <span class="speed-limit-val" id="speedLimitVal">60</span>
+              <span class="speed-limit-label">Tối đa</span>
+            </div>
+          </div>
+
+          <!-- HOS (Hours of Service) Gauge (Decree 10/2020: Max 4h Continuous) -->
+          <div class="hos-card">
+            <div class="hos-ring-container">
+              <svg class="hos-ring-svg" viewBox="0 0 80 80">
+                <circle class="hos-ring-bg" cx="40" cy="40" r="32"/>
+                <circle class="hos-ring-fill" id="hosRingProgress" cx="40" cy="40" r="32" stroke-dasharray="201" stroke-dashoffset="35"/>
+              </svg>
+              <div class="hos-ring-text" id="hosRemainingMin">25p</div>
+            </div>
+            <div class="hos-info-col">
+              <div class="hos-title">Giờ lái an toàn (HOS)</div>
+              <div style="font-size: 12px; color: var(--color-text-secondary); margin-top: 2px;">
+                Đã lái: 3 giờ 35 phút / Tối đa 4 giờ
+              </div>
+              <div class="hos-status-text" id="hosStatusMsg">CẢNH BÁO: Còn 25 phút trước khi vi phạm giờ lái!</div>
+            </div>
+          </div>
+
+          <!-- Cold Chain & TPMS Tires -->
+          <div class="telemetry-row">
+            <!-- Cold Chain -->
+            <div class="telemetry-box">
+              <div class="metric-cell-label">Thùng đông lạnh</div>
+              <div class="telemetry-val-condensed" style="color: var(--color-info-text);">-18.4°C</div>
+              <div style="font-size: 11px; color: var(--color-text-muted);">Dải an toàn: -20°C ~ -16°C</div>
+              <span class="b2b-badge badge-success" style="margin-top: 4px;">Máy lạnh đạt chuẩn</span>
+            </div>
+
+            <!-- Fuel Level -->
+            <div class="telemetry-box">
+              <div class="metric-cell-label">Nhiên liệu Diesel</div>
+              <div class="telemetry-val-condensed" style="color: var(--color-action-amber);">78%</div>
+              <div style="font-size: 11px; color: var(--color-text-muted);">Ước tính chạy: 420 km</div>
+              <span class="b2b-badge badge-info" style="margin-top: 4px;">Phao dầu ổn định</span>
+            </div>
+          </div>
+
+          <!-- 6-Tire Pressure TPMS Schema (Hino 500 8.5T) -->
+          <div class="b2b-card" style="padding: 10px; margin: 0;">
+            <div class="metric-cell-label" style="margin-bottom: 4px;">Áp suất 6 lốp xe (TPMS Chuẩn 110-120 PSI)</div>
+            <div class="tpms-chassis-grid">
+              <div class="tire-indicator"><span>Trục 1 Trái</span><span class="tire-psi">115 PSI</span></div>
+              <div class="tire-indicator"><span>Trục 1 Phải</span><span class="tire-psi">116 PSI</span></div>
+              <div class="tire-indicator"><span>Trục 2 Trái Ngoài</span><span class="tire-psi">118 PSI</span></div>
+              <div class="tire-indicator"><span>Trục 2 Phải Ngoài</span><span class="tire-psi">115 PSI</span></div>
+              <div class="tire-indicator"><span>Trục 2 Trái Trong</span><span class="tire-psi">114 PSI</span></div>
+              <div class="tire-indicator"><span>Trục 2 Phải Trong</span><span class="tire-psi">117 PSI</span></div>
+            </div>
+          </div>
+
+          <!-- Guarded SOS Emergency Action Button -->
+          <div class="sos-safety-panel">
+            <div style="font-size: 12px; font-weight: 700; color: var(--color-error-text); margin-bottom: 6px;">
+              TÌNH HUỐNG KHẨN CẤP / SỰ CỐ TAI NẠN
+            </div>
+            <button class="btn btn-sos" onclick="triggerSosConfirmation()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              PHÁT TÍN HIỆU SOS CỨU HỘ
+            </button>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ===================================================================
+           TAB 3: KÝ NHẬN ĐIỆN TỬ (ePOD & SHA-256 HASH)
+           =================================================================== -->
+      <section class="tab-pane" id="tabPaneEpod" aria-label="Tab Ký nhận ePOD">
+
+        <article class="b2b-card">
+          <div class="card-header-row">
+            <span class="card-title">Ký nhận bàn giao (ePOD)</span>
+            <span class="b2b-badge badge-info">Đơn: DH-20261024-8192</span>
+          </div>
+
+          <!-- 3 Delivery Outcome States -->
+          <div class="form-label">Kết quả bàn giao hàng hóa *</div>
+          <div class="epod-result-group">
+            <div class="epod-radio-card selected" id="optFull" onclick="selectEpodOutcome('FULL')">
+              Đủ hàng (100%)
+            </div>
+            <div class="epod-radio-card" id="optDamaged" onclick="selectEpodOutcome('DAMAGED')">
+              Thiếu / Hư hỏng
+            </div>
+            <div class="epod-radio-card" id="optRejected" onclick="selectEpodOutcome('REJECTED')">
+              Từ chối nhận
+            </div>
+          </div>
+
+          <!-- Receiver Info -->
+          <div class="form-group">
+            <label class="form-label" for="receiverNameInput">Tên người nhận hàng đại diện *</label>
+            <input type="text" class="form-input" id="receiverNameInput" value="Võ Minh Trí (Thủ kho Vinamilk)" placeholder="Nhập họ tên người nhận">
+          </div>
+
+          <!-- Photo Evidence Viewfinder -->
+          <div class="photo-capture-box">
+            <div class="photo-thumb" id="photoThumbPreview">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            </div>
+            <div style="flex: 1;">
+              <div style="font-size: 13px; font-weight: 700;">Ảnh hiện trường & Seal chì</div>
+              <div style="font-size: 11px; color: var(--color-text-muted);" id="photoStatusText">Đã đính kèm 1 ảnh (Mã seal: VDB-994821)</div>
+            </div>
+            <button class="btn btn-secondary" style="min-height: 38px; padding: 4px 10px; font-size: 12px;" onclick="simulateCapturePhoto()">
+              Chụp lại
+            </button>
+          </div>
+
+          <!-- Handwritten Signature Canvas Pad -->
+          <div class="form-label" style="display: flex; justify-content: space-between;">
+            <span>Chữ ký số người nhận *</span>
+            <span style="color: var(--color-primary); cursor: pointer; font-size: 12px; font-weight: 700;" onclick="clearSignatureCanvas()">Xóa ký lại</span>
+          </div>
+          <div class="signature-container">
+            <canvas id="signatureCanvas"></canvas>
+            <div class="signature-watermark" id="signatureWatermark">Ký tay cảm ứng vào khung này</div>
+          </div>
+
+          <!-- Alternative OTP Verification Option -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin: 8px 0 14px 0;">
+            <span style="font-size: 12px; color: var(--color-text-muted);">Khách không ký trực tiếp được?</span>
+            <button class="btn btn-secondary" style="min-height: 36px; padding: 2px 10px; font-size: 12px;" onclick="openOtpVerificationModal()">
+              Xác thực qua OTP SMS
+            </button>
+          </div>
+
+          <!-- Confirmation Submit Button -->
+          <button class="btn-primary-action" onclick="submitEpodConfirmation()">
+            XÁC NHẬN GIAO HÀNG & TẠO CHỨNG THƯ ePOD
+          </button>
+        </article>
+
+      </section>
+
+      <!-- ===================================================================
+           TAB 4: VÍ XE & SỔ CHI PHÍ (WALLET & FUEL LOG)
+           =================================================================== -->
+      <section class="tab-pane" id="tabPaneWallet" aria-label="Tab Ví xe và Sổ">
+
+        <!-- Legal Documents Wallet -->
+        <article class="b2b-card">
+          <div class="card-header-row">
+            <span class="card-title">Ví giấy tờ pháp lý xe & tài xế</span>
+            <span class="b2b-badge badge-success">4 Hạng mục</span>
+          </div>
+
+          <div class="doc-item-row">
+            <div>
+              <div class="doc-name">Giấy phép lái xe Hạng FC</div>
+              <div class="doc-num">GPLX-4301928471 • Sở GTVT Đà Nẵng</div>
+              <div class="doc-exp">Hạn đến: 20/08/2029 (Còn 1020 ngày)</div>
+            </div>
+            <span class="b2b-badge badge-success">Hợp lệ</span>
+          </div>
+
+          <div class="doc-item-row">
+            <div>
+              <div class="doc-name">Kiểm định ATKT & BVMT</div>
+              <div class="doc-num">KD-4301S-19284 • TT Đăng kiểm 43-01S</div>
+              <div class="doc-exp">Hạn đến: 10/11/2026 (Còn 8 ngày)</div>
+            </div>
+            <span class="b2b-badge badge-warning">Sắp hết hạn</span>
+          </div>
+
+          <div class="doc-item-row">
+            <div>
+              <div class="doc-name">Bảo hiểm TNDS bắt buộc</div>
+              <div class="doc-num">BH-PTI-847291 • Tổng Cty Bảo hiểm Bưu Điện</div>
+              <div class="doc-exp">Hạn đến: 15/01/2027 (Còn 74 ngày)</div>
+            </div>
+            <span class="b2b-badge badge-success">Hợp lệ</span>
+          </div>
+
+          <div class="doc-item-row">
+            <div>
+              <div class="doc-name">Phù hiệu Xe tải container</div>
+              <div class="doc-num">PH-43-2026-0812 • Sở GTVT Đà Nẵng</div>
+              <div class="doc-exp">Hạn đến: 15/04/2031 (Còn 1625 ngày)</div>
+            </div>
+            <span class="b2b-badge badge-success">Hợp lệ</span>
+          </div>
+        </article>
+
+        <!-- Fuel Purchase Log Form -->
+        <article class="b2b-card">
+          <div class="card-header-row">
+            <span class="card-title">Nhật ký đổ dầu Diesel (VAT)</span>
+            <span class="b2b-badge badge-info">Petrolimex</span>
+          </div>
+
+          <form onsubmit="handleFuelLogSubmit(event)">
+            <div class="form-group">
+              <label class="form-label" for="fuelOdo">Số công-tơ-mét Odometer (km) *</label>
+              <input type="number" class="form-input" id="fuelOdo" value="124500" required>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <div class="form-group">
+                <label class="form-label" for="fuelLitres">Số lít Diesel *</label>
+                <input type="number" class="form-input" id="fuelLitres" value="120" oninput="calculateFuelTotal()" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="fuelPrice">Đơn giá (đ/lít)</label>
+                <input type="number" class="form-input" id="fuelPrice" value="22000" oninput="calculateFuelTotal()" required>
+              </div>
+            </div>
+
+            <div class="toll-summary-box" style="margin-bottom: 12px;">
+              <span style="font-size: 13px; font-weight: 600;">Tổng tiền thanh toán:</span>
+              <span style="font-family: var(--font-condensed); font-size: 18px; font-weight: 800; color: var(--color-primary);" id="fuelTotalDisplay">2.640.000 đ</span>
+            </div>
+
+            <button type="submit" class="btn btn-secondary" style="width: 100%;">
+              LƯU PHIẾU ĐỔ DẦU & ĐỒNG BỘ
+            </button>
+          </form>
+        </article>
+
+        <!-- Toll Station History -->
+        <article class="b2b-card">
+          <div class="card-header-row">
+            <span class="card-title">Lịch sử trạm thu phí BOT</span>
+            <span class="b2b-badge badge-info">ePass / VETC</span>
+          </div>
+          <div style="font-size: 13px; display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--color-border-subtle); padding-bottom: 6px;">
+              <span>Trạm BOT Điện Bàn (Quốc lộ 1A)</span>
+              <span style="font-weight: 700;">76.000 đ</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span>Trạm BOT Nam Hải Vân (Hòa Liên)</span>
+              <span style="font-weight: 700;">110.000 đ</span>
+            </div>
+          </div>
+        </article>
+
+      </section>
+
+    </main>
+
+    <!-- 4. FIXED BOTTOM NAVIGATION BAR (4 TABS) -->
+    <nav class="app-bottom-nav" aria-label="Điều hướng chính">
+      <button class="nav-tab-btn active" id="navBtnTrip" onclick="switchMainTab('TRIP')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg>
+        <span>Chuyến</span>
+      </button>
+
+      <button class="nav-tab-btn" id="navBtnCockpit" onclick="switchMainTab('COCKPIT')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="m14 14-2-4-2 4"/><path d="M12 18v-2"/></svg>
+        <span>Buồng lái</span>
+      </button>
+
+      <button class="nav-tab-btn" id="navBtnEpod" onclick="switchMainTab('EPOD')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><circle cx="11" cy="11" r="2"/></svg>
+        <span>Ký nhận</span>
+      </button>
+
+      <button class="nav-tab-btn" id="navBtnWallet" onclick="switchMainTab('WALLET')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        <span>Ví xe</span>
+      </button>
+    </nav>
+
+    <!-- 5. FULL-SCREEN OVERLAY A: GRAB-STYLE TRIP OFFER MODAL (15-SECOND COUNTDOWN) -->
+    <div class="fullscreen-modal" id="offerModal" role="dialog" aria-modal="true" aria-label="Đề nghị chuyến mới">
+      <div class="offer-sheet">
+        <div class="offer-countdown-bar">
+          <div class="offer-countdown-fill" id="countdownFill"></div>
+        </div>
+
+        <div class="offer-header-row">
+          <div>
+            <div style="font-size: 12px; font-weight: 700; color: var(--color-action-amber); text-transform: uppercase;">
+              Chuyến xe đề xuất mới (<span id="countdownSecondsText">15</span>s)
+            </div>
+            <div style="font-size: 18px; font-weight: 800; color: var(--color-text-primary);">
+              CH-2026-0881
+            </div>
+          </div>
+          <div class="offer-fare-badge">
+            1.850.000 đ
+          </div>
+        </div>
+
+        <div style="background: var(--color-bg-subtle); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--color-border-subtle);">
+          <div style="font-size: 13px; font-weight: 700; color: var(--color-text-primary); margin-bottom: 6px;">
+            Lộ trình: Dung Quất $\rightarrow$ Đà Nẵng
+          </div>
+          <div style="font-size: 12px; color: var(--color-text-secondary); display: flex; flex-direction: column; gap: 4px;">
+            <div>• Đến điểm lấy: <strong>3.2 km (8 phút)</strong></div>
+            <div>• Điểm 1: Kho Thép Hòa Phát Dung Quất (Lấy 8.5 tấn)</div>
+            <div>• Điểm 2: Kho Tổng Vinamilk Hòa Cường (Giao hàng)</div>
+            <div>• Tổng hành trình: <strong>36.8 km (2 Điểm dừng)</strong></div>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 10px;">
+          <button class="btn btn-secondary" onclick="rejectTripOffer()">
+            Từ chối
+          </button>
+          <button class="btn-primary-action" style="min-height: 52px; font-size: 15px;" onclick="acceptTripOffer()">
+            NHẬN CHUYẾN NGAY
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. FULL-SCREEN OVERLAY B: TURN-BY-TURN VECTOR NAVIGATION (HEADING-UP SVG MAP) -->
+    <div class="nav-fullscreen" id="navigationOverlay" role="region" aria-label="Màn hình Dẫn đường">
+
+      <!-- Top Instruction Banner -->
+      <div class="nav-top-banner">
+        <div class="nav-turn-icon" id="navTurnIconBox">
+          <!-- Turn Arrow SVG -->
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" id="turnArrowSvg">
+            <line x1="12" y1="19" x2="12" y2="5"/>
+            <polyline points="5 12 12 5 19 12"/>
+          </svg>
+        </div>
+        <div class="nav-instruction-col">
+          <div class="nav-turn-distance" id="navTurnDistanceText">250 M</div>
+          <div class="nav-turn-street" id="navTurnStreetText">Rẽ phải vào Quốc lộ 1A hướng Đà Nẵng</div>
+        </div>
+      </div>
+
+      <!-- Truck Context Warning Pill -->
+      <div class="nav-alert-pill" id="navTruckAlertPill">
+        <span>Trạm BOT Điện Bàn cách 2 km (Phí: 76.000 đ - Đã trừ VETC)</span>
+        <span style="font-size: 10px; text-decoration: underline; cursor: pointer;" onclick="dismissNavAlert()">Đã rõ</span>
+      </div>
+
+      <!-- Pure SVG Real-time Map Viewport -->
+      <div class="svg-map-viewport">
+        <!-- Floating HUD Overlays -->
+        <div class="nav-speed-hud">
+          <div class="nav-speed-badge">
+            <div class="nav-speed-val" id="navSpeedHudVal">58</div>
+            <div style="font-size: 9px; font-weight: 700; color: var(--color-text-muted);">KM/H</div>
+          </div>
+          <div class="speed-limit-sign" style="width: 50px; height: 50px; border-width: 4px;">
+            <span class="speed-limit-val" style="font-size: 22px;">60</span>
+          </div>
+        </div>
+
+        <!-- Floating Simulation Tools -->
+        <div class="nav-floating-tools">
+          <button class="tool-circle-btn" title="Thoát dẫn đường" onclick="exitNavigationScreen()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+          <button class="tool-circle-btn" title="Báo sự cố / Lệch tuyến" onclick="simulateOffRoute()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+          </button>
+          <button class="tool-circle-btn" style="background: var(--color-action-amber); color: #FFF; font-size: 10px;" title="Tua nhanh điểm đến" onclick="fastForwardNavigation()">
+            TUA >>
+          </button>
+        </div>
+
+        <!-- SVG Map Container (Smooth Heading-Up Rotation & Car Tracking) -->
+        <svg id="navigationSvgMap" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <!-- Background Ground -->
+          <rect x="0" y="0" width="800" height="600" fill="var(--color-map-bg)"/>
+
+          <!-- River / Coastline (Sông Hàn / Biển Đà Nẵng) -->
+          <path d="M 0,220 C 180,240 260,340 400,310 C 560,280 620,180 800,190 L 800,0 L 0,0 Z" fill="var(--color-map-water)"/>
+
+          <!-- Green Park / Forest Regions -->
+          <path d="M 50,420 C 120,400 180,480 220,530 C 160,590 80,560 30,510 Z" fill="var(--color-map-park)"/>
+          <path d="M 580,260 C 650,240 720,290 750,380 C 680,420 610,360 560,320 Z" fill="var(--color-map-park)"/>
+
+          <!-- Secondary Grid Roads -->
+          <line x1="0" y1="120" x2="800" y2="120" stroke="var(--color-map-road-minor)" stroke-width="10"/>
+          <line x1="0" y1="480" x2="800" y2="480" stroke="var(--color-map-road-minor)" stroke-width="12"/>
+          <line x1="280" y1="0" x2="280" y2="600" stroke="var(--color-map-road-minor)" stroke-width="10"/>
+          <line x1="580" y1="0" x2="580" y2="600" stroke="var(--color-map-road-minor)" stroke-width="10"/>
+
+          <!-- National Highway 1A / Express Route Baseline -->
+          <path id="majorHighwayPath" d="M 120,550 Q 240,430 360,340 T 620,130" fill="none" stroke="var(--color-map-road-major)" stroke-width="20" stroke-linecap="round"/>
+
+          <!-- Traveled Path (Past Route - Muted Gray) -->
+          <path id="routePastPath" d="M 120,550 L 120,550" fill="none" stroke="var(--color-map-route-past)" stroke-width="10" stroke-linecap="round"/>
+
+          <!-- Remaining Active Route Path (Thick Amber / Blue) -->
+          <path id="routeActivePath" d="M 120,550 Q 240,430 360,340 T 620,130" fill="none" stroke="var(--color-map-route-active)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+
+          <!-- Destination Waypoint Pin (Kho Hòa Phát / Vinamilk) -->
+          <g id="destPinGroup" transform="translate(620, 130)">
+            <circle cx="0" cy="0" r="14" fill="#DC2626"/>
+            <circle cx="0" cy="0" r="6" fill="#FFFFFF"/>
+            <rect x="-45" y="-36" width="90" height="22" rx="4" fill="#0F172A"/>
+            <text x="0" y="-21" fill="#FFFFFF" font-size="11" font-weight="700" text-anchor="middle" id="destPinLabelText">Kho Vinamilk</text>
+          </g>
+
+          <!-- Animated Vehicle (Car & Direction Arrow) -->
+          <g id="truckMarkerGroup" transform="translate(120, 550) rotate(0)">
+            <!-- Outer Glow / Heading Wedge -->
+            <polygon points="-16,-22 0,-34 16,-22 0,-10" fill="rgba(217, 119, 6, 0.4)"/>
+            <!-- Truck Cab Body -->
+            <rect x="-14" y="-20" width="28" height="40" rx="4" fill="#1E3A8A" stroke="#FFFFFF" stroke-width="2"/>
+            <!-- Windshield -->
+            <rect x="-10" y="-16" width="20" height="10" rx="2" fill="#93C5FD"/>
+            <!-- Headlights -->
+            <circle cx="-9" cy="-19" r="2" fill="#FEF08A"/>
+            <circle cx="9" cy="-19" r="2" fill="#FEF08A"/>
+            <text x="0" y="8" fill="#FFFFFF" font-size="8" font-weight="900" text-anchor="middle">43C</text>
+          </g>
+        </svg>
+      </div>
+
+      <!-- Bottom Sheet Information & Arrival Confirmation -->
+      <div class="nav-bottom-sheet">
+        <div class="nav-summary-row">
+          <div>
+            <div class="nav-eta-large" id="navEtaValue">14:15</div>
+            <div class="nav-dist-time" id="navDistTimeText">Còn 14.2 km • 22 phút</div>
+          </div>
+          <button class="btn btn-call" onclick="simulatePhoneCall('0905123456', 'Kho đích')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            Gọi thủ kho
+          </button>
+        </div>
+
+        <div style="font-size: 13px; font-weight: 700; color: var(--color-text-primary);" id="navStopTargetName">
+          Điểm 1: Kho Thép Hòa Phát Dung Quất
+        </div>
+        <div style="font-size: 12px; color: var(--color-text-muted); margin-bottom: 12px;" id="navStopTargetAddress">
+          Khu Kinh tế Dung Quất, Bình Sơn, Quảng Ngãi
+        </div>
+
+        <!-- Arrival Confirmation Button -->
+        <button class="btn-primary-action" id="btnConfirmArrival" onclick="confirmArrivalCurrentStop()">
+          ĐÃ ĐẾN NƠI - XÁC NHẬN VÀO KHO
+        </button>
+      </div>
+
+    </div>
+
+    <!-- PRE-TRIP CHECKLIST MODAL -->
+    <div class="fullscreen-modal" id="preTripModal">
+      <div class="offer-sheet">
+        <div style="font-size: 16px; font-weight: 800; color: var(--color-text-primary); margin-bottom: 6px;">
+          Kiểm tra xe trước chuyến (Pre-trip Inspection)
+        </div>
+        <div style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 10px;">
+          Bắt buộc xác nhận 5/5 hạng mục kỹ thuật trước khi xe lăn bánh theo quy định ATGT.
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <label style="display: flex; align-items: center; gap: 10px; font-size: 13px;">
+            <input type="checkbox" id="chk1" checked style="width: 18px; height: 18px;">
+            <span>1. Áp suất 6 lốp xe (TPMS 110-118 PSI đạt)</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 10px; font-size: 13px;">
+            <input type="checkbox" id="chk2" checked style="width: 18px; height: 18px;">
+            <span>2. Mức dầu Diesel trên 50% & phao ổn định</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 10px; font-size: 13px;">
+            <input type="checkbox" id="chk3" checked style="width: 18px; height: 18px;">
+            <span>3. Hệ thống phanh khí nén đạt áp suất 8.5 bar</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 10px; font-size: 13px;">
+            <input type="checkbox" id="chk4" checked style="width: 18px; height: 18px;">
+            <span>4. Máy lạnh thùng đông sâu -18.4°C đạt dải</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 10px; font-size: 13px;">
+            <input type="checkbox" id="chk5" style="width: 18px; height: 18px;">
+            <span style="font-weight: 700; color: var(--color-action-amber);">5. Đèn còi, camera hành trình & ví giấy tờ số</span>
+          </label>
+        </div>
+
+        <div style="margin-top: 10px; display: flex; gap: 10px;">
+          <button class="btn btn-secondary" style="flex: 1;" onclick="closePreTripModal()">Đóng</button>
+          <button class="btn-primary-action" style="flex: 2; min-height: 48px;" onclick="savePreTripInspection()">XÁC NHẬN ĐẠT 5/5</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- OTP VERIFICATION MODAL -->
+    <div class="fullscreen-modal" id="otpModal">
+      <div class="offer-sheet" style="text-align: center;">
+        <div style="font-size: 16px; font-weight: 800; color: var(--color-text-primary);">
+          Xác thực giao hàng qua mã OTP
+        </div>
+        <div style="font-size: 13px; color: var(--color-text-secondary); margin: 6px 0 14px 0;">
+          Mã OTP 6 số đã được gửi qua tin nhắn SMS tới số người nhận <strong>0905.789.012</strong>
+        </div>
+
+        <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 16px;">
+          <input type="text" maxlength="1" class="form-input" style="width: 44px; text-align: center; font-size: 20px; font-weight: 800;" value="8">
+          <input type="text" maxlength="1" class="form-input" style="width: 44px; text-align: center; font-size: 20px; font-weight: 800;" value="4">
+          <input type="text" maxlength="1" class="form-input" style="width: 44px; text-align: center; font-size: 20px; font-weight: 800;" value="9">
+          <input type="text" maxlength="1" class="form-input" style="width: 44px; text-align: center; font-size: 20px; font-weight: 800;" value="2">
+          <input type="text" maxlength="1" class="form-input" style="width: 44px; text-align: center; font-size: 20px; font-weight: 800;" value="1">
+          <input type="text" maxlength="1" class="form-input" style="width: 44px; text-align: center; font-size: 20px; font-weight: 800;" value="0">
+        </div>
+
+        <button class="btn-primary-action" onclick="confirmOtpSuccess()">
+          XÁC THỰC MÃ OTP & HOÀN TẤT
+        </button>
+        <button class="btn btn-secondary" style="margin-top: 8px; width: 100%;" onclick="closeOtpModal()">
+          Quay lại ký tay
+        </button>
+      </div>
+    </div>
+
+    <!-- NOTIFICATION TOAST -->
+    <div class="app-toast" id="appToast" role="alert" aria-live="assertive">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span id="toastMessage">Thông báo mẫu</span>
+    </div>
+
+  </div>
+
+  <!-- ==========================================================================
+       14. PURE JAVASCRIPT STATE ENGINE & INTERACTION LOGIC
+       ========================================================================== -->
+  <script>
+    /* In-Memory Business State Machine (No LocalStorage as instructed) */
+    const State = {
+      isOnline: true,
+      pendingOfflineQueue: [],
+      currentTab: 'TRIP', // TRIP, COCKPIT, EPOD, WALLET
+      tripStatusStep: 2,  // 0: Received, 1: Inspected, 2: EnRoutePickup, 3: Loaded, 4: EnRouteDelivery, 5: AtDelivery, 6: Completed
+      preTripDone: false,
+      epodOutcome: 'FULL',
+      activeNavStage: 1,  // 1: Dung Quat (Pickup), 2: Da Nang (Delivery)
+      navStepIndex: 0,
+      countdownTimer: null,
+      countdownSec: 15
+    };
+
+    // State machine labels for the single primary action button
+    const ActionButtonLabels = {
+      0: 'XÁC NHẬN NHẬN LỆNH ĐIỀU ĐỘNG',
+      1: 'KIỂM TRA AN TOÀN TRƯỚC CHUYẾN',
+      2: 'BẮT ĐẦU DẪN ĐƯỜNG ĐẾN KHO LẤY HÀNG',
+      3: 'XÁC NHẬN ĐÃ LẤY HÀNG & KẸP CHÌ',
+      4: 'BẮT ĐẦU DẪN ĐƯỜNG ĐẾN KHO VINAMILK ĐÀ NẴNG',
+      5: 'XÁC NHẬN ĐÃ ĐẾN ĐIỂM GIAO - KÝ ePOD',
+      6: 'CHUYẾN XE ĐÃ HOÀN TẤT'
+    };
+
+    // Waypoint steps along the SVG map trajectory
+    const NavigationWaypoints = [
+      { x: 120, y: 550, angle: 42, distText: '250 M', street: 'Rẽ phải vào Quốc lộ 1A hướng Đà Nẵng', alert: 'Trạm BOT Điện Bàn cách 2 km (Phí: 76.000 đ)' },
+      { x: 220, y: 440, angle: 48, distText: '1.8 KM', street: 'Chạy thẳng trên Quốc lộ 1A qua KCN Hòa Cầm', alert: 'Lưu ý: Giới hạn tốc độ xe tải 60 km/h' },
+      { x: 340, y: 350, angle: 52, distText: '500 M', street: 'Chuẩn bị qua Trạm BOT Điện Bàn làn 1 VETC', alert: 'Tài khoản VETC đã trừ 76.000 đ' },
+      { x: 480, y: 240, angle: 45, distText: '800 M', street: 'Rẽ trái vào đường gom cầu Hòa Xuân', alert: 'Cầu Hòa Xuân: Tải trọng trục giới hạn 10T' },
+      { x: 620, y: 130, angle: 30, distText: '0 M', street: 'Đã đến Kho đích - Cổng số 2 bàn giao', alert: 'Bạn đã vào Geofence Kho bãi' }
+    ];
+
+    /* --- INITIALIZATION --- */
+    window.addEventListener('DOMContentLoaded', () => {
+      initClock();
+      initSignatureCanvas();
+      updatePrimaryButtonLabel();
+    });
+
+    function initClock() {
+      const update = () => {
+        const now = new Date();
+        const hrs = String(now.getHours()).padStart(2, '0');
+        const mins = String(now.getMinutes()).padStart(2, '0');
+        document.getElementById('osClock').textContent = `${hrs}:${mins}`;
+      };
+      update();
+      setInterval(update, 30000);
+    }
+
+    /* --- TOAST NOTIFICATION --- */
+    function showToast(message) {
+      const toast = document.getElementById('appToast');
+      document.getElementById('toastMessage').textContent = message;
+      toast.classList.add('visible');
+      setTimeout(() => {
+        toast.classList.remove('visible');
+      }, 3200);
+    }
+
+    /* --- THEME TOGGLE (LIGHT / DARK) --- */
+    function toggleDarkMode() {
+      const root = document.documentElement;
+      const current = root.getAttribute('data-theme');
+      if (current === 'dark') {
+        root.setAttribute('data-theme', 'light');
+        showToast('Đã đổi sang giao diện Sáng');
+      } else {
+        root.setAttribute('data-theme', 'dark');
+        showToast('Đã đổi sang giao diện Buồng lái Đêm');
+      }
+    }
+
+    /* --- OFFLINE / ONLINE TOGGLE SIMULATOR --- */
+    function toggleOnlineStatus() {
+      State.isOnline = !State.isOnline;
+      const chip = document.getElementById('syncStatusChip');
+      const label = document.getElementById('syncStatusLabel');
+      const netType = document.getElementById('osNetworkType');
+
+      if (State.isOnline) {
+        chip.className = 'sync-chip online';
+        label.textContent = 'Đã đồng bộ';
+        netType.textContent = '4G';
+        const pendingCount = State.pendingOfflineQueue.length;
+        if (pendingCount > 0) {
+          showToast(`Đã khôi phục mạng 4G! Đã đồng bộ ${pendingCount} mục chờ lên VDBus TMS.`);
+          State.pendingOfflineQueue = [];
+        } else {
+          showToast('Đã kết nối trực tuyến (VDBus Cloud Connected).');
+        }
+      } else {
+        chip.className = 'sync-chip offline';
+        label.textContent = `Ngoại tuyến (${State.pendingOfflineQueue.length} chờ)`;
+        netType.textContent = 'MẤT MẠNG';
+        showToast('Mất kết nối mạng! Ứng dụng đã kích hoạt chế độ đệm ngoại tuyến.');
+      }
+    }
+
+    function recordOfflineAction(actionName) {
+      if (!State.isOnline) {
+        State.pendingOfflineQueue.push({
+          action: actionName,
+          timestamp: new Date().toISOString()
+        });
+        document.getElementById('syncStatusLabel').textContent = `Ngoại tuyến (${State.pendingOfflineQueue.length} chờ)`;
+        showToast(`Ngoại tuyến: Đã lưu "${actionName}" vào hàng đợi, sẽ đồng bộ khi có mạng!`);
+      }
+    }
+
+    /* --- TAB NAVIGATION SWITCHER --- */
+    function switchMainTab(tabKey) {
+      State.currentTab = tabKey;
+      document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-tab-btn').forEach(el => el.classList.remove('active'));
+
+      if (tabKey === 'TRIP') {
+        document.getElementById('tabPaneTrip').classList.add('active');
+        document.getElementById('navBtnTrip').classList.add('active');
+      } else if (tabKey === 'COCKPIT') {
+        document.getElementById('tabPaneCockpit').classList.add('active');
+        document.getElementById('navBtnCockpit').classList.add('active');
+      } else if (tabKey === 'EPOD') {
+        document.getElementById('tabPaneEpod').classList.add('active');
+        document.getElementById('navBtnEpod').classList.add('active');
+      } else if (tabKey === 'WALLET') {
+        document.getElementById('tabPaneWallet').classList.add('active');
+        document.getElementById('navBtnWallet').classList.add('active');
+      }
+    }
+
+    /* --- STATE MACHINE & PRIMARY ACTION DISPATCHER --- */
+    function updatePrimaryButtonLabel() {
+      const btn = document.getElementById('btnMainTripAction');
+      btn.textContent = ActionButtonLabels[State.tripStatusStep] || 'TIẾP TỤC HÀNH TRÌNH';
+      
+      const badge = document.getElementById('tripStateBadge');
+      if (State.tripStatusStep === 2) badge.textContent = 'Đang đến điểm lấy';
+      else if (State.tripStatusStep === 3) badge.textContent = 'Đang bốc xếp';
+      else if (State.tripStatusStep === 4) badge.textContent = 'Đang vận chuyển';
+      else if (State.tripStatusStep === 5) badge.textContent = 'Đã đến điểm giao';
+      else if (State.tripStatusStep === 6) badge.textContent = 'Đã hoàn tất';
+    }
+
+    function handlePrimaryAction() {
+      recordOfflineAction('Chuyển trạng thái: ' + ActionButtonLabels[State.tripStatusStep]);
+
+      if (State.tripStatusStep === 0) {
+        State.tripStatusStep = 1;
+        updatePrimaryButtonLabel();
+        showToast('Đã nhận lệnh điều động chuyến!');
+      } else if (State.tripStatusStep === 1) {
+        openPreTripModal();
+      } else if (State.tripStatusStep === 2) {
+        // Open Navigation Stage 1 (Dung Quat)
+        startTurnByTurnNavigation(1);
+      } else if (State.tripStatusStep === 3) {
+        State.tripStatusStep = 4;
+        updatePrimaryButtonLabel();
+        showToast('Đã lấy hàng & kẹp chì seal VDB-994821!');
+      } else if (State.tripStatusStep === 4) {
+        // Open Navigation Stage 2 (Da Nang)
+        startTurnByTurnNavigation(2);
+      } else if (State.tripStatusStep === 5) {
+        switchMainTab('EPOD');
+        showToast('Đã đến điểm đích cuối. Chuyển sang màn hình ký nhận ePOD.');
+      } else if (State.tripStatusStep === 6) {
+        showToast('Chuyến xe đã kết thúc.');
+      }
+    }
+
+    /* --- PRE-TRIP INSPECTION MODAL --- */
+    function openPreTripModal() {
+      document.getElementById('preTripModal').classList.add('active');
+    }
+
+    function closePreTripModal() {
+      document.getElementById('preTripModal').classList.remove('active');
+    }
+
+    function savePreTripInspection() {
+      document.getElementById('chk5').checked = true;
+      State.preTripDone = true;
+      closePreTripModal();
+
+      const banner = document.getElementById('preTripBanner');
+      banner.classList.add('completed');
+      document.getElementById('preTripTitle').textContent = 'Kiểm tra xe trước chuyến: ĐÃ ĐẠT CHUẨN';
+      document.getElementById('preTripSubtitle').textContent = '5/5 Hạng mục an toàn đã được xác nhận';
+      const badge = document.getElementById('preTripBadge');
+      badge.className = 'b2b-badge badge-success';
+      badge.textContent = '5/5 Mục Đạt';
+
+      if (State.tripStatusStep === 1) {
+        State.tripStatusStep = 2;
+        updatePrimaryButtonLabel();
+      }
+      recordOfflineAction('Xác nhận kiểm tra Pre-trip 5/5');
+      showToast('Xác nhận xe 43C-189.24 đủ điều kiện xuất bến an toàn!');
+    }
+
+    /* --- FULLSCREEN A: TRIP OFFER (GRAB-STYLE 15S) --- */
+    function openOfferModal() {
+      const modal = document.getElementById('offerModal');
+      modal.classList.add('active');
+      State.countdownSec = 15;
+      document.getElementById('countdownSecondsText').textContent = '15';
+      const fill = document.getElementById('countdownFill');
+      fill.style.width = '100%';
+
+      clearInterval(State.countdownTimer);
+      State.countdownTimer = setInterval(() => {
+        State.countdownSec -= 1;
+        document.getElementById('countdownSecondsText').textContent = State.countdownSec;
+        fill.style.width = `${(State.countdownSec / 15) * 100}%`;
+        if (State.countdownSec <= 0) {
+          clearInterval(State.countdownTimer);
+          rejectTripOffer('Hết thời gian 15s');
+        }
+      }, 1000);
+    }
+
+    function rejectTripOffer(reason) {
+      clearInterval(State.countdownTimer);
+      document.getElementById('offerModal').classList.remove('active');
+      showToast(reason ? `Chuyến bị từ chối (${reason})` : 'Đã từ chối chuyến xe.');
+    }
+
+    function acceptTripOffer() {
+      clearInterval(State.countdownTimer);
+      document.getElementById('offerModal').classList.remove('active');
+      recordOfflineAction('Tài xế bấm nhận chuyến CH-2026-0881');
+      showToast('ĐÃ NHẬN CHUYẾN! Đang nạp lộ trình điều vận.');
+      State.tripStatusStep = 2;
+      updatePrimaryButtonLabel();
+    }
+
+    /* --- FULLSCREEN B: VECTOR TURN-BY-TURN NAVIGATION (SVG MAP) --- */
+    function startTurnByTurnNavigation(stage) {
+      State.activeNavStage = stage;
+      State.navStepIndex = 0;
+      const overlay = document.getElementById('navigationOverlay');
+      overlay.classList.add('active');
+
+      if (stage === 1) {
+        document.getElementById('destPinLabelText').textContent = 'Kho Hòa Phát';
+        document.getElementById('navStopTargetName').textContent = 'Chặng 1: Kho Thép Hòa Phát Dung Quất (Lấy hàng)';
+        document.getElementById('navStopTargetAddress').textContent = 'Khu Kinh tế Dung Quất, Bình Sơn, Quảng Ngãi';
+        document.getElementById('navDistTimeText').textContent = 'Còn 14.2 km • 22 phút';
+        document.getElementById('navEtaValue').textContent = '14:15';
+        document.getElementById('btnConfirmArrival').textContent = 'ĐÃ ĐẾN NƠI - XÁC NHẬN VÀO KHO LẤY HÀNG';
+      } else {
+        document.getElementById('destPinLabelText').textContent = 'Kho Vinamilk';
+        document.getElementById('navStopTargetName').textContent = 'Chặng 2: Kho Tổng Vinamilk Hòa Cường (Giao hàng)';
+        document.getElementById('navStopTargetAddress').textContent = '478 Điện Biên Phủ, Thanh Khê, Đà Nẵng';
+        document.getElementById('navDistTimeText').textContent = 'Còn 22.6 km • 35 phút';
+        document.getElementById('navEtaValue').textContent = '14:50';
+        document.getElementById('btnConfirmArrival').textContent = 'ĐÃ ĐẾN NƠI - TIẾN HÀNH BÀN GIAO & KÝ ePOD';
+      }
+
+      applyNavWaypoint(0);
+      showToast(`Bắt đầu dẫn đường Chặng ${stage}: Tuyến đường xe tải đã nạp sẵn.`);
+    }
+
+    function applyNavWaypoint(idx) {
+      const wp = NavigationWaypoints[idx];
+      if (!wp) return;
+
+      document.getElementById('navTurnDistanceText').textContent = wp.distText;
+      document.getElementById('navTurnStreetText').textContent = wp.street;
+      document.getElementById('navTruckAlertPill').querySelector('span').textContent = wp.alert;
+
+      // Animate SVG Truck Marker Position & Heading Angle
+      const truck = document.getElementById('truckMarkerGroup');
+      truck.setAttribute('transform', `translate(${wp.x}, ${wp.y}) rotate(${wp.angle})`);
+
+      // Update traveled path versus remaining path
+      const pastPath = document.getElementById('routePastPath');
+      pastPath.setAttribute('d', `M 120,550 L ${wp.x},${wp.y}`);
+    }
+
+    function fastForwardNavigation() {
+      State.navStepIndex = (State.navStepIndex + 1) % NavigationWaypoints.length;
+      applyNavWaypoint(State.navStepIndex);
+
+      if (State.navStepIndex === NavigationWaypoints.length - 1) {
+        showToast('Bạn đã vào phạm vi kho (Geofence). Nút xác nhận đã kích hoạt!');
+        document.getElementById('btnConfirmArrival').style.backgroundColor = '#16A34A';
+      } else {
+        showToast(`Đã qua ngã rẽ ${State.navStepIndex + 1}/${NavigationWaypoints.length}`);
+      }
+    }
+
+    function simulateOffRoute() {
+      showToast('Đang tính lại đường... Cập nhật lại lộ trình tránh cầu cấm tải!');
+      document.getElementById('navTurnStreetText').textContent = 'ĐANG TÍNH LẠI ĐƯỜNG TRÁNH ĐOẠN ĐANG THI CÔNG...';
+      setTimeout(() => {
+        applyNavWaypoint(State.navStepIndex);
+        showToast('Đã tìm thấy tuyến đường thay thế tối ưu.');
+      }, 1500);
+    }
+
+    function dismissNavAlert() {
+      document.getElementById('navTruckAlertPill').style.display = 'none';
+    }
+
+    function exitNavigationScreen() {
+      document.getElementById('navigationOverlay').classList.remove('active');
+      showToast('Đã thoát chế độ dẫn đường.');
+    }
+
+    function confirmArrivalCurrentStop() {
+      exitNavigationScreen();
+      recordOfflineAction(`Xác nhận đến trạm Chặng ${State.activeNavStage}`);
+
+      if (State.activeNavStage === 1) {
+        State.tripStatusStep = 3;
+        updatePrimaryButtonLabel();
+        document.getElementById('stopBadge1').className = 'b2b-badge badge-success';
+        document.getElementById('stopBadge1').textContent = 'Đã đến lấy hàng';
+        showToast('Đã xác nhận đến Kho Dung Quất. Chuẩn bị bốc xếp & kẹp chì.');
+      } else {
+        State.tripStatusStep = 5;
+        updatePrimaryButtonLabel();
+        document.getElementById('stopBadge2').className = 'b2b-badge badge-success';
+        document.getElementById('stopBadge2').textContent = 'Đã đến giao hàng';
+        switchMainTab('EPOD');
+        showToast('Đã đến Kho Vinamilk! Mở màn hình Ký nhận ePOD.');
+      }
+    }
+
+    /* --- TAB 3: EPOD SIGNATURE CANVAS & SUBMISSION --- */
+    let canvas, ctx, isDrawing = false;
+
+    function initSignatureCanvas() {
+      canvas = document.getElementById('signatureCanvas');
+      if (!canvas) return;
+      ctx = canvas.getContext('2d');
+      resizeCanvas();
+
+      // Mouse & Touch Listeners
+      canvas.addEventListener('mousedown', startDrawing);
+      canvas.addEventListener('mousemove', draw);
+      canvas.addEventListener('mouseup', stopDrawing);
+
+      canvas.addEventListener('touchstart', (e) => {
+        const touch = e.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        isDrawing = true;
+        ctx.beginPath();
+        ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
+        document.getElementById('signatureWatermark').style.display = 'none';
+        e.preventDefault();
+      });
+
+      canvas.addEventListener('touchmove', (e) => {
+        if (!isDrawing) return;
+        const touch = e.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
+        ctx.strokeStyle = '#0F172A';
+        ctx.lineWidth = 2.5;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+        e.preventDefault();
+      });
+
+      canvas.addEventListener('touchend', () => { isDrawing = false; });
+    }
+
+    function resizeCanvas() {
+      if (!canvas) return;
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = 140;
+    }
+
+    function startDrawing(e) {
+      isDrawing = true;
+      ctx.beginPath();
+      ctx.moveTo(e.offsetX, e.offsetY);
+      document.getElementById('signatureWatermark').style.display = 'none';
+    }
+
+    function draw(e) {
+      if (!isDrawing) return;
+      ctx.lineTo(e.offsetX, e.offsetY);
+      ctx.strokeStyle = '#0F172A';
+      ctx.lineWidth = 2.5;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+    }
+
+    function stopDrawing() { isDrawing = false; }
+
+    function clearSignatureCanvas() {
+      if (!ctx || !canvas) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      document.getElementById('signatureWatermark').style.display = 'block';
+    }
+
+    function selectEpodOutcome(outcome) {
+      State.epodOutcome = outcome;
+      document.getElementById('optFull').classList.remove('selected');
+      document.getElementById('optDamaged').classList.remove('selected');
+      document.getElementById('optRejected').classList.remove('selected');
+
+      if (outcome === 'FULL') document.getElementById('optFull').classList.add('selected');
+      else if (outcome === 'DAMAGED') document.getElementById('optDamaged').classList.add('selected');
+      else if (outcome === 'REJECTED') document.getElementById('optRejected').classList.add('selected');
+    }
+
+    function simulateCapturePhoto() {
+      document.getElementById('photoStatusText').textContent = 'Đã chụp mới lúc ' + new Date().toLocaleTimeString('vi-VN');
+      showToast('Đã chụp và lưu ảnh hiện trường kiện hàng!');
+    }
+
+    function openOtpVerificationModal() {
+      document.getElementById('otpModal').classList.add('active');
+    }
+
+    function closeOtpModal() {
+      document.getElementById('otpModal').classList.remove('active');
+    }
+
+    function confirmOtpSuccess() {
+      closeOtpModal();
+      showToast('Xác thực OTP người nhận thành công (Mã: 849210)!');
+      submitEpodConfirmation(true);
+    }
+
+    function submitEpodConfirmation(viaOtp = false) {
+      const receiver = document.getElementById('receiverNameInput').value.trim();
+      if (!receiver) {
+        showToast('Vui lòng nhập tên người nhận hàng!');
+        return;
+      }
+
+      recordOfflineAction(`Ký ePOD bởi ${receiver} (${State.epodOutcome})`);
+      State.tripStatusStep = 6;
+      updatePrimaryButtonLabel();
+      switchMainTab('TRIP');
+      showToast('XÁC NHẬN ePOD THÀNH CÔNG! Mã băm SHA-256 đã kích hoạt và lưu chứng thư.');
+    }
+
+    /* --- TAB 4: FUEL LOGGING & TOLL EXPENSES --- */
+    function calculateFuelTotal() {
+      const litres = parseFloat(document.getElementById('fuelLitres').value) || 0;
+      const price = parseFloat(document.getElementById('fuelPrice').value) || 0;
+      const total = litres * price;
+      document.getElementById('fuelTotalDisplay').textContent = total.toLocaleString('vi-VN') + ' đ';
+    }
+
+    function handleFuelLogSubmit(e) {
+      e.preventDefault();
+      const odo = document.getElementById('fuelOdo').value;
+      const litres = document.getElementById('fuelLitres').value;
+      recordOfflineAction(`Phiếu dầu ${litres}L tại Odo ${odo}`);
+      showToast('Đã lưu phiếu đổ dầu Petrolimex vào sổ chi phí!');
+    }
+
+    /* --- GUARDED SOS EMERGENCY CONFIRMATION --- */
+    function triggerSosConfirmation() {
+      const conf = confirm('XÁC NHẬN PHÁT TÍN HIỆU SOS KHẨN CẤP?\n\nTọa độ GPS hiện tại (16.0544, 108.2022) và cảnh báo tai nạn/hỏng hóc sẽ được gửi lập tức tới Trung tâm điều vận VDBus và Đội cứu hộ gần nhất.');
+      if (conf) {
+        recordOfflineAction('SOS KHẨN CẤP PHÁT TỌA ĐỘ');
+        showToast('TÍN HIỆU SOS ĐÃ PHÁT TỚI TRUNG TÂM ĐIỀU HÀNH VÀ CỨU HỘ!');
+      }
+    }
+
+    /* --- QUICK CALL SIMULATOR --- */
+    function simulatePhoneCall(phoneNum, contactName) {
+      const conf = confirm(`GỌI ĐIỆN THOẠI THỦ KHO:\n\nKết nối tới: ${contactName}\nSố điện thoại: ${phoneNum}\n\nNhấn OK để thực hiện cuộc gọi.`);
+      if (conf) {
+        showToast(`Đang kết nối cuộc gọi tới ${contactName}...`);
+      }
+    }
+  </script>
+</body>
+</html>
+

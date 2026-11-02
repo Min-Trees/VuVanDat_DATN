@@ -19,9 +19,9 @@ class DriverMainScreen extends StatefulWidget {
 
 class _DriverMainScreenState extends State<DriverMainScreen> {
   int _currentIndex = 0;
-  final String _driverName = 'Nguyen Van Tuan';
+  final String _driverName = 'Nguyễn Văn Tuấn';
   String _vehiclePlate = '43C-189.24';
-  final String _vehicleModel = 'Hino 500 FG8JJ7A (8.5 tan)';
+  final String _vehicleModel = 'Hino 500 FG8JJ7A (8.5 tấn)';
 
   late DriverTrip _trip;
   bool _preTripInspected = true;
@@ -49,16 +49,16 @@ class _DriverMainScreenState extends State<DriverMainScreen> {
         TripStop(
           order: 1,
           type: 'Pickup',
-          address: 'Kho Tong Vinamilk, KCN Hoa Khanh, Lien Chieu, Da Nang',
-          contactName: 'Nguyen Van Hung (Quan ly Kho)',
+          address: 'Kho Tổng Vinamilk, KCN Hòa Khánh, Liên Chiểu, Đà Nẵng',
+          contactName: 'Nguyễn Văn Hùng (Quản lý kho)',
           contactPhone: '0905123456',
           scheduledTime: DateTime.now().add(const Duration(minutes: 45)),
         ),
         TripStop(
           order: 2,
           type: 'Delivery',
-          address: 'Tong kho Co.opmart Da Nang, 478 Dien Bien Phu, Thanh Khe, Da Nang',
-          contactName: 'Tran Dinh Long (Bo phan Giao nhan)',
+          address: 'Tổng kho Co.opmart Đà Nẵng, 478 Điện Biên Phủ, Thanh Khê, Đà Nẵng',
+          contactName: 'Trần Đình Long (Bộ phận giao nhận)',
           contactPhone: '0905333444',
           scheduledTime: DateTime.now().add(const Duration(hours: 3)),
         ),
@@ -105,25 +105,25 @@ class _DriverMainScreenState extends State<DriverMainScreen> {
         setState(() {
           _trip = _trip.copyWith(currentStep: TripStep.atPickup);
         });
-        await ApiService.advanceTripStatus(_trip.id, 2, 'Tai xe da den kho Vinamilk lay hang');
+        await ApiService.advanceTripStatus(_trip.id, 2, 'Tài xế đã đến kho Vinamilk lấy hàng');
         break;
       case TripStep.atPickup:
         setState(() {
           _trip = _trip.copyWith(currentStep: TripStep.loading);
         });
-        await ApiService.advanceTripStatus(_trip.id, 3, 'Bat dau boc xep hang va kiem tra niêm phong');
+        await ApiService.advanceTripStatus(_trip.id, 3, 'Bắt đầu bốc xếp hàng và kiểm tra niêm phong chì');
         break;
       case TripStep.loading:
         setState(() {
           _trip = _trip.copyWith(currentStep: TripStep.inTransit);
         });
-        await ApiService.advanceTripStatus(_trip.id, 4, 'Boc xep xong, xe bat dau khoi hanh');
+        await ApiService.advanceTripStatus(_trip.id, 4, 'Bốc xếp xong, xe bắt đầu khởi hành');
         break;
       case TripStep.inTransit:
         setState(() {
           _trip = _trip.copyWith(currentStep: TripStep.atDelivery);
         });
-        await ApiService.advanceTripStatus(_trip.id, 5, 'Xe da toi kho Co.opmart Da Nang');
+        await ApiService.advanceTripStatus(_trip.id, 5, 'Xe đã tới kho Co.opmart Đà Nẵng');
         break;
       case TripStep.atDelivery:
         // Switch to ePOD Tab
@@ -156,9 +156,15 @@ class _DriverMainScreenState extends State<DriverMainScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Kiem tra xe truoc chuyen (Pre-trip Inspection)',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: VDBusColors.textPrimary),
+                const Row(
+                  children: [
+                    Icon(Icons.fact_check_outlined, color: VDBusColors.primary, size: 22),
+                    SizedBox(width: 8),
+                    Text(
+                      'Kiểm tra an toàn trước chuyến (Pre-trip Inspection)',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: VDBusColors.textPrimary),
+                    ),
+                  ],
                 ),
                 IconButton(
                   icon: const Icon(Icons.close),
@@ -168,13 +174,13 @@ class _DriverMainScreenState extends State<DriverMainScreen> {
             ),
             const Divider(),
             const SizedBox(height: 8),
-            _buildChecklistRow('Ap suat lop xe (TPMS 6 banh)', '110 - 118 PSI (Dat chuan)'),
-            _buildChecklistRow('Dau Diesel va muc dau boi tron', 'Con 82% binh (Dat chuan)'),
-            _buildChecklistRow('He thong phanh khi nen & ABS', 'Dong ho ap 8.5 bar (An toan)'),
-            _buildChecklistRow('He thong may lanh thung hang', '-18.4 do C (San sang)'),
-            _buildChecklistRow('Giay to xe & Phu hieu xe tai', 'Dang kiem con han den 2026-11-10'),
+            _buildChecklistRow(Icons.tire_repair, 'Áp suất lốp xe (TPMS 6 bánh)', '110 - 118 PSI (Đạt chuẩn)'),
+            _buildChecklistRow(Icons.local_gas_station, 'Dầu Diesel và mức dầu bôi trơn', 'Còn 82% bình (Đạt chuẩn)'),
+            _buildChecklistRow(Icons.settings, 'Hệ thống phanh khí nén & ABS', 'Đồng hồ áp 8.5 bar (An toàn)'),
+            _buildChecklistRow(Icons.ac_unit, 'Hệ thống máy lạnh thùng đông', '-18.4°C (Sẵn sàng)'),
+            _buildChecklistRow(Icons.description_outlined, 'Giấy tờ xe & Phù hiệu xe tải', 'Đăng kiểm còn hạn đến 10/11/2026'),
             const SizedBox(height: 16),
-            ElevatedButton(
+            ElevatedButton.icon(
               onPressed: () {
                 setState(() {
                   _preTripInspected = true;
@@ -182,12 +188,13 @@ class _DriverMainScreenState extends State<DriverMainScreen> {
                 Navigator.of(ctx).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Xac nhan xe 43C-189.24 du dieu kien luu hanh an toan.'),
+                    content: Text('Xác nhận xe 43C-189.24 đủ điều kiện lưu hành an toàn.'),
                     backgroundColor: VDBusColors.successText,
                   ),
                 );
               },
-              child: const Text('XAC NHAN XE DU DIEU KIEN XUAT BEN'),
+              icon: const Icon(Icons.check_circle_outline, size: 20),
+              label: const Text('XÁC NHẬN XE ĐỦ ĐIỀU KIỆN XUẤT BẾN'),
             ),
             const SizedBox(height: 8),
           ],
@@ -196,12 +203,12 @@ class _DriverMainScreenState extends State<DriverMainScreen> {
     );
   }
 
-  Widget _buildChecklistRow(String title, String subtitle) {
+  Widget _buildChecklistRow(IconData icon, String title, String subtitle) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: Row(
         children: [
-          const Icon(Icons.check_circle, color: VDBusColors.successText, size: 20),
+          Icon(icon, color: VDBusColors.primary, size: 20),
           const SizedBox(width: 10),
           Expanded(
             child: Column(
@@ -212,6 +219,7 @@ class _DriverMainScreenState extends State<DriverMainScreen> {
               ],
             ),
           ),
+          const Icon(Icons.check_circle, color: VDBusColors.successText, size: 20),
         ],
       ),
     );
@@ -220,34 +228,34 @@ class _DriverMainScreenState extends State<DriverMainScreen> {
   String _getStepTitle(TripStep step) {
     switch (step) {
       case TripStep.scheduled:
-        return 'Cho bat dau';
+        return 'Chờ bắt đầu';
       case TripStep.atPickup:
-        return 'Da den diem lay hang';
+        return 'Đã đến điểm lấy hàng';
       case TripStep.loading:
-        return 'Dang boc xep hang';
+        return 'Đang bốc xếp hàng';
       case TripStep.inTransit:
-        return 'Dang van chuyen';
+        return 'Đang vận chuyển';
       case TripStep.atDelivery:
-        return 'Da den diem giao hang';
+        return 'Đã đến điểm giao hàng';
       case TripStep.completed:
-        return 'Chuyen xe hoan tat';
+        return 'Chuyến xe hoàn tất';
     }
   }
 
   String _getActionButtonLabel(TripStep step) {
     switch (step) {
       case TripStep.scheduled:
-        return 'BAT DAU DI DEN DIEM LAY HANG';
+        return 'BẮT ĐẦU ĐI ĐẾN ĐIỂM LẤY HÀNG';
       case TripStep.atPickup:
-        return 'XAC NHAN BAT DAU XEP HANG';
+        return 'XÁC NHẬN BẮT ĐẦU XẾP HÀNG';
       case TripStep.loading:
-        return 'XEP HANG XONG - KHOI HANH';
+        return 'XẾP HÀNG XONG - KHỞI HÀNH';
       case TripStep.inTransit:
-        return 'DA TOI DIEM GIAO HANG';
+        return 'ĐÃ TỚI ĐIỂM GIAO HÀNG';
       case TripStep.atDelivery:
-        return 'TIEN HANH GIAO HANG & KY ePOD';
+        return 'TIẾN HÀNH GIAO HÀNG & KÝ ePOD';
       case TripStep.completed:
-        return 'KHOI TAO CHUYEN XE MOI';
+        return 'KHỞI TẠO CHUYẾN XE MỚI';
     }
   }
 
@@ -279,12 +287,18 @@ class _DriverMainScreenState extends State<DriverMainScreen> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Xac nhan dang xuat'),
-        content: const Text('Ban co chac chan muon dang xuat ca lam viec hien tai khong?'),
+        title: const Row(
+          children: [
+            Icon(Icons.logout, color: VDBusColors.errorText, size: 20),
+            SizedBox(width: 8),
+            Text('Xác nhận đăng xuất'),
+          ],
+        ),
+        content: const Text('Bạn có chắc chắn muốn đăng xuất ca làm việc hiện tại không?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(false),
-            child: const Text('HUY'),
+            child: const Text('HỦY'),
           ),
           ElevatedButton(
             onPressed: () => Navigator.of(ctx).pop(true),
@@ -292,7 +306,7 @@ class _DriverMainScreenState extends State<DriverMainScreen> {
               backgroundColor: VDBusColors.errorText,
               foregroundColor: Colors.white,
             ),
-            child: const Text('DANG XUAT'),
+            child: const Text('ĐĂNG XUẤT'),
           ),
         ],
       ),
@@ -315,25 +329,29 @@ class _DriverMainScreenState extends State<DriverMainScreen> {
           children: [
             const Icon(Icons.local_shipping, color: VDBusColors.primary, size: 24),
             const SizedBox(width: 8),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'VDBus Tai xe',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: VDBusColors.textPrimary),
-                ),
-                Text(
-                  '$_driverName - Xe: $_vehiclePlate',
-                  style: const TextStyle(fontSize: 12, color: VDBusColors.textSecondary),
-                ),
-              ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'VDBus Tài xế',
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: VDBusColors.textPrimary),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    '$_driverName - Xe: $_vehiclePlate',
+                    style: const TextStyle(fontSize: 11, color: VDBusColors.textSecondary),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
             ),
           ],
         ),
         actions: [
           Container(
             margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
             decoration: BoxDecoration(
               color: VDBusColors.successBg,
               borderRadius: BorderRadius.circular(12),
@@ -342,10 +360,10 @@ class _DriverMainScreenState extends State<DriverMainScreen> {
             child: const Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                CircleAvatar(radius: 3, backgroundColor: VDBusColors.successText),
-                SizedBox(width: 4),
+                CircleAvatar(radius: 4, backgroundColor: VDBusColors.successText),
+                SizedBox(width: 6),
                 Text(
-                  'Truc tuyen',
+                  'Trực tuyến',
                   style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: VDBusColors.successText),
                 ),
               ],
@@ -353,7 +371,7 @@ class _DriverMainScreenState extends State<DriverMainScreen> {
           ),
           IconButton(
             icon: const Icon(Icons.logout, size: 20),
-            tooltip: 'Dang xuat',
+            tooltip: 'Đăng xuất ca làm việc',
             onPressed: _handleLogout,
           ),
         ],
@@ -381,31 +399,31 @@ class _DriverMainScreenState extends State<DriverMainScreen> {
         unselectedFontSize: 11,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.assignment_outlined),
-            activeIcon: Icon(Icons.assignment),
-            label: 'Chuyen xe',
+            icon: Icon(Icons.local_shipping_outlined),
+            activeIcon: Icon(Icons.local_shipping),
+            label: 'Chuyến xe',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.map_outlined),
-            activeIcon: Icon(Icons.map),
-            label: 'Buong lai',
+            icon: Icon(Icons.speed_outlined),
+            activeIcon: Icon(Icons.speed),
+            label: 'Buồng lái',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.draw_outlined),
             activeIcon: Icon(Icons.draw),
-            label: 'Ky ePOD',
+            label: 'Ký ePOD',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.account_balance_wallet_outlined),
             activeIcon: Icon(Icons.account_balance_wallet),
-            label: 'Vi xe & So',
+            label: 'Ví xe & Sổ',
           ),
         ],
       ),
     );
   }
 
-  // TAB 1: Chuyen xe & Tien trinh
+  // TAB 1: Chuyến xe & Tiến trình
   Widget _buildTripTab() {
     final statusBg = _getStatusBg(_trip.currentStep);
     final statusText = _getStatusText(_trip.currentStep);
@@ -433,16 +451,28 @@ class _DriverMainScreenState extends State<DriverMainScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'Chuyen xe: ${_trip.tripCode}',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: VDBusColors.textPrimary,
+                      Expanded(
+                        child: Row(
+                          children: [
+                            const Icon(Icons.confirmation_number_outlined, size: 18, color: VDBusColors.primary),
+                            const SizedBox(width: 6),
+                            Expanded(
+                              child: Text(
+                                'Chuyến xe: ${_trip.tripCode}',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: VDBusColors.textPrimary,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
+                      const SizedBox(width: 8),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
                           color: statusBg,
                           border: Border.all(color: statusText),
@@ -464,16 +494,24 @@ class _DriverMainScreenState extends State<DriverMainScreen> {
                     children: [
                       const Icon(Icons.inventory_2_outlined, size: 16, color: VDBusColors.primary),
                       const SizedBox(width: 6),
-                      Text(
-                        'Don hang: ${_trip.orderCode} (Sua tuoi Vinamilk)',
-                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: VDBusColors.textPrimary),
+                      Expanded(
+                        child: Text(
+                          'Đơn hàng: ${_trip.orderCode} (Sữa tươi tiệt trùng Vinamilk)',
+                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: VDBusColors.textPrimary),
+                        ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Trong tai: ${(_trip.totalWeightKg / 1000).toStringAsFixed(1)} tan - ${_trip.totalVolumeCbm} CBM',
-                    style: const TextStyle(fontSize: 13, color: VDBusColors.textSecondary),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      const Icon(Icons.scale_outlined, size: 16, color: VDBusColors.textMuted),
+                      const SizedBox(width: 6),
+                      Text(
+                        'Trọng tải: ${(_trip.totalWeightKg / 1000).toStringAsFixed(1)} tấn - ${_trip.totalVolumeCbm} CBM',
+                        style: const TextStyle(fontSize: 13, color: VDBusColors.textSecondary),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -486,7 +524,7 @@ class _DriverMainScreenState extends State<DriverMainScreen> {
               onTap: _showPreTripInspectionDialog,
               borderRadius: BorderRadius.circular(VDBusRadius.sm),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                 decoration: BoxDecoration(
                   color: _preTripInspected ? VDBusColors.successBg : VDBusColors.warningBg,
                   borderRadius: BorderRadius.circular(VDBusRadius.sm),
@@ -495,18 +533,18 @@ class _DriverMainScreenState extends State<DriverMainScreen> {
                 child: Row(
                   children: [
                     Icon(
-                      _preTripInspected ? Icons.verified : Icons.error_outline,
+                      _preTripInspected ? Icons.verified : Icons.warning_amber_rounded,
                       color: _preTripInspected ? VDBusColors.successText : VDBusColors.warningText,
-                      size: 20,
+                      size: 22,
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 10),
                     Expanded(
                       child: Text(
                         _preTripInspected
-                            ? 'Kiem tra xe truoc chuyen: DA DAT YEU CAU'
-                            : 'Yeu cau kiem tra ky thuat xe truoc khi xuat ben',
+                            ? 'Kiểm tra xe trước chuyến: ĐÃ ĐẠT YÊU CẦU'
+                            : 'Yêu cầu kiểm tra kỹ thuật xe trước khi xuất bến',
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 13,
                           fontWeight: FontWeight.bold,
                           color: _preTripInspected ? VDBusColors.successText : VDBusColors.warningText,
                         ),
@@ -521,13 +559,19 @@ class _DriverMainScreenState extends State<DriverMainScreen> {
             const SizedBox(height: 16),
 
             // Stops Timeline Header
-            const Text(
-              'Lo trinh & Diem dung',
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-                color: VDBusColors.textPrimary,
-              ),
+            const Row(
+              children: [
+                Icon(Icons.route_outlined, size: 18, color: VDBusColors.primary),
+                SizedBox(width: 6),
+                Text(
+                  'Lộ trình & Điểm dừng',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: VDBusColors.textPrimary,
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 8),
 
@@ -556,7 +600,7 @@ class _DriverMainScreenState extends State<DriverMainScreen> {
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(
-                            isPickup ? 'LAY HANG' : 'GIAO HANG',
+                            isPickup ? 'LẤY HÀNG' : 'GIAO HÀNG',
                             style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.bold,
@@ -577,14 +621,22 @@ class _DriverMainScreenState extends State<DriverMainScreen> {
                                   color: VDBusColors.textPrimary,
                                 ),
                               ),
-                              const SizedBox(height: 4),
+                              const SizedBox(height: 6),
                               Row(
                                 children: [
-                                  const Icon(Icons.phone, size: 14, color: VDBusColors.textSecondary),
+                                  const Icon(Icons.person_outline, size: 14, color: VDBusColors.textSecondary),
+                                  const SizedBox(width: 4),
+                                  Expanded(
+                                    child: Text(
+                                      stop.contactName,
+                                      style: const TextStyle(fontSize: 12, color: VDBusColors.textSecondary),
+                                    ),
+                                  ),
+                                  const Icon(Icons.phone_outlined, size: 14, color: VDBusColors.primary),
                                   const SizedBox(width: 4),
                                   Text(
-                                    '${stop.contactName} - ${stop.contactPhone}',
-                                    style: const TextStyle(fontSize: 12, color: VDBusColors.textSecondary),
+                                    stop.contactPhone,
+                                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: VDBusColors.primary),
                                   ),
                                 ],
                               ),
@@ -601,9 +653,13 @@ class _DriverMainScreenState extends State<DriverMainScreen> {
             const SizedBox(height: 12),
 
             // High-Contrast Primary Touch Action (Height >= 48dp)
-            ElevatedButton(
+            ElevatedButton.icon(
               onPressed: _advanceTripStep,
-              child: Text(_getActionButtonLabel(_trip.currentStep)),
+              icon: const Icon(Icons.arrow_circle_right_outlined, size: 22),
+              label: Text(_getActionButtonLabel(_trip.currentStep)),
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size.fromHeight(52),
+              ),
             ),
           ],
         ),
@@ -611,7 +667,7 @@ class _DriverMainScreenState extends State<DriverMainScreen> {
     );
   }
 
-  // TAB 2: Buong lai & Ban do thoi gian thuc
+  // TAB 2: Buồng lái & Bản đồ thời gian thực
   Widget _buildCockpitAndMapTab() {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(VDBusSpace.lg),
@@ -643,10 +699,17 @@ class _DriverMainScreenState extends State<DriverMainScreen> {
                   ),
                   child: const Column(
                     children: [
-                      Text('TOC DO GPS', style: TextStyle(fontSize: 11, color: VDBusColors.textSecondary)),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.speed, size: 14, color: VDBusColors.primary),
+                          SizedBox(width: 4),
+                          Text('TỐC ĐỘ GPS', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: VDBusColors.textSecondary)),
+                        ],
+                      ),
                       SizedBox(height: 4),
                       Text('54', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: VDBusColors.primary)),
-                      Text('km/h (Hop quyen)', style: TextStyle(fontSize: 11, color: VDBusColors.successText)),
+                      Text('km/h (Hợp quy)', style: TextStyle(fontSize: 11, color: VDBusColors.successText)),
                     ],
                   ),
                 ),
@@ -662,10 +725,17 @@ class _DriverMainScreenState extends State<DriverMainScreen> {
                   ),
                   child: const Column(
                     children: [
-                      Text('GIO LAI (ND 10/2020)', style: TextStyle(fontSize: 11, color: VDBusColors.textSecondary)),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.timer_outlined, size: 14, color: VDBusColors.warningText),
+                          SizedBox(width: 4),
+                          Text('GIỜ LÁI (NĐ 10/2020)', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: VDBusColors.textSecondary)),
+                        ],
+                      ),
                       SizedBox(height: 4),
                       Text('55', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: VDBusColors.warningText)),
-                      Text('phut con lai / 4h', style: TextStyle(fontSize: 11, color: VDBusColors.warningText)),
+                      Text('phút còn lại / 4h', style: TextStyle(fontSize: 11, color: VDBusColors.warningText)),
                     ],
                   ),
                 ),
@@ -692,12 +762,12 @@ class _DriverMainScreenState extends State<DriverMainScreen> {
                       children: [
                         Icon(Icons.ac_unit, size: 16, color: VDBusColors.infoText),
                         SizedBox(width: 4),
-                        Text('NHIET DO THUNG', style: TextStyle(fontSize: 11, color: VDBusColors.textSecondary)),
+                        Text('NHIỆT ĐỘ THÙNG', style: TextStyle(fontSize: 11, color: VDBusColors.textSecondary)),
                       ],
                     ),
                     const SizedBox(height: 4),
-                    const Text('-18.4 C', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: VDBusColors.infoText)),
-                    const Text('Dinh muc -20 C den -16 C', style: TextStyle(fontSize: 10, color: VDBusColors.textMuted)),
+                    const Text('-18.4°C', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: VDBusColors.infoText)),
+                    const Text('Định mức -20°C đến -16°C', style: TextStyle(fontSize: 10, color: VDBusColors.textMuted)),
                   ],
                 ),
                 Container(height: 40, width: 1, color: VDBusColors.borderSubtle),
@@ -707,11 +777,11 @@ class _DriverMainScreenState extends State<DriverMainScreen> {
                       children: [
                         Icon(Icons.tire_repair, size: 16, color: VDBusColors.successText),
                         SizedBox(width: 4),
-                        Text('AP SUAT LOP (TPMS)', style: TextStyle(fontSize: 11, color: VDBusColors.textSecondary)),
+                        Text('ÁP SUẤT LỐP (TPMS)', style: TextStyle(fontSize: 11, color: VDBusColors.textSecondary)),
                       ],
                     ),
                     const SizedBox(height: 4),
-                    const Text('6 / 6 LOP DAT', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: VDBusColors.successText)),
+                    const Text('6 / 6 LỐP ĐẠT', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: VDBusColors.successText)),
                     const Text('112 - 116 PSI', style: TextStyle(fontSize: 10, color: VDBusColors.textMuted)),
                   ],
                 ),
@@ -733,20 +803,20 @@ class _DriverMainScreenState extends State<DriverMainScreen> {
                 ),
               );
             },
-            icon: const Icon(Icons.speed, size: 18),
-            label: const Text('MO TOAN MAN HINH BUONG LAI & HOS'),
+            icon: const Icon(Icons.open_in_new, size: 18),
+            label: const Text('MỞ TOÀN MÀN HÌNH BUỒNG LÁI & HOS'),
           ),
         ],
       ),
     );
   }
 
-  // TAB 3: ePOD Ky nhan dien tu
+  // TAB 3: ePOD Ký nhận điện tử
   Widget _buildEpodTab() {
     return EpodScreen(trip: _trip);
   }
 
-  // TAB 4: Vi xe & So sach chi phi
+  // TAB 4: Ví xe & Sổ sách chi phí
   Widget _buildWalletAndExpensesTab() {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(VDBusSpace.lg),
@@ -763,14 +833,14 @@ class _DriverMainScreenState extends State<DriverMainScreen> {
             ),
             child: Row(
               children: [
-                const Icon(Icons.folder_shared, color: VDBusColors.primary, size: 36),
+                const Icon(Icons.folder_shared_outlined, color: VDBusColors.primary, size: 36),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Ho so Phuong tien: $_vehiclePlate',
+                        'Hồ sơ Phương tiện: $_vehiclePlate',
                         style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: VDBusColors.primary),
                       ),
                       const SizedBox(height: 2),
@@ -794,9 +864,9 @@ class _DriverMainScreenState extends State<DriverMainScreen> {
               borderRadius: BorderRadius.circular(VDBusRadius.sm),
               side: const BorderSide(color: VDBusColors.borderSubtle),
             ),
-            leading: const Icon(Icons.badge, color: VDBusColors.primary),
-            title: const Text('Vi giay to phap ly xe & tai xe', style: TextStyle(fontWeight: FontWeight.w600)),
-            subtitle: const Text('GPLX, Dang kiem, Phu hieu, Bao hiem PTI', style: TextStyle(fontSize: 12)),
+            leading: const Icon(Icons.badge_outlined, color: VDBusColors.primary, size: 24),
+            title: const Text('Ví giấy tờ pháp lý xe & tài xế', style: TextStyle(fontWeight: FontWeight.w600)),
+            subtitle: const Text('GPLX, Đăng kiểm, Phù hiệu, Bảo hiểm PTI', style: TextStyle(fontSize: 12)),
             trailing: const Icon(Icons.arrow_forward_ios, size: 14),
             onTap: () {
               Navigator.of(context).push(
@@ -819,9 +889,9 @@ class _DriverMainScreenState extends State<DriverMainScreen> {
               borderRadius: BorderRadius.circular(VDBusRadius.sm),
               side: const BorderSide(color: VDBusColors.borderSubtle),
             ),
-            leading: const Icon(Icons.local_gas_station, color: VDBusColors.warningText),
-            title: const Text('Nhat ky do dau & Hoa don VAT', style: TextStyle(fontWeight: FontWeight.w600)),
-            subtitle: const Text('Ghi nhan so lit, don gia, hoa don xang dau doc duong', style: TextStyle(fontSize: 12)),
+            leading: const Icon(Icons.local_gas_station_outlined, color: VDBusColors.warningText, size: 24),
+            title: const Text('Nhật ký đổ dầu & Hóa đơn VAT', style: TextStyle(fontWeight: FontWeight.w600)),
+            subtitle: const Text('Ghi nhận số lít, đơn giá, hóa đơn xăng dầu dọc đường', style: TextStyle(fontSize: 12)),
             trailing: const Icon(Icons.arrow_forward_ios, size: 14),
             onTap: () {
               Navigator.of(context).push(
@@ -850,15 +920,15 @@ class _DriverMainScreenState extends State<DriverMainScreen> {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.toll, size: 18, color: VDBusColors.infoText),
+                    Icon(Icons.toll_outlined, size: 18, color: VDBusColors.infoText),
                     SizedBox(width: 6),
-                    Text('Lich su phi duong bo VETC / ePass', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                    Text('Lịch sử phí đường bộ VETC / ePass', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
                   ],
                 ),
                 SizedBox(height: 8),
-                Text('Tram BOT Dien Ban: 76,000 VND (10:15 - 2026-11-01)', style: TextStyle(fontSize: 12, color: VDBusColors.textSecondary)),
+                Text('Trạm BOT Điện Bàn: 76.000 VNĐ (10:15 - 01/11/2026)', style: TextStyle(fontSize: 12, color: VDBusColors.textSecondary)),
                 SizedBox(height: 4),
-                Text('Tram BOT Nam Hai Van: 110,000 VND (07:30 - 2026-11-01)', style: TextStyle(fontSize: 12, color: VDBusColors.textSecondary)),
+                Text('Trạm BOT Nam Hải Vân: 110.000 VNĐ (07:30 - 01/11/2026)', style: TextStyle(fontSize: 12, color: VDBusColors.textSecondary)),
               ],
             ),
           ),

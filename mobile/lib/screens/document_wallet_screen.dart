@@ -25,39 +25,39 @@ class DocumentWalletScreen extends StatelessWidget {
 
   const DocumentWalletScreen({
     super.key,
-    this.driverName = 'Nguyen Van Hai',
+    this.driverName = 'Nguyễn Văn Tuấn',
     this.vehiclePlate = '43C-189.24',
   });
 
   static const List<WalletDocument> sampleDocuments = [
     WalletDocument(
-      title: 'Giay phep lai xe Hang FC',
+      title: 'Giấy phép lái xe hạng FC',
       docNumber: 'GPLX-4301928471',
-      issuer: 'So Giao thong Van tai Da Nang',
+      issuer: 'Sở Giao thông Vận tải TP. Đà Nẵng',
       expiryDate: '2029-08-20',
       daysRemaining: 1020,
       isVehicleDoc: false,
     ),
     WalletDocument(
-      title: 'Giay chung nhan Kiem dinh ATKT & BVMT',
+      title: 'Giấy chứng nhận Kiểm định ATKT & BVMT',
       docNumber: 'KD-4301S-19284',
-      issuer: 'Trung tam Dang kiem 43-01S',
+      issuer: 'Trung tâm Đăng kiểm 43-01S',
       expiryDate: '2026-11-10',
       daysRemaining: 9,
       isVehicleDoc: true,
     ),
     WalletDocument(
-      title: 'Phu hieu Xe tai (Container)',
+      title: 'Phù hiệu Xe tải (Container)',
       docNumber: 'PH-43-2026-0812',
-      issuer: 'So Giao thong Van tai Da Nang',
+      issuer: 'Sở Giao thông Vận tải TP. Đà Nẵng',
       expiryDate: '2031-04-15',
       daysRemaining: 1625,
       isVehicleDoc: true,
     ),
     WalletDocument(
-      title: 'Bao hiem TNDS bat buoc chu xe co gioi',
+      title: 'Bảo hiểm TNDS bắt buộc chủ xe cơ giới',
       docNumber: 'BH-PTI-847291',
-      issuer: 'Tong cong ty Bao hiem Buu dien (PTI)',
+      issuer: 'Tổng công ty Cổ phần Bảo hiểm Bưu điện (PTI)',
       expiryDate: '2027-01-15',
       daysRemaining: 75,
       isVehicleDoc: true,
@@ -68,9 +68,15 @@ class DocumentWalletScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Vi Giay to So & Dang kiem',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+        title: const Row(
+          children: [
+            Icon(Icons.badge_outlined, color: VDBusColors.primary, size: 22),
+            SizedBox(width: 8),
+            Text(
+              'Ví Giấy tờ Số & Đăng kiểm',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            ),
+          ],
         ),
         backgroundColor: VDBusColors.surface,
         foregroundColor: VDBusColors.textPrimary,
@@ -91,7 +97,7 @@ class DocumentWalletScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'HO SO DIEN TU TAI XE & PHUONG TIEN',
+                    'HỒ SƠ ĐIỆN TỬ TÀI XẾ & PHƯƠNG TIỆN',
                     style: TextStyle(
                       color: VDBusColors.textInverse,
                       fontSize: 12,
@@ -100,35 +106,54 @@ class DocumentWalletScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    driverName,
-                    style: const TextStyle(
-                      color: VDBusColors.textInverse,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Row(
+                    children: [
+                      const Icon(Icons.person, color: VDBusColors.textInverse, size: 24),
+                      const SizedBox(width: 8),
+                      Text(
+                        driverName,
+                        style: const TextStyle(
+                          color: VDBusColors.textInverse,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 4),
-                  Text(
-                    'Phuong tien gan lien: $vehiclePlate',
-                    style: const TextStyle(
-                      color: VDBusColors.subtle,
-                      fontSize: 14,
-                    ),
+                  Row(
+                    children: [
+                      const Icon(Icons.local_shipping_outlined, color: VDBusColors.subtle, size: 18),
+                      const SizedBox(width: 6),
+                      Text(
+                        'Phương tiện gắn liền: $vehiclePlate',
+                        style: const TextStyle(
+                          color: VDBusColors.subtle,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 10),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
                       color: VDBusColors.primaryHover,
                       borderRadius: BorderRadius.circular(6),
                     ),
-                    child: const Text(
-                      'Che do ngoai tuyen: San sang xuat trinh cho CSGT / TTGT',
-                      style: TextStyle(
-                        color: VDBusColors.textInverse,
-                        fontSize: 11,
-                      ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.wifi_off, size: 14, color: VDBusColors.textInverse),
+                        SizedBox(width: 6),
+                        Text(
+                          'Chế độ ngoại tuyến: Sẵn sàng xuất trình cho CSGT / TTGT',
+                          style: TextStyle(
+                            color: VDBusColors.textInverse,
+                            fontSize: 11,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -136,13 +161,19 @@ class DocumentWalletScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
 
-            const Text(
-              'Danh muc giay to luu hanh (4 hang muc)',
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-                color: VDBusColors.textPrimary,
-              ),
+            const Row(
+              children: [
+                Icon(Icons.folder_outlined, size: 18, color: VDBusColors.primary),
+                SizedBox(width: 6),
+                Text(
+                  'Danh mục giấy tờ lưu hành (4 hạng mục)',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: VDBusColors.textPrimary,
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 12),
 
@@ -156,13 +187,22 @@ class DocumentWalletScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: VDBusColors.borderSubtle),
               ),
-              child: const Text(
-                'Luu y phap ly: Can xuat trinh ban goc hoac giay to dien tu co gia tri phap ly theo Nghi dinh 10/2020/ND-CP khi duoc luc luong chuc nang yeu cau kiem tra.',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: VDBusColors.textSecondary,
-                  height: 1.4,
-                ),
+              child: const Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(Icons.info_outline, size: 18, color: VDBusColors.textSecondary),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Lưu ý pháp lý: Cần xuất trình bản gốc hoặc giấy tờ điện tử có giá trị pháp lý theo Nghị định 10/2020/NĐ-CP khi được lực lượng chức năng yêu cầu kiểm tra.',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: VDBusColors.textSecondary,
+                        height: 1.4,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -179,16 +219,18 @@ class DocumentWalletScreen extends StatelessWidget {
     if (doc.daysRemaining <= 0) {
       badgeBg = VDBusColors.errorBg;
       badgeText = VDBusColors.errorText;
-      badgeLabel = 'Het han';
+      badgeLabel = 'Hết hạn';
     } else if (doc.daysRemaining <= 30) {
       badgeBg = VDBusColors.warningBg;
       badgeText = VDBusColors.warningText;
-      badgeLabel = 'Sap het han (${doc.daysRemaining} ngay)';
+      badgeLabel = 'Sắp hết hạn (${doc.daysRemaining} ngày)';
     } else {
       badgeBg = VDBusColors.successBg;
       badgeText = VDBusColors.successText;
-      badgeLabel = 'Hop le';
+      badgeLabel = 'Hợp lệ';
     }
+
+    IconData cardIcon = doc.isVehicleDoc ? Icons.description_outlined : Icons.badge_outlined;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -208,15 +250,24 @@ class DocumentWalletScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
-                child: Text(
-                  doc.title,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: VDBusColors.textPrimary,
-                  ),
+                child: Row(
+                  children: [
+                    Icon(cardIcon, size: 18, color: VDBusColors.primary),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text(
+                        doc.title,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: VDBusColors.textPrimary,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
+              const SizedBox(width: 8),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
@@ -236,7 +287,7 @@ class DocumentWalletScreen extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'So hieu: ${doc.docNumber}',
+            'Số hiệu: ${doc.docNumber}',
             style: const TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,
@@ -246,20 +297,26 @@ class DocumentWalletScreen extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            'Co quan cap: ${doc.issuer}',
+            'Cơ quan cấp: ${doc.issuer}',
             style: const TextStyle(
               fontSize: 12,
               color: VDBusColors.textSecondary,
             ),
           ),
           const SizedBox(height: 4),
-          Text(
-            'Hieu luc den: ${doc.expiryDate}',
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-              color: VDBusColors.textPrimary,
-            ),
+          Row(
+            children: [
+              const Icon(Icons.event_outlined, size: 14, color: VDBusColors.textSecondary),
+              const SizedBox(width: 4),
+              Text(
+                'Hiệu lực đến: ${doc.expiryDate}',
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: VDBusColors.textPrimary,
+                ),
+              ),
+            ],
           ),
         ],
       ),

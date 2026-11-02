@@ -191,18 +191,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: VDBusSpace.xl),
 
                   // Login Button
-                  ElevatedButton(
+                  ElevatedButton.icon(
                     onPressed: _isLoading ? null : _handleLogin,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: VDBusColors.primary,
-                      foregroundColor: Colors.white,
-                      minimumSize: const Size.fromHeight(50),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(VDBusRadius.sm),
-                      ),
-                      elevation: 0,
-                    ),
-                    child: _isLoading
+                    icon: _isLoading
+                        ? const SizedBox.shrink()
+                        : const Icon(Icons.login, size: 20),
+                    label: _isLoading
                         ? const SizedBox(
                             width: 22,
                             height: 22,
@@ -212,6 +206,15 @@ class _LoginScreenState extends State<LoginScreen> {
                             'ĐĂNG NHẬP VÀO CA',
                             style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                           ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: VDBusColors.primary,
+                      foregroundColor: Colors.white,
+                      minimumSize: const Size.fromHeight(50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(VDBusRadius.sm),
+                      ),
+                      elevation: 0,
+                    ),
                   ),
                   const SizedBox(height: VDBusSpace.md),
 

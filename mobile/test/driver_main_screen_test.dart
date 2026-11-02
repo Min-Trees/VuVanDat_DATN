@@ -15,35 +15,35 @@ void main() {
     );
 
     // Header info
-    expect(find.text('VDBus Tai xe'), findsOneWidget);
-    expect(find.textContaining('Nguyen Van Tuan'), findsOneWidget);
+    expect(find.text('VDBus Tài xế'), findsOneWidget);
+    expect(find.textContaining('Nguyễn Văn Tuấn'), findsOneWidget);
     expect(find.textContaining('Xe: 43C-189.24'), findsOneWidget);
-    expect(find.text('Truc tuyen'), findsOneWidget);
+    expect(find.text('Trực tuyến'), findsOneWidget);
 
     // Trip details
-    expect(find.text('Chuyen xe: CH-2026-0881'), findsOneWidget);
-    expect(find.text('Cho bat dau'), findsOneWidget);
-    expect(find.text('BAT DAU DI DEN DIEM LAY HANG'), findsOneWidget);
+    expect(find.text('Chuyến xe: CH-2026-0881'), findsOneWidget);
+    expect(find.text('Chờ bắt đầu'), findsOneWidget);
+    expect(find.text('BẮT ĐẦU ĐI ĐẾN ĐIỂM LẤY HÀNG'), findsOneWidget);
 
     // Pre-trip inspection banner check
-    expect(find.text('Kiem tra xe truoc chuyen: DA DAT YEU CAU'), findsOneWidget);
+    expect(find.text('Kiểm tra xe trước chuyến: ĐÃ ĐẠT YÊU CẦU'), findsOneWidget);
 
     // Switch to Cockpit & Map Tab
-    await tester.tap(find.text('Buong lai'));
+    await tester.tap(find.text('Buồng lái'));
     await tester.pumpAndSettle();
-    expect(find.text('TOC DO GPS'), findsOneWidget);
-    expect(find.text('NHIET DO THUNG'), findsOneWidget);
+    expect(find.text('TỐC ĐỘ GPS'), findsOneWidget);
+    expect(find.text('NHIỆT ĐỘ THÙNG'), findsOneWidget);
 
     // Switch to Wallet Tab
-    await tester.tap(find.text('Vi xe & So'));
+    await tester.tap(find.text('Ví xe & Sổ'));
     await tester.pumpAndSettle();
-    expect(find.textContaining('Ho so Phuong tien: 43C-189.24'), findsOneWidget);
-    expect(find.text('Vi giay to phap ly xe & tai xe'), findsOneWidget);
-    expect(find.text('Nhat ky do dau & Hoa don VAT'), findsOneWidget);
+    expect(find.textContaining('Hồ sơ Phương tiện: 43C-189.24'), findsOneWidget);
+    expect(find.text('Ví giấy tờ pháp lý xe & tài xế'), findsOneWidget);
+    expect(find.text('Nhật ký đổ dầu & Hóa đơn VAT'), findsOneWidget);
 
     // Switch to ePOD Tab
-    await tester.tap(find.text('Ky ePOD'));
+    await tester.tap(find.text('Ký ePOD'));
     await tester.pumpAndSettle();
-    expect(find.text('Ky Nhan Dien Tu (ePOD)'), findsOneWidget);
+    expect(find.text('Ký Nhận Điện Tử (ePOD)'), findsOneWidget);
   });
 }

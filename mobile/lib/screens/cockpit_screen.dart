@@ -27,7 +27,7 @@ class CockpitScreen extends StatefulWidget {
   const CockpitScreen({
     super.key,
     this.vehiclePlate = '43C-189.24',
-    this.driverName = 'Nguyen Van Tuan',
+    this.driverName = 'Nguyễn Văn Tuấn',
   });
 
   @override
@@ -112,14 +112,24 @@ class _CockpitScreenState extends State<CockpitScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('TIN HIEU SOS DA PHAT', style: TextStyle(fontWeight: FontWeight.bold, color: VDBusColors.errorText)),
+        title: const Row(
+          children: [
+            Icon(Icons.warning_amber_rounded, color: VDBusColors.errorText, size: 24),
+            SizedBox(width: 8),
+            Text('TÍN HIỆU SOS ĐÃ PHÁT', style: TextStyle(fontWeight: FontWeight.bold, color: VDBusColors.errorText)),
+          ],
+        ),
         content: const Text(
-          'Toa do 16.0544, 108.2022 va thong tin khan cap da duoc ghi nhan va phat toi Trung tam dieu hanh VDBus TMS va cac doi cuu ho gan nhat.',
+          'Tọa độ 16.0544, 108.2022 và thông tin khẩn cấp đã được ghi nhận và phát tới Trung tâm điều hành VDBus TMS và các đội cứu hộ gần nhất.',
         ),
         actions: [
-          TextButton(
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: VDBusColors.errorText,
+              foregroundColor: Colors.white,
+            ),
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('DA HIEU'),
+            child: const Text('ĐÃ HIỂU'),
           ),
         ],
       ),
@@ -137,37 +147,44 @@ class _CockpitScreenState extends State<CockpitScreen> {
     String hosAlertText;
     if (_continuousDrivingMinutes >= _maxContinuousMinutes) {
       hosColor = VDBusColors.errorText;
-      hosAlertText = 'VI PHAM GIO LAI: Vui long tap vao le va nghi toi thieu 15 phut!';
+      hosAlertText = 'VI PHẠM GIỜ LÁI XE: Vui lòng tấp vào lề và nghỉ tối thiểu 15 phút!';
     } else if (remainingMinutes <= 15) {
       hosColor = VDBusColors.errorText;
-      hosAlertText = 'KHAN CAP: Con duoi 15 phut gio lai lien tuc!';
+      hosAlertText = 'KHẨN CẤP: Còn dưới 15 phút giờ lái liên tục!';
     } else if (remainingMinutes <= 30) {
       hosColor = VDBusColors.warningText;
-      hosAlertText = 'CANH BAO: Con $remainingMinutes phut truoc khi het gio lai.';
+      hosAlertText = 'CẢNH BÁO: Còn $remainingMinutes phút trước khi hết giờ lái.';
     } else {
       hosColor = VDBusColors.successText;
-      hosAlertText = 'An toan: Con $remainingMinutes phut gio lai lien tuc.';
+      hosAlertText = 'An toàn: Còn $remainingMinutes phút giờ lái liên tục.';
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Buong lai so (Cockpit)'),
+        title: const Text('Buồng lái số (Cockpit)'),
         actions: [
           Container(
             margin: const EdgeInsets.only(right: 16),
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
               color: VDBusColors.mockBg,
               border: Border.all(color: VDBusColors.mockText),
               borderRadius: BorderRadius.circular(4),
             ),
-            child: const Text(
-              'Mo phong GPS & IoT',
-              style: TextStyle(
-                fontSize: 12,
-                color: VDBusColors.mockText,
-                fontWeight: FontWeight.w600,
-              ),
+            child: const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.satellite_alt_outlined, size: 14, color: VDBusColors.mockText),
+                SizedBox(width: 4),
+                Text(
+                  'Mô phỏng GPS & IoT',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: VDBusColors.mockText,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -180,7 +197,7 @@ class _CockpitScreenState extends State<CockpitScreen> {
             children: [
               // Header Card: Driver & Vehicle Info
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
                   color: VDBusColors.surface,
                   border: Border.all(color: VDBusColors.borderSubtle),
@@ -192,16 +209,23 @@ class _CockpitScreenState extends State<CockpitScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          widget.vehiclePlate,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: VDBusColors.textPrimary,
-                          ),
+                        Row(
+                          children: [
+                            const Icon(Icons.local_shipping, size: 18, color: VDBusColors.primary),
+                            const SizedBox(width: 6),
+                            Text(
+                              widget.vehiclePlate,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: VDBusColors.textPrimary,
+                              ),
+                            ),
+                          ],
                         ),
+                        const SizedBox(height: 2),
                         Text(
-                          'Tai xe: ${widget.driverName}',
+                          'Tài xế: ${widget.driverName}',
                           style: const TextStyle(
                             fontSize: 13,
                             color: VDBusColors.textSecondary,
@@ -210,19 +234,30 @@ class _CockpitScreenState extends State<CockpitScreen> {
                       ],
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
                         color: isStationary ? VDBusColors.subtle : VDBusColors.successBg,
                         border: Border.all(color: isStationary ? VDBusColors.borderDefault : VDBusColors.successText),
                         borderRadius: BorderRadius.circular(4),
                       ),
-                      child: Text(
-                        isStationary ? 'DUNG XE' : 'DANG CHAY',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: isStationary ? VDBusColors.textMuted : VDBusColors.successText,
-                        ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            isStationary ? Icons.pause_circle_outline : Icons.play_circle_outline,
+                            size: 14,
+                            color: isStationary ? VDBusColors.textMuted : VDBusColors.successText,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            isStationary ? 'DỪNG XE' : 'ĐANG CHẠY',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: isStationary ? VDBusColors.textMuted : VDBusColors.successText,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -233,7 +268,7 @@ class _CockpitScreenState extends State<CockpitScreen> {
 
               // Digital Speedometer Display with GPS Noise Filter
               Container(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(18),
                 decoration: BoxDecoration(
                   color: VDBusColors.surface,
                   border: Border.all(color: VDBusColors.borderSubtle),
@@ -241,14 +276,21 @@ class _CockpitScreenState extends State<CockpitScreen> {
                 ),
                 child: Column(
                   children: [
-                    const Text(
-                      'VAN TOC GPS HIEN TAI',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: VDBusColors.textMuted,
-                        letterSpacing: 1.0,
-                      ),
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.speed, size: 16, color: VDBusColors.primary),
+                        SizedBox(width: 6),
+                        Text(
+                          'VẬN TỐC GPS HIỆN TẠI',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: VDBusColors.textMuted,
+                            letterSpacing: 1.0,
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 8),
                     Row(
@@ -259,7 +301,7 @@ class _CockpitScreenState extends State<CockpitScreen> {
                         Text(
                           filteredSpeed.toStringAsFixed(1),
                           style: const TextStyle(
-                            fontSize: 48,
+                            fontSize: 52,
                             fontWeight: FontWeight.bold,
                             color: VDBusColors.primary,
                           ),
@@ -268,7 +310,7 @@ class _CockpitScreenState extends State<CockpitScreen> {
                         const Text(
                           'km/h',
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 18,
                             color: VDBusColors.textSecondary,
                             fontWeight: FontWeight.w600,
                           ),
@@ -278,10 +320,11 @@ class _CockpitScreenState extends State<CockpitScreen> {
                     const SizedBox(height: 4),
                     Text(
                       isStationary
-                          ? 'Loc nhieu GPS: Da kich hoat (Van toc goc ${_rawSpeedKmh.toStringAsFixed(1)} < 3 km/h)'
-                          : 'Tin hieu GPS on dinh',
+                          ? 'Lọc nhiễu GPS: Đã kích hoạt (Vận tốc gốc ${_rawSpeedKmh.toStringAsFixed(1)} < 3.0 km/h)'
+                          : 'Tín hiệu GPS ổn định',
                       style: TextStyle(
-                        fontSize: 11,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
                         color: isStationary ? VDBusColors.warningText : VDBusColors.textMuted,
                       ),
                     ),
@@ -305,13 +348,19 @@ class _CockpitScreenState extends State<CockpitScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          'GIO LAI AN TOAN (HOS)',
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold,
-                            color: VDBusColors.textPrimary,
-                          ),
+                        const Row(
+                          children: [
+                            Icon(Icons.timer_outlined, size: 18, color: VDBusColors.primary),
+                            SizedBox(width: 6),
+                            Text(
+                              'GIỜ LÁI AN TOÀN (HOS NĐ 10/2020)',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: VDBusColors.textPrimary,
+                              ),
+                            ),
+                          ],
                         ),
                         Text(
                           '${_continuousDrivingMinutes}p / ${_maxContinuousMinutes}p',
@@ -336,7 +385,7 @@ class _CockpitScreenState extends State<CockpitScreen> {
                     ),
                     const SizedBox(height: 10),
                     Container(
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         color: _continuousDrivingMinutes >= _maxContinuousMinutes
                             ? VDBusColors.errorBg
@@ -349,13 +398,13 @@ class _CockpitScreenState extends State<CockpitScreen> {
                         hosAlertText,
                         style: TextStyle(
                           fontSize: 12,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w600,
                           color: hosColor,
                         ),
                       ),
                     ),
                     const SizedBox(height: 12),
-                    ElevatedButton(
+                    ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: _isResting ? VDBusColors.successText : VDBusColors.primary,
                         foregroundColor: VDBusColors.textInverse,
@@ -365,10 +414,11 @@ class _CockpitScreenState extends State<CockpitScreen> {
                         ),
                       ),
                       onPressed: _toggleRest,
-                      child: Text(
+                      icon: Icon(_isResting ? Icons.check_circle : Icons.nightlife, size: 20),
+                      label: Text(
                         _isResting
-                            ? 'DANG NGHI NGOI ($_restMinutesElapsed / 15 PHUT) - KET THUC'
-                            : 'BAT DAU NGHI NGOI AN TOAN (15 PHUT)',
+                            ? 'ĐANG NGHỈ NGƠI ($_restMinutesElapsed / 15 PHÚT) - KẾT THÚC'
+                            : 'BẮT ĐẦU NGHỈ NGƠI AN TOÀN (15 PHÚT)',
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -392,23 +442,29 @@ class _CockpitScreenState extends State<CockpitScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          'CHUOI LANH (THUNG HANG)',
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold,
-                            color: VDBusColors.textPrimary,
-                          ),
+                        const Row(
+                          children: [
+                            Icon(Icons.ac_unit, size: 18, color: VDBusColors.infoText),
+                            SizedBox(width: 6),
+                            Text(
+                              'CHUỖI LẠNH (THÙNG HÀNG)',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: VDBusColors.textPrimary,
+                              ),
+                            ),
+                          ],
                         ),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                           decoration: BoxDecoration(
                             color: isTempWarning ? VDBusColors.errorBg : VDBusColors.successBg,
                             border: Border.all(color: isTempWarning ? VDBusColors.errorText : VDBusColors.successText),
-                            borderRadius: BorderRadius.circular(2),
+                            borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(
-                            isTempWarning ? 'VUOT NGUONG' : 'DAT CHUAN',
+                            isTempWarning ? 'VƯỢT NGƯỠNG' : 'ĐẠT CHUẨN',
                             style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.bold,
@@ -425,12 +481,12 @@ class _CockpitScreenState extends State<CockpitScreen> {
                         Column(
                           children: [
                             const Text(
-                              'Nhiet do hien tai',
+                              'Nhiệt độ hiện tại',
                               style: TextStyle(fontSize: 12, color: VDBusColors.textMuted),
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              '${_coldChainTemp.toStringAsFixed(1)} C',
+                              '${_coldChainTemp.toStringAsFixed(1)}°C',
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
@@ -442,12 +498,12 @@ class _CockpitScreenState extends State<CockpitScreen> {
                         Column(
                           children: [
                             const Text(
-                              'Dai yeu cau',
+                              'Dải yêu cầu',
                               style: TextStyle(fontSize: 12, color: VDBusColors.textMuted),
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              '${_coldChainTargetMin.toInt()} C den ${_coldChainTargetMax.toInt()} C',
+                              '${_coldChainTargetMin.toInt()}°C đến ${_coldChainTargetMax.toInt()}°C',
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -459,12 +515,12 @@ class _CockpitScreenState extends State<CockpitScreen> {
                         Column(
                           children: [
                             const Text(
-                              'May lanh',
+                              'Máy lạnh',
                               style: TextStyle(fontSize: 12, color: VDBusColors.textMuted),
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              _isReeferRunning ? 'DANG CHAY' : 'TAT',
+                              _isReeferRunning ? 'ĐANG CHẠY' : 'TẮT',
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
@@ -492,22 +548,28 @@ class _CockpitScreenState extends State<CockpitScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Text(
-                      'AP SUAT LOP TPMS (DINH MUC 110 - 120 PSI)',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        color: VDBusColors.textPrimary,
-                      ),
+                    const Row(
+                      children: [
+                        Icon(Icons.tire_repair, size: 18, color: VDBusColors.primary),
+                        SizedBox(width: 6),
+                        Text(
+                          'ÁP SUẤT LỐP TPMS (ĐỊNH MỨC 110 - 120 PSI)',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: VDBusColors.textPrimary,
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 12),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: const [
-                        _TireItem(label: 'Truoc Trai', psi: 115, temp: 45),
-                        _TireItem(label: 'Truoc Phai', psi: 116, temp: 46),
-                        _TireItem(label: 'Sau Trai', psi: 118, temp: 50),
-                        _TireItem(label: 'Sau Phai', psi: 117, temp: 49),
+                        _TireItem(label: 'Trước Trái', psi: 115, temp: 45),
+                        _TireItem(label: 'Trước Phải', psi: 116, temp: 46),
+                        _TireItem(label: 'Sau Trái', psi: 118, temp: 50),
+                        _TireItem(label: 'Sau Phải', psi: 117, temp: 49),
                       ],
                     ),
                   ],
@@ -516,11 +578,11 @@ class _CockpitScreenState extends State<CockpitScreen> {
 
               const SizedBox(height: 16),
 
-              // Driver Quick Access Actions (Phase 3)
+              // Driver Quick Access Actions
               Row(
                 children: [
                   Expanded(
-                    child: OutlinedButton(
+                    child: OutlinedButton.icon(
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         side: const BorderSide(color: VDBusColors.primary),
@@ -536,12 +598,13 @@ class _CockpitScreenState extends State<CockpitScreen> {
                           ),
                         );
                       },
-                      child: const Text('VI GIAY TO', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                      icon: const Icon(Icons.badge_outlined, size: 16),
+                      label: const Text('VÍ GIẤY TỜ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11)),
                     ),
                   ),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: OutlinedButton(
+                    child: OutlinedButton.icon(
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         side: const BorderSide(color: VDBusColors.primary),
@@ -557,12 +620,13 @@ class _CockpitScreenState extends State<CockpitScreen> {
                           ),
                         );
                       },
-                      child: const Text('DO XANG DAU', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                      icon: const Icon(Icons.local_gas_station_outlined, size: 16),
+                      label: const Text('ĐỔ XĂNG DẦU', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11)),
                     ),
                   ),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: ElevatedButton(
+                    child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         backgroundColor: VDBusColors.errorText,
@@ -570,7 +634,8 @@ class _CockpitScreenState extends State<CockpitScreen> {
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                       ),
                       onPressed: _handleSosEmergency,
-                      child: const Text('SOS KHAN CAP', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                      icon: const Icon(Icons.emergency, size: 16),
+                      label: const Text('SOS KHẨN CẤP', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11)),
                     ),
                   ),
                 ],
@@ -579,13 +644,14 @@ class _CockpitScreenState extends State<CockpitScreen> {
               const SizedBox(height: 16),
 
               // Test Simulation Button: Trigger GPS Stationary Noise Filter (< 3 km/h)
-              OutlinedButton(
+              OutlinedButton.icon(
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size.fromHeight(48),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                 ),
                 onPressed: _simulateStationary,
-                child: const Text('KIEM TRA LOC NHIEU GPS (DAT TOC DO 2.4 KM/H)'),
+                icon: const Icon(Icons.filter_alt_outlined, size: 18),
+                label: const Text('KIỂM TRA LỌC NHIỄU GPS (ĐẶT TỐC ĐỘ 2.4 KM/H)'),
               ),
             ],
           ),
@@ -612,19 +678,19 @@ class _TireItem extends StatelessWidget {
       children: [
         Text(
           label,
-          style: const TextStyle(fontSize: 11, color: VDBusColors.textMuted),
+          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: VDBusColors.textMuted),
         ),
         const SizedBox(height: 4),
         Text(
           '$psi PSI',
           style: const TextStyle(
-            fontSize: 14,
+            fontSize: 15,
             fontWeight: FontWeight.bold,
             color: VDBusColors.textPrimary,
           ),
         ),
         Text(
-          '$temp C',
+          '$temp°C',
           style: const TextStyle(fontSize: 11, color: VDBusColors.textSecondary),
         ),
       ],
