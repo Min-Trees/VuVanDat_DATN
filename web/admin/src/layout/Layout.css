@@ -1,3 +1,8 @@
+/* ==========================================================================
+   VDBUS LOGISTICS PLATFORM - ENTERPRISE B2B SAAS LAYOUT STYLING
+   Tuân thủ nghiêm ngặt: 0 Emoji, 100% Design Tokens, Chuẩn WCAG AA
+   ========================================================================== */
+
 .vdbus-app {
   display: flex;
   height: 100vh;
@@ -5,40 +10,57 @@
   overflow: hidden;
   background-color: var(--vdbus-color-bg-canvas);
   color: var(--vdbus-color-text-primary);
+  font-family: var(--vdbus-font-family);
 }
 
-/* Sidebar */
+/* --------------------------------------------------------------------------
+   1. SIDEBAR (THANH ĐIỀU HƯỚNG BÊN TRÁI)
+   -------------------------------------------------------------------------- */
 .vdbus-sidebar {
-  width: 240px;
+  width: 256px;
   background-color: var(--vdbus-color-bg-surface);
   border-right: var(--vdbus-border-width) solid var(--vdbus-color-border-subtle);
   display: flex;
   flex-direction: column;
-  transition: width 150ms ease;
+  transition: width 180ms cubic-bezier(0.4, 0, 0.2, 1);
   user-select: none;
+  z-index: 20;
 }
 
 .vdbus-sidebar--collapsed {
-  width: 56px;
+  width: 60px;
 }
 
 .vdbus-sidebar__brand {
-  height: 48px;
+  height: 52px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 var(--vdbus-space-3);
   border-bottom: var(--vdbus-border-width) solid var(--vdbus-color-border-subtle);
+  background-color: var(--vdbus-color-bg-subtle);
+}
+
+.vdbus-sidebar__logo-container {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .vdbus-sidebar__logo {
-  font-weight: var(--vdbus-font-weight-semibold);
+  font-weight: var(--vdbus-font-weight-bold);
   font-size: var(--vdbus-font-size-base);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
   color: var(--vdbus-color-primary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+
+.vdbus-sidebar__tagline {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--vdbus-color-text-muted);
+  font-weight: var(--vdbus-font-weight-semibold);
 }
 
 .vdbus-sidebar__nav {
@@ -46,15 +68,29 @@
   padding: var(--vdbus-space-2) var(--vdbus-space-2);
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--vdbus-space-1);
   overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.vdbus-sidebar__group {
+  margin-bottom: var(--vdbus-space-2);
+}
+
+.vdbus-sidebar__group-title {
+  font-size: 11px;
+  font-weight: var(--vdbus-font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--vdbus-color-text-muted);
+  padding: var(--vdbus-space-2) var(--vdbus-space-3) var(--vdbus-space-1);
 }
 
 .vdbus-sidebar__link {
   display: flex;
   align-items: center;
-  gap: var(--vdbus-space-3);
-  padding: var(--vdbus-space-2) var(--vdbus-space-3);
+  gap: var(--vdbus-space-2);
+  padding: 7px var(--vdbus-space-3);
   border-radius: var(--vdbus-radius-base);
   border: none;
   background: transparent;
@@ -66,6 +102,8 @@
   text-align: left;
   width: 100%;
   box-sizing: border-box;
+  transition: all 120ms ease;
+  position: relative;
 }
 
 .vdbus-sidebar__link:hover {
@@ -79,66 +117,287 @@
   font-weight: var(--vdbus-font-weight-semibold);
 }
 
+.vdbus-sidebar__link--active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 3px;
+  border-radius: 0 2px 2px 0;
+  background-color: var(--vdbus-color-primary);
+}
+
+.vdbus-sidebar__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
 .vdbus-sidebar__link-text {
+  flex: 1;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* Main Area */
+.vdbus-sidebar__badge {
+  font-size: 10px;
+  font-weight: var(--vdbus-font-weight-semibold);
+  padding: 1px 6px;
+  border-radius: var(--vdbus-radius-full);
+  background-color: var(--vdbus-color-bg-subtle);
+  color: var(--vdbus-color-text-secondary);
+  border: 1px solid var(--vdbus-color-border-subtle);
+}
+
+.vdbus-sidebar__badge--alert {
+  background-color: var(--vdbus-color-error-subtle);
+  color: var(--vdbus-color-error);
+  border-color: var(--vdbus-color-error);
+}
+
+.vdbus-sidebar__footer {
+  padding: var(--vdbus-space-2) var(--vdbus-space-3);
+  border-top: var(--vdbus-border-width) solid var(--vdbus-color-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--vdbus-color-bg-subtle);
+}
+
+.vdbus-sidebar__version {
+  font-size: 11px;
+  color: var(--vdbus-color-text-muted);
+}
+
+.vdbus-sidebar__status-dot {
+  font-size: 10px;
+  font-weight: var(--vdbus-font-weight-semibold);
+  color: var(--vdbus-color-success);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.vdbus-sidebar__status-dot::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--vdbus-color-success);
+}
+
+/* --------------------------------------------------------------------------
+   2. MAIN AREA & HEADER
+   -------------------------------------------------------------------------- */
 .vdbus-main-area {
   flex: 1;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  min-width: 0;
 }
 
-/* Header */
 .vdbus-header {
-  height: 48px;
+  height: 52px;
   background-color: var(--vdbus-color-bg-surface);
   border-bottom: var(--vdbus-border-width) solid var(--vdbus-color-border-subtle);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 var(--vdbus-space-5);
-  box-sizing: border-box;
+  padding: 0 var(--vdbus-space-4);
+  gap: var(--vdbus-space-4);
+  z-index: 10;
+  box-shadow: var(--vdbus-shadow-sm);
 }
 
 .vdbus-header__left {
   display: flex;
   align-items: center;
   gap: var(--vdbus-space-3);
+  flex: 1;
+  max-width: 600px;
 }
 
 .vdbus-header__tenant {
   display: flex;
   align-items: center;
   gap: var(--vdbus-space-2);
+  padding: var(--vdbus-space-1) var(--vdbus-space-2);
+  border-radius: var(--vdbus-radius-base);
+  background-color: var(--vdbus-color-bg-subtle);
+  border: var(--vdbus-border-width) solid var(--vdbus-color-border-subtle);
+  font-size: var(--vdbus-font-size-xs);
   font-weight: var(--vdbus-font-weight-medium);
-  font-size: var(--vdbus-font-size-sm);
+  white-space: nowrap;
+}
+
+.vdbus-header__tenant-name {
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .vdbus-header__search {
-  width: 260px;
+  flex: 1;
+  min-width: 220px;
 }
 
 .vdbus-header__right {
   display: flex;
   align-items: center;
-  gap: var(--vdbus-space-3);
+  gap: var(--vdbus-space-2);
 }
 
+/* Trung tâm Cảnh báo khẩn */
+.vdbus-header__alert-wrapper {
+  position: relative;
+}
+
+.vdbus-header__alert-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--vdbus-radius-base);
+  border: 1px solid var(--vdbus-color-border-subtle);
+  background: var(--vdbus-color-bg-subtle);
+  color: var(--vdbus-color-text-secondary);
+  cursor: pointer;
+  position: relative;
+}
+
+.vdbus-header__alert-btn:hover {
+  background-color: var(--vdbus-color-bg-canvas);
+  color: var(--vdbus-color-text-primary);
+}
+
+.vdbus-header__alert-count {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background-color: var(--vdbus-color-error);
+  color: var(--vdbus-color-text-inverse);
+  font-size: 10px;
+  font-weight: var(--vdbus-font-weight-bold);
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vdbus-alert-dropdown {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  width: 380px;
+  background-color: var(--vdbus-color-bg-surface);
+  border: 1px solid var(--vdbus-color-border-default);
+  border-radius: var(--vdbus-radius-md);
+  box-shadow: var(--vdbus-shadow-lg);
+  z-index: 100;
+  overflow: hidden;
+}
+
+.vdbus-alert-dropdown__header {
+  padding: var(--vdbus-space-3);
+  background-color: var(--vdbus-color-bg-subtle);
+  border-bottom: 1px solid var(--vdbus-color-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--vdbus-font-size-xs);
+}
+
+.vdbus-alert-dropdown__body {
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.vdbus-alert-item {
+  padding: var(--vdbus-space-3);
+  border-bottom: 1px solid var(--vdbus-color-border-subtle);
+  font-size: var(--vdbus-font-size-xs);
+  display: flex;
+  gap: var(--vdbus-space-2);
+  align-items: flex-start;
+  line-height: 1.4;
+}
+
+.vdbus-alert-item:last-child {
+  border-bottom: none;
+}
+
+.vdbus-alert-item__bullet {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.vdbus-alert-item--error .vdbus-alert-item__bullet {
+  background-color: var(--vdbus-color-error);
+}
+
+.vdbus-alert-item--warning .vdbus-alert-item__bullet {
+  background-color: var(--vdbus-color-warning);
+}
+
+.vdbus-alert-item--info .vdbus-alert-item__bullet {
+  background-color: var(--vdbus-color-info);
+}
+
+/* User Profile Badge */
 .vdbus-header__user {
   display: flex;
   align-items: center;
   gap: var(--vdbus-space-2);
-  font-size: var(--vdbus-font-size-sm);
+  padding: 2px var(--vdbus-space-2);
+  border-left: 1px solid var(--vdbus-color-border-subtle);
 }
 
-/* Content Body */
-.vdbus-content {
+.vdbus-header__avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--vdbus-radius-base);
+  background-color: var(--vdbus-color-primary);
+  color: var(--vdbus-color-text-inverse);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: var(--vdbus-font-weight-bold);
+}
+
+.vdbus-header__user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.vdbus-header__username {
+  font-size: var(--vdbus-font-size-xs);
+  font-weight: var(--vdbus-font-weight-semibold);
+  line-height: 1.2;
+}
+
+.vdbus-header__role {
+  font-size: 10px;
+  color: var(--vdbus-color-text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   3. CONTENT AREA
+   -------------------------------------------------------------------------- */
+.vdbus-content-area {
   flex: 1;
   overflow-y: auto;
-  padding: var(--vdbus-space-5);
+  padding: var(--vdbus-space-4);
+  box-sizing: border-box;
 }

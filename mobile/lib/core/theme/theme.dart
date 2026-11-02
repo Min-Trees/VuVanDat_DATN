@@ -34,6 +34,21 @@ class VDBusColors {
   static const Color infoText = Color(0xFF1E3A8A);
   static const Color mockBg = Color(0xFFFEFCE8);
   static const Color mockText = Color(0xFF854D0E);
+
+  // Single Action Amber Accent (Enterprise TMS Action Token)
+  static const Color amberAction = Color(0xFFD97706);
+  static const Color amberActionHover = Color(0xFFB45309);
+  static const Color amberActionSubtle = Color(0xFFFEF3C7);
+  static const Color amberActionText = Color(0xFF78350F);
+
+  // Status Aliases & Borders
+  static const Color error = errorText;
+  static const Color warning = warningText;
+  static const Color success = successText;
+  static const Color info = infoText;
+  static const Color successBorder = Color(0xFF86EFAC);
+  static const Color warningBorder = Color(0xFFFCD34D);
+  static const Color errorBorder = Color(0xFFFCA5A5);
 }
 
 class VDBusSpace {

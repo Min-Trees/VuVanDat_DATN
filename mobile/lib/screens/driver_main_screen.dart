@@ -9,6 +9,8 @@ import 'document_wallet_screen.dart';
 import 'epod_screen.dart';
 import 'fuel_entry_screen.dart';
 import 'login_screen.dart';
+import 'trip_offer_screen.dart';
+import 'truck_navigation_screen.dart';
 
 class DriverMainScreen extends StatefulWidget {
   const DriverMainScreen({super.key});
@@ -136,6 +138,53 @@ class _DriverMainScreenState extends State<DriverMainScreen> {
         setState(() {});
         break;
     }
+  }
+
+  void _openTripOffer() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => TripOfferScreen(
+        onAccept: () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Đã nhận chuyến xe #CH-2026-0881 thành công! Đang kích hoạt dẫn đường...'),
+              backgroundColor: VDBusColors.primary,
+            ),
+          );
+          _openTruckNavigation();
+        },
+        onReject: (reason) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Đã từ chối chuyến: $reason'),
+              backgroundColor: VDBusColors.textSecondary,
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  void _openTruckNavigation() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => TruckNavigationScreen(
+          onFinishToEpod: () {
+            setState(() {
+              _trip = _trip.copyWith(currentStep: TripStep.atDelivery);
+              _currentIndex = 2; // Switch to ePOD Tab
+            });
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Đã đến Điểm giao hàng Vinamilk! Đang mở biên bản ký nhận ePOD.'),
+                backgroundColor: VDBusColors.primary,
+              ),
+            );
+          },
+        ),
+      ),
+    );
   }
 
   void _showPreTripInspectionDialog() {
@@ -556,6 +605,46 @@ class _DriverMainScreenState extends State<DriverMainScreen> {
               ),
             ),
 
+            const SizedBox(height: 12),
+
+            // Demo Actions: Grab Offer 15s & Truck Turn-by-Turn Navigation
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: _openTripOffer,
+                    icon: const Icon(Icons.flash_on, size: 16, color: VDBusColors.amberAction),
+                    label: const Text(
+                      'ĐỀ NGHỊ CHUYẾN (15S)',
+                      style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: VDBusColors.amberAction),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: const Size(0, 44),
+                      side: const BorderSide(color: VDBusColors.amberAction),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: _openTruckNavigation,
+                    icon: const Icon(Icons.navigation, size: 16, color: Colors.white),
+                    label: const Text(
+                      'DẪN ĐƯỜNG XE TẢI',
+                      style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: VDBusColors.primary,
+                      foregroundColor: Colors.white,
+                      minimumSize: const Size(0, 44),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
             const SizedBox(height: 16),
 
             // Stops Timeline Header
@@ -674,6 +763,24 @@ class _DriverMainScreenState extends State<DriverMainScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          // Fullscreen Navigation CTA
+          ElevatedButton.icon(
+            onPressed: _openTruckNavigation,
+            icon: const Icon(Icons.navigation_outlined, size: 20, color: Colors.white),
+            label: const Text(
+              'MỞ DẪN ĐƯỜNG HEADING-UP TOÀN MÀN HÌNH',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: VDBusColors.amberAction,
+              foregroundColor: Colors.white,
+              minimumSize: const Size.fromHeight(48),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+            ),
+          ),
+
+          const SizedBox(height: 12),
+
           // Live Map Card
           DriverOsmMap(
             currentPosition: const LatLng(16.0712, 108.1754),
