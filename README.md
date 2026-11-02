@@ -23,6 +23,10 @@ Hệ sinh thái bao gồm:
 4. **Mobile Driver App (Flutter)**: Ứng dụng di động chuyên biệt cho tài xế xe tải buồng lái (Android/iOS/Web), công thái học thao tác 1 tay, chế độ ban đêm, hỗ trợ ngoại tuyến khi mất sóng, bảng ký nhận ePOD và đồng hồ cảnh báo giờ lái xe liên tục (HOS).
 5. **Driver Mobile Standalone Prototype (`driver-prototype.html`)**: Bản nguyên mẫu hoàn chỉnh trong MỘT file HTML/CSS/JS thuần, tích hợp bản đồ dẫn đường vector SVG heading-up bám xe, mô phỏng nhận đơn Grab 15s và hàng đợi ngoại tuyến.
 
+<p align="center">
+  <img src="docs/images/mobile-driver-emulator.png" alt="VDBus Mobile Driver App trên Android Emulator" width="320"/>
+</p>
+
 ---
 
 ## 🚀 HƯỚNG DẪN CÀI ĐẶT & CHẠY NHANH CHO AGENT VÀ DEVELOPER
