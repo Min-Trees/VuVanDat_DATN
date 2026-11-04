@@ -29,7 +29,51 @@ Hệ sinh thái bao gồm:
 
 ---
 
-## 🚀 HƯỚNG DẪN CÀI ĐẶT & CHẠY NHANH CHO AGENT VÀ DEVELOPER
+## ⚡ KHỞI CHẠY 1 CHẠM TOÀN BỘ HỆ THỐNG (ONE-CLICK QUICK RUN & SEED DATA)
+
+Hệ thống cung cấp sẵn các bộ script tự động hóa hoàn chỉnh cho Windows (PowerShell & Batch script click đúp):
+
+### 1. File chạy nhanh bằng một cú nhấp đúp (Double-click):
+| Tên File Batch | Chức năng | Thao tác |
+| :--- | :--- | :--- |
+| **`start-all.bat`** | **Khởi chạy toàn bộ hệ thống 1 chạm** (DB Check, Seed Check, Backend API, Web Admin, Web Shipper, Mobile App, ADB Reverse) | Nhấp đúp chuột để chạy |
+| **`seed-data.bat`** | **Nạp dữ liệu mẫu toàn diện** (Master seed 25 bảng CSDL, khách hàng B2B, đội xe tải, chuyến hàng, điểm dừng, ePOD, hóa đơn, BOT) | Nhấp đúp chuột để nạp data |
+| **`stop-all.bat`** | **Dừng an toàn toàn bộ tiến trình** trên các port 5000, 3000, 3001, 3002 | Nhấp đúp chuột để dừng |
+
+### 2. Chạy qua PowerShell CLI:
+```powershell
+# 1. Khởi chạy toàn bộ hệ thống (kèm Bảng điều khiển tương tác CLI & tự mở trình duyệt):
+.\scripts\start-all.ps1
+
+# 2. Hoặc chỉ nạp dữ liệu mẫu vào PostgreSQL:
+.\scripts\seed-all-data.ps1
+
+# 3. Dừng toàn bộ các dịch vụ:
+.\scripts\stop-all.ps1
+```
+
+### 3. Cổng dịch vụ hệ sinh thái (Local URLs):
+| Phân hệ / Dịch vụ | Địa chỉ URL Local | Công nghệ |
+| :--- | :--- | :--- |
+| **Web Admin Portal** | [http://localhost:3000](http://localhost:3000) | React 18, Vite, TypeScript |
+| **Web Shipper Portal** | [http://localhost:3001](http://localhost:3001) | React 18, Vite, TypeScript |
+| **Mobile Driver App (Web)** | [http://localhost:3002](http://localhost:3002) | Flutter Web Server |
+| **Backend REST API & Swagger** | [http://localhost:5000/swagger](http://localhost:5000/swagger) | .NET 8 Web API, C# |
+| **PostgreSQL 17 Database** | `localhost:5432` (`vdbus_logistics`) | PostgreSQL 17 Windows Service |
+| **Android Emulator** | `emulator-5554` (Đã cấu hình `adb reverse tcp:5000`) | Flutter Mobile App |
+
+### 4. Danh sách tài khoản mẫu (Mật khẩu dùng chung: `AdminPassword123!`):
+| Vai trò | Họ tên | Email đăng nhập | Phân quyền truy cập |
+| :--- | :--- | :--- | :--- |
+| **Tổng Giám đốc** | Vũ Văn Đạt | `admin@vdbus.vn` | Quản trị tối cao (Admin) |
+| **Trưởng phòng Điều độ** | Nguyễn Quốc Diệp | `dieupk@vdbus.vn` | Điều độ đội xe & lệnh vận chuyển (Dispatcher) |
+| **Kế toán Trưởng** | Trần Thị Thu Hằng | `ketoan@vdbus.vn` | Đối soát cước, hóa đơn, BOT & dầu (Accountant) |
+| **Tài xế Xe tải FC** | Nguyễn Văn Tuấn | `driver.tuan@vdbus.vn` | Buồng lái, dẫn đường, nhận chuyến, ePOD (Driver) |
+| **Tài xế Xe tải C** | Trần Văn Hoàng | `driver.hoang@vdbus.vn` | Buồng lái, dẫn đường, nhận chuyến, ePOD (Driver) |
+
+---
+
+## 🚀 HƯỚNG DẪN CÀI ĐẶT & CHẠY THỦ CÔNG CHO AGENT VÀ DEVELOPER
 
 > 📖 **Xem hướng dẫn chi tiết từng bước:** [AGENT_SETUP_GUIDE.md](AGENT_SETUP_GUIDE.md)
 
